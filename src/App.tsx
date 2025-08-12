@@ -12,6 +12,7 @@ import Blog from "./pages/Blog";
 import LegalTerms from "./pages/LegalTerms";
 import LegalPrivacy from "./pages/LegalPrivacy";
 import Contact from "./pages/Contact";
+import ListingDetails from "./pages/ListingDetails";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/cars" element={<Cars />} />
+          <Route path="/cars/:slug" element={<ListingDetails />} />
           <Route path="/sell" element={<Sell />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/blog" element={<Blog />} />

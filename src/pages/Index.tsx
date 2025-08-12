@@ -1,18 +1,18 @@
 import Hero from "@/components/Hero";
 import { SEO } from "@/components/SEO";
 import { ListingCard } from "@/components/ListingCard";
-import camryImg from "@/assets/listing-camry.jpg";
-import lexusImg from "@/assets/listing-lexus-rx.jpg";
-import p911Img from "@/assets/listing-911.jpg";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { listings as allListings } from "@/data/listings";
+import { useFavorites } from "@/hooks/use-favorites";
+import { Link } from "react-router-dom";
 
 const Index = () => {
-  const listings = [
-    { image: camryImg, title: "Toyota Camry 2020 SE", priceAED: 55900, year: 2020, location: "Dubai", isPremium: true },
-    { image: lexusImg, title: "Lexus RX 2021 F Sport", priceAED: 174000, year: 2021, location: "Abu Dhabi", isPremium: true },
-    { image: p911Img, title: "Porsche 911 Carrera 2019", priceAED: 349000, year: 2019, location: "Dubai", isPremium: false },
-  ];
+  const { has, toggle } = useFavorites();
+  const featured = allListings
+    .filter((l) => l.isPremium)
+    .concat(allListings.filter((l) => !l.isPremium))
+    .slice(0, 6);
 
   return (
     <div className="min-h-screen bg-background">
@@ -72,8 +72,24 @@ const Index = () => {
           <Button variant="premium">View all</Button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-          {listings.concat(listings).map((l, i) => (
-            <ListingCard key={i} {...l} />
+          {featured.map((l) => (
+            <Link key={l.id} to={`/cars/${l.slug}`} className="block">
+              <ListingCard
+                id={l.id}
+                image={l.coverImageUrl}
+                title={`${l.make} ${l.model} ${l.year}${l.trim ? ` ${l.trim}` : ''}`}
+                priceAED={l.priceAED}
+                year={l.year}
+                location={l.emirate}
+                isPremium={l.isPremium}
+                favorite={has.has(l.id)}
+                onToggleFavorite={(e?: any) => {
+                  // Prevent link navigation when toggling favorite
+                  if (e && e.preventDefault) e.preventDefault();
+                  toggle(l.id);
+                }}
+              />
+            </Link>
           ))}
         </div>
       </section>

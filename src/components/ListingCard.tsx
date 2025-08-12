@@ -1,18 +1,23 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import * as React from "react";
 
 interface ListingCardProps {
+  id: string;
   image: string;
   title: string;
   priceAED: number;
   year: number;
   location: string;
   isPremium?: boolean;
+  favorite?: boolean;
+  onToggleFavorite?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const formatAED = (n: number) => new Intl.NumberFormat("en-AE", { style: "currency", currency: "AED", maximumFractionDigits: 0 }).format(n);
 
-export const ListingCard = ({ image, title, priceAED, year, location, isPremium }: ListingCardProps) => {
+export const ListingCard = ({ id, image, title, priceAED, year, location, isPremium, favorite, onToggleFavorite }: ListingCardProps) => {
   return (
     <Card className="group overflow-hidden transition-transform hover:-translate-y-0.5 hover:shadow-lg">
       <div className="relative aspect-[16/10] w-full overflow-hidden">
@@ -27,6 +32,9 @@ export const ListingCard = ({ image, title, priceAED, year, location, isPremium 
             <Badge className="bg-primary text-primary-foreground shadow-md">Premium</Badge>
           </div>
         )}
+        <div className="absolute right-3 top-3">
+          <FavoriteButton active={favorite} onClick={onToggleFavorite} />
+        </div>
       </div>
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-2">
