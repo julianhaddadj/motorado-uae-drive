@@ -18,7 +18,7 @@ function useFilters() {
     setParams(next, { replace: true });
   };
 
-  return { params, set };
+  return { params, set, setParams };
 }
 
 function applyFilters(data: Listing[], params: URLSearchParams) {
@@ -60,7 +60,7 @@ function applyFilters(data: Listing[], params: URLSearchParams) {
 }
 
 const Cars = () => {
-  const { params, set } = useFilters();
+  const { params, set, setParams } = useFilters();
   const { has, toggle } = useFavorites();
 
   const make = params.get("make") || "";
