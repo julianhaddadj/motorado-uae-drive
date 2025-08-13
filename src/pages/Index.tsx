@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import { Header } from "@/components/Header";
 import { SEO } from "@/components/SEO";
 import { ListingCard } from "@/components/ListingCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -16,6 +17,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <SEO
         title="Motorado — UAE Car Marketplace"
         description="Sell your car in the UAE fast. Pay-to-list with promo codes. Browse premium cars by make, model, price and more."

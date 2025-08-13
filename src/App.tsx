@@ -14,7 +14,6 @@ import LegalPrivacy from "./pages/LegalPrivacy";
 import Contact from "./pages/Contact";
 import ListingDetails from "./pages/ListingDetails";
 import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -31,11 +30,10 @@ const App = () => (
           <Route path="/sell" element={<Sell />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/legal/terms" element={<LegalTerms />} />
           <Route path="/legal/privacy" element={<LegalPrivacy />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
