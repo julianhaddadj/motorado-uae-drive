@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/motorado-hero.jpg";
 import { Link } from "react-router-dom";
+import { AuthButtons } from "@/components/AuthButtons";
 
 const Hero = () => {
   return (
@@ -18,7 +19,7 @@ const Hero = () => {
           <Link to="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</Link>
         </div>
         <div className="hidden sm:block">
-          <Link to="/sell"><Button variant="hero" size="sm">Sell your car</Button></Link>
+          <AuthButtons />
         </div>
       </nav>
 

@@ -30,8 +30,8 @@ All colors MUST be HSL.
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 28 94% 54%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 266 65% 40%; /* Rebecca Purple #663399 */
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;

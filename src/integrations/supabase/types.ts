@@ -14,7 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      listings: {
+        Row: {
+          body_type: Database["public"]["Enums"]["body_type"]
+          created_at: string
+          description: string | null
+          emirate: string
+          id: string
+          images: string[] | null
+          is_premium: boolean | null
+          is_published: boolean | null
+          make: string
+          mileage_km: number
+          model: string
+          price_aed: number
+          regional_spec: Database["public"]["Enums"]["regional_spec"]
+          slug: string
+          trim: string | null
+          updated_at: string
+          user_id: string
+          year: number
+        }
+        Insert: {
+          body_type: Database["public"]["Enums"]["body_type"]
+          created_at?: string
+          description?: string | null
+          emirate: string
+          id?: string
+          images?: string[] | null
+          is_premium?: boolean | null
+          is_published?: boolean | null
+          make: string
+          mileage_km: number
+          model: string
+          price_aed: number
+          regional_spec: Database["public"]["Enums"]["regional_spec"]
+          slug: string
+          trim?: string | null
+          updated_at?: string
+          user_id: string
+          year: number
+        }
+        Update: {
+          body_type?: Database["public"]["Enums"]["body_type"]
+          created_at?: string
+          description?: string | null
+          emirate?: string
+          id?: string
+          images?: string[] | null
+          is_premium?: boolean | null
+          is_published?: boolean | null
+          make?: string
+          mileage_km?: number
+          model?: string
+          price_aed?: number
+          regional_spec?: Database["public"]["Enums"]["regional_spec"]
+          slug?: string
+          trim?: string | null
+          updated_at?: string
+          user_id?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +112,24 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      body_type:
+        | "SUV"
+        | "Hatchback"
+        | "Sedan"
+        | "Coupe"
+        | "Convertible"
+        | "Pickup"
+        | "Wagon"
+        | "Van/Minivan"
+        | "Crossover"
+        | "Other"
+      regional_spec:
+        | "GCC"
+        | "Japanese"
+        | "Chinese"
+        | "American"
+        | "Euro"
+        | "Other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +256,27 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      body_type: [
+        "SUV",
+        "Hatchback",
+        "Sedan",
+        "Coupe",
+        "Convertible",
+        "Pickup",
+        "Wagon",
+        "Van/Minivan",
+        "Crossover",
+        "Other",
+      ],
+      regional_spec: [
+        "GCC",
+        "Japanese",
+        "Chinese",
+        "American",
+        "Euro",
+        "Other",
+      ],
+    },
   },
 } as const
