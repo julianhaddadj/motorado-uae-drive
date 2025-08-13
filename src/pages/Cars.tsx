@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { ListingCard } from "@/components/ListingCard";
 import { listings, allMakes, modelsByMake, Listing } from "@/data/listings";
 import { Button } from "@/components/ui/button";
@@ -77,6 +78,7 @@ const Cars = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <BreadcrumbNavigation />
       <main className="mx-auto max-w-6xl px-4 py-10">
       <SEO
         title="Browse Cars — Motorado"

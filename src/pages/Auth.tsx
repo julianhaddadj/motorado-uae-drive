@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { useEffect } from "react";
 
 const Auth = () => {
@@ -81,6 +82,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <BreadcrumbNavigation />
       <div className="flex items-center justify-center px-4" style={{ minHeight: 'calc(100vh - 4rem)' }}>
       <SEO
         title="Sign In | Sign Up — Motorado"

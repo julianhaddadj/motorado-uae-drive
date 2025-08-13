@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { getListingBySlug } from "@/data/listings";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { Badge } from "@/components/ui/badge";
 
 const formatAED = (n: number) => new Intl.NumberFormat("en-AE", { style: "currency", currency: "AED", maximumFractionDigits: 0 }).format(n);
@@ -48,6 +49,7 @@ const ListingDetails = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <BreadcrumbNavigation />
       <main className="mx-auto max-w-6xl px-4 py-10">
       <SEO
         title={`${listing.make} ${listing.model} ${listing.year} — Motorado`}

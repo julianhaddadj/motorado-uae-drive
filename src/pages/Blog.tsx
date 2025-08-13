@@ -1,10 +1,12 @@
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
+import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 
 const Blog = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <BreadcrumbNavigation />
       <main className="mx-auto max-w-6xl px-4 py-10">
       <SEO
         title="Blog — Motorado"
