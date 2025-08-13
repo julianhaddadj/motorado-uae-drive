@@ -1,33 +1,36 @@
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { User } from "lucide-react";
+import { User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
-export const AuthButtons = () => {
-  const { user, signOut, loading } = useAuth();
+export function AuthButtons() {
+  const { user, signOut } = useAuth();
 
-  if (loading) {
-    return <div className="h-9 w-20 bg-muted animate-pulse rounded-md" />;
-  }
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   if (user) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="ghost" size="sm" className="flex items-center space-x-2">
             <User className="h-4 w-4" />
-            Profile
+            <span className="hidden sm:inline">
+              {user.user_metadata?.display_name || user.email?.split('@')[0]}
+            </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem asChild>
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/profile">Profile</Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/sell">Sell Car</Link>
+            <Link to="/my-listings">My Listings</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => signOut()}>
+          <DropdownMenuItem onClick={handleSignOut}>
+            <LogOut className="h-4 w-4 mr-2" />
             Sign Out
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -36,13 +39,13 @@ export const AuthButtons = () => {
   }
 
   return (
-    <div className="flex gap-2">
-      <Button asChild variant="outline" size="sm">
+    <div className="flex items-center space-x-2">
+      <Button variant="ghost" size="sm" asChild>
         <Link to="/auth">Sign In</Link>
       </Button>
-      <Button asChild size="sm" className="bg-accent hover:bg-accent/90">
-        <Link to="/auth?mode=signup">Sign Up</Link>
+      <Button size="sm" asChild>
+        <Link to="/auth">Sign Up</Link>
       </Button>
     </div>
   );
-};
+}
