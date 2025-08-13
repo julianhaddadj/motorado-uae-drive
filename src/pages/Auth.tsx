@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { SEO } from "@/components/SEO";
+import { Header } from "@/components/Header";
 import { useEffect } from "react";
 
 const Auth = () => {
@@ -78,7 +79,9 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="flex items-center justify-center px-4" style={{ minHeight: 'calc(100vh - 4rem)' }}>
       <SEO
         title="Sign In | Sign Up — Motorado"
         description="Sign in to your Motorado account or create a new account to start buying and selling cars in the UAE."
@@ -170,6 +173,7 @@ const Auth = () => {
           </Tabs>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };

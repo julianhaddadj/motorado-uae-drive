@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEO } from "@/components/SEO";
+import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
@@ -31,6 +32,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <SEO
         title="Dashboard — Motorado"
         description="Manage your car listings and account on Motorado."

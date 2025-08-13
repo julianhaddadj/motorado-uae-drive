@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { SEO } from "@/components/SEO";
+import { Header } from "@/components/Header";
 import { ListingCard } from "@/components/ListingCard";
 import { listings, allMakes, modelsByMake, Listing } from "@/data/listings";
 import { Button } from "@/components/ui/button";
@@ -74,7 +75,9 @@ const Cars = () => {
   const filtered = useMemo(() => applyFilters(listings, params), [params]);
 
   return (
-    <main className="mx-auto max-w-6xl min-h-screen px-4 py-10">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="mx-auto max-w-6xl px-4 py-10">
       <SEO
         title="Browse Cars — Motorado"
         description="Search cars for sale across the UAE by make, model, price, year, mileage and more."
@@ -137,7 +140,8 @@ const Cars = () => {
       {filtered.length === 0 && (
         <p className="mt-10 text-muted-foreground">No cars found. Try adjusting your filters.</p>
       )}
-    </main>
+      </main>
+    </div>
   );
 };
 

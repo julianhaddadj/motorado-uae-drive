@@ -1,9 +1,12 @@
 import { SEO } from "@/components/SEO";
+import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 
 const Sell = () => {
   return (
-    <main className="mx-auto max-w-6xl min-h-screen px-4 py-10">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="mx-auto max-w-6xl px-4 py-10">
       <SEO
         title="Sell Your Car — Motorado"
         description="List your car in minutes. Pay-to-list with optional promo code for free listings. Secure Stripe checkout in AED."
@@ -14,7 +17,8 @@ const Sell = () => {
       <div className="mt-8">
         <Button variant="hero" size="xl">Start listing</Button>
       </div>
-    </main>
+      </main>
+    </div>
   );
 };
 

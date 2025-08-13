@@ -1,8 +1,11 @@
 import { SEO } from "@/components/SEO";
+import { Header } from "@/components/Header";
 
 const Blog = () => {
   return (
-    <main className="mx-auto max-w-6xl min-h-screen px-4 py-10">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="mx-auto max-w-6xl px-4 py-10">
       <SEO
         title="Blog — Motorado"
         description="Car-buying guides, market insights, and UAE car ownership tips."
@@ -10,7 +13,8 @@ const Blog = () => {
       />
       <h1 className="mb-6 text-3xl font-bold">Blog</h1>
       <p className="text-muted-foreground">Articles and guides coming soon.</p>
-    </main>
+      </main>
+    </div>
   );
 };
 

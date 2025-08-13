@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { getListingBySlug } from "@/data/listings";
 import { SEO } from "@/components/SEO";
+import { Header } from "@/components/Header";
 import { Badge } from "@/components/ui/badge";
 
 const formatAED = (n: number) => new Intl.NumberFormat("en-AE", { style: "currency", currency: "AED", maximumFractionDigits: 0 }).format(n);
@@ -11,10 +12,13 @@ const ListingDetails = () => {
 
   if (!listing) {
     return (
-      <main className="mx-auto max-w-6xl min-h-screen px-4 py-16">
-        <h1 className="mb-4 text-3xl font-bold">Listing not found</h1>
-        <Link to="/cars" className="text-primary underline">Back to search</Link>
-      </main>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="mx-auto max-w-6xl px-4 py-16">
+          <h1 className="mb-4 text-3xl font-bold">Listing not found</h1>
+          <Link to="/cars" className="text-primary underline">Back to search</Link>
+        </main>
+      </div>
     );
   }
 
@@ -42,7 +46,9 @@ const ListingDetails = () => {
   };
 
   return (
-    <main className="mx-auto max-w-6xl min-h-screen px-4 py-10">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="mx-auto max-w-6xl px-4 py-10">
       <SEO
         title={`${listing.make} ${listing.model} ${listing.year} — Motorado`}
         description={listing.description || `${listing.make} ${listing.model} ${listing.year} for sale in ${listing.emirate}.`}
@@ -88,7 +94,8 @@ const ListingDetails = () => {
       <div className="mt-8">
         <Link to="/cars" className="text-primary underline">← Back to search</Link>
       </div>
-    </main>
+      </main>
+    </div>
   );
 };
 
