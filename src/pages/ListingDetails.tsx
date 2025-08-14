@@ -12,6 +12,8 @@ interface Listing {
   id: string;
   make: string;
   model: string;
+  make_name?: string;
+  model_name?: string;
   year: number;
   price_aed: number;
   mileage_km: number;
@@ -55,7 +57,20 @@ const ListingDetails = () => {
         return;
       }
 
-      setListing(data);
+      // Fetch make and model names separately
+      const [makeData, modelData] = await Promise.all([
+        supabase.from('makes').select('name').eq('id', data.make).single(),
+        supabase.from('models').select('name').eq('id', data.model).single()
+      ]);
+
+      // Add make and model names to the listing object
+      const listingWithNames = {
+        ...data,
+        make_name: makeData.data?.name || data.make,
+        model_name: modelData.data?.name || data.model
+      };
+
+      setListing(listingWithNames);
     } catch (error) {
       console.error('Error fetching listing:', error);
     } finally {
@@ -89,9 +104,9 @@ const ListingDetails = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Vehicle",
-    name: `${listing.year} ${listing.make} ${listing.model}`,
-    brand: listing.make,
-    model: listing.model,
+    name: `${listing.year} ${listing.make_name || listing.make} ${listing.model_name || listing.model}`,
+    brand: listing.make_name || listing.make,
+    model: listing.model_name || listing.model,
     vehicleTransmission: "Unknown",
     mileageFromOdometer: {
       "@type": "QuantitativeValue",
@@ -113,15 +128,23 @@ const ListingDetails = () => {
       <BreadcrumbNavigation />
       <main className="mx-auto max-w-6xl px-4 py-10">
         <SEO
-          title={`${listing.make} ${listing.model} ${listing.year} — Motorado`}
-          description={listing.description || `${listing.make} ${listing.model} ${listing.year} for sale in ${listing.emirate}.`}
+          title={`${listing.make_name || listing.make} ${listing.model_name || listing.model} ${listing.year} — Motorado`}
+          description={listing.description || `${listing.make_name || listing.make} ${listing.model_name || listing.model} ${listing.year} for sale in ${listing.emirate}.`}
           canonical={`/cars/${listing.slug}`}
           jsonLd={jsonLd}
         />
         
-        <div className="mb-6 flex items-center gap-3">
-          {listing.is_premium && <Badge className="bg-primary text-primary-foreground">Premium</Badge>}
-          <h1 className="text-3xl font-bold">{listing.year} {listing.make} {listing.model}</h1>
+        <div className="mb-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              {listing.is_premium && <Badge className="bg-primary text-primary-foreground">Premium</Badge>}
+              <h1 className="text-3xl font-bold">{listing.make_name || listing.make} - {listing.model_name || listing.model}</h1>
+            </div>
+            <div className="text-2xl font-bold">{formatAED(listing.price_aed)}</div>
+          </div>
+          <p className="mt-2 text-lg text-muted-foreground">
+            {listing.year}, {listing.mileage_km.toLocaleString()} km, {listing.regional_spec}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -129,7 +152,7 @@ const ListingDetails = () => {
             {/* Use placeholder image if no images are available */}
             <img 
               src={listing.images?.[0] || "/placeholder.svg"} 
-              alt={`${listing.year} ${listing.make} ${listing.model} for sale`} 
+              alt={`${listing.year} ${listing.make_name || listing.make} ${listing.model_name || listing.model} for sale`} 
               className="w-full rounded-lg border" 
             />
             {/* TODO: Implement gallery thumbnails when backend ready */}
@@ -137,12 +160,11 @@ const ListingDetails = () => {
           
           <div className="space-y-6">
             <div className="rounded-lg border p-4">
-              <div className="text-2xl font-bold">{formatAED(listing.price_aed)}</div>
-              <p className="mt-2 text-muted-foreground">{listing.year} • {listing.emirate}</p>
-              <ul className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                <li><span className="text-muted-foreground">Body</span>: {listing.body_type}</li>
+              <h3 className="text-lg font-semibold mb-3">Car Details</h3>
+              <ul className="grid grid-cols-2 gap-3 text-sm">
+                <li><span className="text-muted-foreground">Body Type</span>: {listing.body_type}</li>
                 <li><span className="text-muted-foreground">Mileage</span>: {listing.mileage_km.toLocaleString()} km</li>
-                <li><span className="text-muted-foreground">Spec</span>: {listing.regional_spec}</li>
+                <li><span className="text-muted-foreground">Regional Spec</span>: {listing.regional_spec}</li>
                 <li><span className="text-muted-foreground">Location</span>: {listing.emirate}</li>
               </ul>
             </div>
