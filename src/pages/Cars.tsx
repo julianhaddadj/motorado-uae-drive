@@ -3,11 +3,14 @@ import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { ListingCard } from "@/components/ListingCard";
+import { ListingCardList } from "@/components/ListingCardList";
+import { LayoutSwitcher } from "@/components/LayoutSwitcher";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useFavorites } from "@/hooks/use-favorites";
 import { useMakesAndModels } from "@/hooks/use-makes-models";
+import { useLayout } from "@/hooks/use-layout";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -28,6 +31,7 @@ const Cars = () => {
   const { params, set, setParams } = useFilters();
   const { has, toggle } = useFavorites();
   const { makes, loading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
+  const { layout } = useLayout();
   const [listings, setListings] = useState<any[]>([]);
   const [listingsLoading, setListingsLoading] = useState(true);
 
@@ -212,38 +216,59 @@ const Cars = () => {
             onChange={(e) => set("maxPrice", e.target.value || undefined)} 
           />
 
-          <Select value={sort} onValueChange={(value) => set("sort", value)}>
-            <SelectTrigger className="h-11 md:col-span-2">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent className="bg-background border border-border shadow-lg z-50">
-              <SelectItem value="newest">Newest</SelectItem>
-              <SelectItem value="price_asc">Price: Low to High</SelectItem>
-              <SelectItem value="price_desc">Price: High to Low</SelectItem>
-              <SelectItem value="mileage_asc">Mileage: Low to High</SelectItem>
-              <SelectItem value="year_desc">Year: New to Old</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-3">
+            <Select value={sort} onValueChange={(value) => set("sort", value)}>
+              <SelectTrigger className="h-11 w-48">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
+                <SelectItem value="newest">Newest</SelectItem>
+                <SelectItem value="price_asc">Price: Low to High</SelectItem>
+                <SelectItem value="price_desc">Price: High to Low</SelectItem>
+                <SelectItem value="mileage_asc">Mileage: Low to High</SelectItem>
+                <SelectItem value="year_desc">Year: New to Old</SelectItem>
+              </SelectContent>
+            </Select>
 
-          <Button variant="premium" onClick={() => setParams(new URLSearchParams())}>
-            Reset
-          </Button>
+            <LayoutSwitcher />
+
+            <Button variant="premium" onClick={() => setParams(new URLSearchParams())}>
+              Reset
+            </Button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+        <div className={layout === 'grid' 
+          ? "grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3" 
+          : "space-y-4"
+        }>
           {filteredListings.map((listing) => (
             <Link key={listing.id} to={`/cars/${listing.slug}`} className="block">
-              <ListingCard
-                id={listing.id}
-                image={listing.images?.[0] || "/placeholder.svg"}
-                title={`${listing.make_name || listing.make} ${listing.model_name || listing.model}`}
-                priceAED={listing.price_aed}
-                year={listing.year}
-                location={listing.emirate}
-                isPremium={listing.is_premium}
-                favorite={has.has(listing.id)}
-                onToggleFavorite={() => toggle(listing.id)}
-              />
+              {layout === 'grid' ? (
+                <ListingCard
+                  id={listing.id}
+                  image={listing.images?.[0] || "/placeholder.svg"}
+                  title={`${listing.make_name || listing.make} ${listing.model_name || listing.model}`}
+                  priceAED={listing.price_aed}
+                  year={listing.year}
+                  location={listing.emirate}
+                  isPremium={listing.is_premium}
+                  favorite={has.has(listing.id)}
+                  onToggleFavorite={() => toggle(listing.id)}
+                />
+              ) : (
+                <ListingCardList
+                  id={listing.id}
+                  image={listing.images?.[0] || "/placeholder.svg"}
+                  title={`${listing.make_name || listing.make} ${listing.model_name || listing.model}`}
+                  priceAED={listing.price_aed}
+                  year={listing.year}
+                  location={listing.emirate}
+                  isPremium={listing.is_premium}
+                  favorite={has.has(listing.id)}
+                  onToggleFavorite={() => toggle(listing.id)}
+                />
+              )}
             </Link>
           ))}
         </div>
