@@ -10,14 +10,18 @@ export function useAuth() {
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Auto-redirect admin users to admin dashboard
-        if (event === 'SIGNED_IN' && session?.user?.email === 'julian_102030@hotmail.com') {
+        // Auto-redirect admin users to admin dashboard (only once and not if already on admin page)
+        if (event === 'SIGNED_IN' && 
+            session?.user?.email === 'julian_102030@hotmail.com' && 
+            !window.location.pathname.includes('/admin') &&
+            !sessionStorage.getItem('admin_redirected')) {
           console.log('🚀 Admin user detected, redirecting to admin dashboard');
+          sessionStorage.setItem('admin_redirected', 'true');
           setTimeout(() => {
             window.location.href = '/admin';
           }, 1000);
