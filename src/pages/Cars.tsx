@@ -162,61 +162,63 @@ const Cars = () => {
         />
         <h1 className="mb-6 text-3xl font-bold">Browse Cars</h1>
 
-        <div className="mb-6 grid grid-cols-1 gap-3 md:grid-cols-6">
-          <Select value={selectedMakeId || "all"} onValueChange={handleMakeChange}>
-            <SelectTrigger className="h-11 md:col-span-1">
-              <SelectValue placeholder="Make" />
-            </SelectTrigger>
-            <SelectContent className="bg-background border border-border shadow-lg z-50">
-              <SelectItem value="all">All Makes</SelectItem>
-              {makes.map((make) => (
-                <SelectItem key={make.id} value={make.id}>
-                  {make.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="mb-6 space-y-4">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-6">
+            <Select value={selectedMakeId || "all"} onValueChange={handleMakeChange}>
+              <SelectTrigger className="h-11 md:col-span-1">
+                <SelectValue placeholder="Make" />
+              </SelectTrigger>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
+                <SelectItem value="all">All Makes</SelectItem>
+                {makes.map((make) => (
+                  <SelectItem key={make.id} value={make.id}>
+                    {make.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          <Select value={selectedModelId || "all"} onValueChange={(value) => set("model", value === "all" ? "" : value)} disabled={!selectedMakeId}>
-            <SelectTrigger className="h-11 md:col-span-1">
-              <SelectValue placeholder={isLoadingModelsForMake(selectedMakeId) ? "Loading..." : "Model"} />
-            </SelectTrigger>
-            <SelectContent className="bg-background border border-border shadow-lg z-50">
-              <SelectItem value="all">All Models</SelectItem>
-              {availableModels.map((model) => (
-                <SelectItem key={model.id} value={model.id}>
-                  {model.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <Select value={selectedModelId || "all"} onValueChange={(value) => set("model", value === "all" ? "" : value)} disabled={!selectedMakeId}>
+              <SelectTrigger className="h-11 md:col-span-1">
+                <SelectValue placeholder={isLoadingModelsForMake(selectedMakeId) ? "Loading..." : "Model"} />
+              </SelectTrigger>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
+                <SelectItem value="all">All Models</SelectItem>
+                {availableModels.map((model) => (
+                  <SelectItem key={model.id} value={model.id}>
+                    {model.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          <Input 
-            className="h-11" 
-            placeholder="Min Year" 
-            value={minYear} 
-            onChange={(e) => set("minYear", e.target.value || undefined)} 
-          />
-          <Input 
-            className="h-11" 
-            placeholder="Max Year" 
-            value={maxYear} 
-            onChange={(e) => set("maxYear", e.target.value || undefined)} 
-          />
-          <Input 
-            className="h-11" 
-            placeholder="Min Price" 
-            value={minPrice} 
-            onChange={(e) => set("minPrice", e.target.value || undefined)} 
-          />
-          <Input 
-            className="h-11" 
-            placeholder="Max Price" 
-            value={maxPrice} 
-            onChange={(e) => set("maxPrice", e.target.value || undefined)} 
-          />
+            <Input 
+              className="h-11" 
+              placeholder="Min Year" 
+              value={minYear} 
+              onChange={(e) => set("minYear", e.target.value || undefined)} 
+            />
+            <Input 
+              className="h-11" 
+              placeholder="Max Year" 
+              value={maxYear} 
+              onChange={(e) => set("maxYear", e.target.value || undefined)} 
+            />
+            <Input 
+              className="h-11" 
+              placeholder="Min Price" 
+              value={minPrice} 
+              onChange={(e) => set("minPrice", e.target.value || undefined)} 
+            />
+            <Input 
+              className="h-11" 
+              placeholder="Max Price" 
+              value={maxPrice} 
+              onChange={(e) => set("maxPrice", e.target.value || undefined)} 
+            />
+          </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between gap-4">
             <Select value={sort} onValueChange={(value) => set("sort", value)}>
               <SelectTrigger className="h-11 w-48">
                 <SelectValue placeholder="Sort by" />
@@ -230,11 +232,12 @@ const Cars = () => {
               </SelectContent>
             </Select>
 
-            <LayoutSwitcher />
-
-            <Button variant="premium" onClick={() => setParams(new URLSearchParams())}>
-              Reset
-            </Button>
+            <div className="flex items-center gap-3">
+              <LayoutSwitcher />
+              <Button variant="premium" onClick={() => setParams(new URLSearchParams())}>
+                Reset
+              </Button>
+            </div>
           </div>
         </div>
 
