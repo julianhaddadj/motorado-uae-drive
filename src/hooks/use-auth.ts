@@ -15,16 +15,19 @@ export function useAuth() {
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Auto-redirect admin users to admin dashboard (only once and not if already on admin page)
+        // Clear redirect flag when signing out
+        if (event === 'SIGNED_OUT') {
+          sessionStorage.removeItem('admin_redirected');
+        }
+        
+        // Auto-redirect admin users to admin dashboard
         if (event === 'SIGNED_IN' && 
             session?.user?.email === 'julian_102030@hotmail.com' && 
-            !window.location.pathname.includes('/admin') &&
-            !sessionStorage.getItem('admin_redirected')) {
+            !window.location.pathname.includes('/admin')) {
           console.log('🚀 Admin user detected, redirecting to admin dashboard');
-          sessionStorage.setItem('admin_redirected', 'true');
           setTimeout(() => {
             window.location.href = '/admin';
-          }, 1000);
+          }, 500);
         }
       }
     );
@@ -34,6 +37,15 @@ export function useAuth() {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // Also check for admin redirect on initial load
+      if (session?.user?.email === 'julian_102030@hotmail.com' && 
+          !window.location.pathname.includes('/admin')) {
+        console.log('🚀 Admin user already signed in, redirecting to admin dashboard');
+        setTimeout(() => {
+          window.location.href = '/admin';
+        }, 500);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -64,6 +76,8 @@ export function useAuth() {
   };
 
   const signOut = async () => {
+    // Clear redirect flag on sign out
+    sessionStorage.removeItem('admin_redirected');
     const { error } = await supabase.auth.signOut();
     return { error };
   };
