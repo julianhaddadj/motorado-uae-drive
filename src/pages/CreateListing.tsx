@@ -331,13 +331,11 @@ const CreateListing = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent side="bottom">
-                            <SelectItem value="GCC Specs">GCC Specs</SelectItem>
-                            <SelectItem value="American Specs">American Specs</SelectItem>
-                            <SelectItem value="Canadian Specs">Canadian Specs</SelectItem>
-                            <SelectItem value="European Specs">European Specs</SelectItem>
-                            <SelectItem value="Japanese Specs">Japanese Specs</SelectItem>
-                            <SelectItem value="Korean Specs">Korean Specs</SelectItem>
-                            <SelectItem value="Chinese Specs">Chinese Specs</SelectItem>
+                            <SelectItem value="GCC">GCC Specs</SelectItem>
+                            <SelectItem value="American">American Specs</SelectItem>
+                            <SelectItem value="Euro">European Specs</SelectItem>
+                            <SelectItem value="Japanese">Japanese Specs</SelectItem>
+                            <SelectItem value="Chinese">Chinese Specs</SelectItem>
                             <SelectItem value="Other">Other</SelectItem>
                           </SelectContent>
                         </Select>
