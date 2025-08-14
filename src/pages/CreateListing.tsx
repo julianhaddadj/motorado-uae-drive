@@ -94,7 +94,7 @@ const CreateListing = () => {
       // Create slug from make and model
       const slug = `${values.make}-${values.model}-${values.year}-${Date.now()}`.toLowerCase().replace(/\s+/g, '-');
       
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('listings')
         .insert({
           user_id: user.id,
@@ -109,7 +109,8 @@ const CreateListing = () => {
           description: values.description || null,
           slug: slug,
           is_published: false,
-        } as any);
+        } as any)
+        .select();
 
       if (error) {
         console.error('Error creating listing:', error);
@@ -119,6 +120,21 @@ const CreateListing = () => {
           variant: "destructive"
         });
         return;
+      }
+
+      // Send email notification
+      try {
+        await supabase.functions.invoke('listing-notifications', {
+          body: {
+            type: 'submitted',
+            listingId: data[0].id,
+            userEmail: user.email,
+            userName: user.user_metadata?.display_name || user.email,
+            carDetails: `${values.year} ${values.make} ${values.model}`
+          }
+        });
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError);
       }
 
       toast({
