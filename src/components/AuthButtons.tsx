@@ -8,6 +8,8 @@ import { useAdmin } from "@/hooks/use-admin";
 export function AuthButtons() {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdmin();
+  
+  console.log('🔐 AuthButtons render - user:', user?.email, 'isAdmin:', isAdmin);
 
   const handleSignOut = async () => {
     await signOut();
