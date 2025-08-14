@@ -27,7 +27,7 @@ function useFilters() {
 const Cars = () => {
   const { params, set, setParams } = useFilters();
   const { has, toggle } = useFavorites();
-  const { makes, models, loading, getModelsByMake } = useMakesAndModels();
+  const { makes, loading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
 
   const selectedMakeId = params.get("make") || "";
   const selectedModelId = params.get("model") || "";
@@ -39,8 +39,17 @@ const Cars = () => {
 
   // Get make and model names for filtering
   const selectedMake = makes.find(m => m.id === selectedMakeId);
-  const selectedModel = models.find(m => m.id === selectedModelId);
   const availableModels = selectedMakeId ? getModelsByMake(selectedMakeId) : [];
+  const selectedModel = availableModels.find(m => m.id === selectedModelId);
+
+  // Load models when make is selected
+  const handleMakeChange = async (value: string) => {
+    set("make", value);
+    set("model", ""); // Reset model when make changes
+    if (value) {
+      await fetchModelsForMake(value);
+    }
+  };
 
   const filteredListings = useMemo(() => {
     let filtered = listings;
@@ -109,14 +118,11 @@ const Cars = () => {
         <h1 className="mb-6 text-3xl font-bold">Browse Cars</h1>
 
         <div className="mb-6 grid grid-cols-1 gap-3 md:grid-cols-6">
-          <Select value={selectedMakeId} onValueChange={(value) => {
-            set("make", value);
-            set("model", ""); // Reset model when make changes
-          }}>
+          <Select value={selectedMakeId} onValueChange={handleMakeChange}>
             <SelectTrigger className="h-11 md:col-span-1">
               <SelectValue placeholder="Make" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-background border border-border shadow-lg z-50">
               <SelectItem value="">All Makes</SelectItem>
               {makes.map((make) => (
                 <SelectItem key={make.id} value={make.id}>
@@ -128,9 +134,9 @@ const Cars = () => {
 
           <Select value={selectedModelId} onValueChange={(value) => set("model", value)} disabled={!selectedMakeId}>
             <SelectTrigger className="h-11 md:col-span-1">
-              <SelectValue placeholder="Model" />
+              <SelectValue placeholder={isLoadingModelsForMake(selectedMakeId) ? "Loading..." : "Model"} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-background border border-border shadow-lg z-50">
               <SelectItem value="">All Models</SelectItem>
               {availableModels.map((model) => (
                 <SelectItem key={model.id} value={model.id}>
@@ -169,7 +175,7 @@ const Cars = () => {
             <SelectTrigger className="h-11 md:col-span-2">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-background border border-border shadow-lg z-50">
               <SelectItem value="newest">Newest</SelectItem>
               <SelectItem value="price_asc">Price: Low to High</SelectItem>
               <SelectItem value="price_desc">Price: High to Low</SelectItem>

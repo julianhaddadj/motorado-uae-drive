@@ -15,8 +15,9 @@ export interface Model {
 
 export const useMakesAndModels = () => {
   const [makes, setMakes] = useState<Make[]>([]);
-  const [models, setModels] = useState<Model[]>([]);
+  const [modelsByMake, setModelsByMake] = useState<Record<string, Model[]>>({});
   const [loading, setLoading] = useState(true);
+  const [loadingModels, setLoadingModels] = useState<Record<string, boolean>>({});
 
   const fetchMakes = async () => {
     try {
@@ -32,35 +33,47 @@ export const useMakesAndModels = () => {
     }
   };
 
-  const fetchModels = async (makeId?: string) => {
+  const fetchModelsForMake = async (makeId: string) => {
+    // Return early if already loaded or loading
+    if (modelsByMake[makeId] || loadingModels[makeId]) {
+      return modelsByMake[makeId] || [];
+    }
+
+    setLoadingModels(prev => ({ ...prev, [makeId]: true }));
+
     try {
-      let query = supabase
+      const { data, error } = await supabase
         .from('models')
         .select('*')
+        .eq('make_id', makeId)
         .order('name');
 
-      if (makeId) {
-        query = query.eq('make_id', makeId);
-      }
-
-      const { data, error } = await query;
-
       if (error) throw error;
-      setModels(data || []);
+      
+      const models = data || [];
+      setModelsByMake(prev => ({ ...prev, [makeId]: models }));
+      setLoadingModels(prev => ({ ...prev, [makeId]: false }));
+      
+      return models;
     } catch (error) {
       console.error('Error fetching models:', error);
+      setLoadingModels(prev => ({ ...prev, [makeId]: false }));
+      return [];
     }
   };
 
   const getModelsByMake = (makeId: string) => {
-    return models.filter(model => model.make_id === makeId);
+    return modelsByMake[makeId] || [];
+  };
+
+  const isLoadingModelsForMake = (makeId: string) => {
+    return loadingModels[makeId] || false;
   };
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       await fetchMakes();
-      await fetchModels();
       setLoading(false);
     };
 
@@ -69,13 +82,14 @@ export const useMakesAndModels = () => {
 
   return {
     makes,
-    models,
     loading,
-    fetchModels,
+    fetchModelsForMake,
     getModelsByMake,
+    isLoadingModelsForMake,
     refreshData: async () => {
+      setModelsByMake({});
+      setLoadingModels({});
       await fetchMakes();
-      await fetchModels();
     }
   };
 };

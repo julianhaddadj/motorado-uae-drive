@@ -13,7 +13,7 @@ import { useState } from "react";
 
 const Index = () => {
   const { has, toggle } = useFavorites();
-  const { makes, models, loading, getModelsByMake } = useMakesAndModels();
+  const { makes, loading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
   const [selectedMake, setSelectedMake] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
   
@@ -23,6 +23,14 @@ const Index = () => {
     .slice(0, 6);
 
   const availableModels = selectedMake ? getModelsByMake(selectedMake) : [];
+
+  const handleMakeChange = async (value: string) => {
+    setSelectedMake(value);
+    setSelectedModel(""); // Reset model when make changes
+    if (value) {
+      await fetchModelsForMake(value);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -49,14 +57,11 @@ const Index = () => {
       <section className="mx-auto max-w-6xl px-4 pb-12">
         <div className="rounded-xl border bg-card p-4 shadow-sm md:p-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-            <Select value={selectedMake} onValueChange={(value) => {
-              setSelectedMake(value);
-              setSelectedModel(""); // Reset model when make changes
-            }}>
+            <Select value={selectedMake} onValueChange={handleMakeChange}>
               <SelectTrigger className="h-11">
                 <SelectValue placeholder="Make" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
                 <SelectItem value="">All Makes</SelectItem>
                 {makes.map((make) => (
                   <SelectItem key={make.id} value={make.id}>
@@ -68,9 +73,9 @@ const Index = () => {
             
             <Select value={selectedModel} onValueChange={setSelectedModel} disabled={!selectedMake}>
               <SelectTrigger className="h-11">
-                <SelectValue placeholder="Model" />
+                <SelectValue placeholder={isLoadingModelsForMake(selectedMake) ? "Loading..." : "Model"} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
                 <SelectItem value="">All Models</SelectItem>
                 {availableModels.map((model) => (
                   <SelectItem key={model.id} value={model.id}>
@@ -84,7 +89,7 @@ const Index = () => {
               <SelectTrigger className="h-11">
                 <SelectValue placeholder="Year" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
                 <SelectItem value="2024">2024+</SelectItem>
                 <SelectItem value="2020">2020+</SelectItem>
                 <SelectItem value="2015">2015+</SelectItem>
