@@ -1,15 +1,15 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { ListingCard } from "@/components/ListingCard";
-import { listings } from "@/data/listings";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useFavorites } from "@/hooks/use-favorites";
 import { useMakesAndModels } from "@/hooks/use-makes-models";
 import { Link, useSearchParams } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 function useFilters() {
   const [params, setParams] = useSearchParams();
@@ -28,6 +28,8 @@ const Cars = () => {
   const { params, set, setParams } = useFilters();
   const { has, toggle } = useFavorites();
   const { makes, loading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
+  const [listings, setListings] = useState<any[]>([]);
+  const [listingsLoading, setListingsLoading] = useState(true);
 
   const selectedMakeId = params.get("make") || "";
   const selectedModelId = params.get("model") || "";
@@ -41,6 +43,29 @@ const Cars = () => {
   const selectedMake = makes.find(m => m.id === selectedMakeId);
   const availableModels = selectedMakeId ? getModelsByMake(selectedMakeId) : [];
   const selectedModel = availableModels.find(m => m.id === selectedModelId);
+
+  // Fetch listings from Supabase
+  useEffect(() => {
+    const fetchListings = async () => {
+      setListingsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('listings')
+          .select('*')
+          .eq('is_published', true);
+        
+        if (error) throw error;
+        setListings(data || []);
+      } catch (error) {
+        console.error('Error fetching listings:', error);
+        setListings([]);
+      } finally {
+        setListingsLoading(false);
+      }
+    };
+
+    fetchListings();
+  }, []);
 
   const handleMakeChange = async (value: string) => {
     set("make", value === "all" ? "" : value);
@@ -67,32 +92,32 @@ const Cars = () => {
       filtered = filtered.filter(listing => listing.year <= parseInt(maxYear));
     }
     if (minPrice) {
-      filtered = filtered.filter(listing => listing.priceAED >= parseInt(minPrice));
+      filtered = filtered.filter(listing => listing.price_aed >= parseInt(minPrice));
     }
     if (maxPrice) {
-      filtered = filtered.filter(listing => listing.priceAED <= parseInt(maxPrice));
+      filtered = filtered.filter(listing => listing.price_aed <= parseInt(maxPrice));
     }
 
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sort) {
         case "price_asc":
-          return a.priceAED - b.priceAED;
+          return a.price_aed - b.price_aed;
         case "price_desc":
-          return b.priceAED - a.priceAED;
+          return b.price_aed - a.price_aed;
         case "mileage_asc":
-          return a.mileage - b.mileage;
+          return a.mileage_km - b.mileage_km;
         case "year_desc":
           return b.year - a.year;
         default:
-          return +new Date(b.publishedAt) - +new Date(a.publishedAt);
+          return +new Date(b.created_at) - +new Date(a.created_at);
       }
     });
 
     return filtered;
   }, [listings, selectedMake, selectedModel, minYear, maxYear, minPrice, maxPrice, sort]);
 
-  if (loading) {
+  if (loading || listingsLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -193,12 +218,12 @@ const Cars = () => {
             <Link key={listing.id} to={`/cars/${listing.slug}`} className="block">
               <ListingCard
                 id={listing.id}
-                image={listing.coverImageUrl}
+                image={listing.images?.[0] || "/placeholder.svg"}
                 title={`${listing.make} ${listing.model} ${listing.year}${listing.trim ? ` ${listing.trim}` : ''}`}
-                priceAED={listing.priceAED}
+                priceAED={listing.price_aed}
                 year={listing.year}
                 location={listing.emirate}
-                isPremium={listing.isPremium}
+                isPremium={listing.is_premium}
                 favorite={has.has(listing.id)}
                 onToggleFavorite={() => toggle(listing.id)}
               />
