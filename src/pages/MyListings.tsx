@@ -66,62 +66,75 @@ export default function MyListings() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">My Listings</h1>
-        <Button asChild>
-          <Link to="/sell">
-            <Plus className="h-4 w-4 mr-2" />
-            Add New Listing
+    <div className="min-h-screen bg-background">
+      {/* Header with Motorado Logo */}
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <Link to="/" className="inline-flex items-center hover:opacity-80 transition-opacity">
+            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Motorado
+            </span>
           </Link>
-        </Button>
-      </div>
-
-      {listings.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <p className="text-muted-foreground mb-4">You haven't created any listings yet.</p>
-            <Button asChild>
-              <Link to="/sell">Create Your First Listing</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {listings.map((listing) => (
-            <Card key={listing.id}>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">
-                    {listing.make} {listing.model}
-                  </CardTitle>
-                  {getStatusBadge(listing.approval_status)}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <p><strong>Year:</strong> {listing.year}</p>
-                  <p><strong>Price:</strong> AED {listing.price_aed.toLocaleString()}</p>
-                  <p><strong>Published:</strong> {listing.is_published ? 'Yes' : 'No'}</p>
-                  <p><strong>Created:</strong> {new Date(listing.created_at).toLocaleDateString()}</p>
-                </div>
-                
-                <div className="flex gap-2 mt-4">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to={`/listing/${listing.id}`}>
-                      View
-                    </Link>
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4 mr-1" />
-                    Edit
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
         </div>
-      )}
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">My Listings</h1>
+          <Button asChild>
+            <Link to="/sell">
+              <Plus className="h-4 w-4 mr-2" />
+              Add New Listing
+            </Link>
+          </Button>
+        </div>
+
+        {listings.length === 0 ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <p className="text-muted-foreground mb-4">You haven't created any listings yet.</p>
+              <Button asChild>
+                <Link to="/sell">Create Your First Listing</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {listings.map((listing) => (
+              <Card key={listing.id}>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg">
+                      {listing.make} {listing.model}
+                    </CardTitle>
+                    {getStatusBadge(listing.approval_status)}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <p><strong>Year:</strong> {listing.year}</p>
+                    <p><strong>Price:</strong> AED {listing.price_aed.toLocaleString()}</p>
+                    <p><strong>Published:</strong> {listing.is_published ? 'Yes' : 'No'}</p>
+                    <p><strong>Created:</strong> {new Date(listing.created_at).toLocaleDateString()}</p>
+                  </div>
+                  
+                  <div className="flex gap-2 mt-4">
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to={`/listing/${listing.id}`}>
+                        View
+                      </Link>
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Edit className="h-4 w-4 mr-1" />
+                      Edit
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
