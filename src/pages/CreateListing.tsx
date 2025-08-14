@@ -122,10 +122,13 @@ const CreateListing = () => {
   };
 
   const handleModelChange = async (value: string) => {
+    console.log('Model changed to:', value);
     form.setValue("model", value);
     form.setValue("trim", ""); // Reset trim when model changes
     if (value) {
-      await fetchTrimsForModel(value);
+      console.log('Fetching trims for model:', value);
+      const trims = await fetchTrimsForModel(value);
+      console.log('Available trims:', trims);
     }
   };
 
@@ -430,41 +433,46 @@ const CreateListing = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                  <FormField
-                    control={form.control}
-                    name="trim"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Trim</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value} disabled={!selectedModel}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder={
-                                !selectedModel 
-                                  ? "Select model first" 
-                                  : isLoadingTrimsForModel(selectedModel) 
-                                    ? "Loading trims..." 
-                                    : "Select trim (optional)"
-                              } />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent side="bottom" className="bg-background border border-border shadow-lg z-50">
-                            {availableTrims.map((trim) => (
-                              <SelectItem key={trim.id} value={trim.id}>
-                                {trim.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                 <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
+                   <FormField
+                     control={form.control}
+                     name="trim"
+                     render={({ field }) => (
+                       <FormItem>
+                         <FormLabel>Trim</FormLabel>
+                         <Select onValueChange={field.onChange} value={field.value} disabled={!selectedModel}>
+                           <FormControl>
+                             <SelectTrigger>
+                               <SelectValue placeholder={
+                                 !selectedModel 
+                                   ? "Select model first" 
+                                   : isLoadingTrimsForModel(selectedModel) 
+                                     ? "Loading trims..." 
+                                     : "Select trim (optional)"
+                               } />
+                             </SelectTrigger>
+                           </FormControl>
+                           <SelectContent side="bottom" className="bg-background border border-border shadow-lg z-[60]">
+                             {availableTrims.length > 0 ? (
+                               availableTrims.map((trim) => (
+                                 <SelectItem key={trim.id} value={trim.id}>
+                                   {trim.name}
+                                 </SelectItem>
+                               ))
+                             ) : (
+                               !isLoadingTrimsForModel(selectedModel) && selectedModel && (
+                                 <SelectItem value="" disabled>No trims available</SelectItem>
+                               )
+                             )}
+                           </SelectContent>
+                         </Select>
+                         <FormMessage />
+                       </FormItem>
+                     )}
+                   />
+                 </div>
 
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="year"

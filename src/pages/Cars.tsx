@@ -101,10 +101,13 @@ const Cars = () => {
   };
 
   const handleModelChange = async (value: string) => {
+    console.log('Model changed to:', value);
     set("model", value === "all" ? "" : value);
     set("trim", ""); // Reset trim when model changes
     if (value && value !== "all") {
-      await fetchTrimsForModel(value);
+      console.log('Fetching trims for model:', value);
+      const trims = await fetchTrimsForModel(value);
+      console.log('Available trims:', trims);
     }
   };
 
@@ -211,13 +214,19 @@ const Cars = () => {
               <SelectTrigger className="h-11 md:col-span-1">
                 <SelectValue placeholder={isLoadingTrimsForModel(selectedModelId) ? "Loading..." : "Trim"} />
               </SelectTrigger>
-              <SelectContent className="bg-background border border-border shadow-lg z-50">
+              <SelectContent className="bg-background border border-border shadow-lg z-[60]">
                 <SelectItem value="all">All Trims</SelectItem>
-                {availableTrims.map((trim) => (
-                  <SelectItem key={trim.id} value={trim.id}>
-                    {trim.name}
-                  </SelectItem>
-                ))}
+                {availableTrims.length > 0 ? (
+                  availableTrims.map((trim) => (
+                    <SelectItem key={trim.id} value={trim.id}>
+                      {trim.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  !isLoadingTrimsForModel(selectedModelId) && selectedModelId && (
+                    <SelectItem value="" disabled>No trims available</SelectItem>
+                  )
+                )}
               </SelectContent>
             </Select>
 
