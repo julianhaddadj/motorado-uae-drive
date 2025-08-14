@@ -68,6 +68,11 @@ export const BreadcrumbNavigation = () => {
       return crumbs;
     }
 
+    if (path === "/admin") {
+      crumbs.push({ label: "Admin Dashboard" });
+      return crumbs;
+    }
+
     if (path === "/legal/terms") {
       crumbs.push({ label: "Legal", href: "/legal/terms" });
       crumbs.push({ label: "Terms of Service" });

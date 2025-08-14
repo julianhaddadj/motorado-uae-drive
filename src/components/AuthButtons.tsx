@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useAdmin } from "@/hooks/use-admin";
 
 export function AuthButtons() {
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdmin();
 
   const handleSignOut = async () => {
     await signOut();
@@ -29,6 +31,14 @@ export function AuthButtons() {
           <DropdownMenuItem asChild>
             <Link to="/my-listings">My Listings</Link>
           </DropdownMenuItem>
+          {isAdmin && (
+            <DropdownMenuItem asChild>
+              <Link to="/admin">
+                <Shield className="h-4 w-4 mr-2" />
+                Admin Dashboard
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={handleSignOut}>
             <LogOut className="h-4 w-4 mr-2" />
             Sign Out

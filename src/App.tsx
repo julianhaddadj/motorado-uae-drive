@@ -16,6 +16,7 @@ import ListingDetails from "./pages/ListingDetails";
 import Auth from "./pages/Auth";
 import CreateListing from "./pages/CreateListing";
 import ListingSubmitted from "./pages/ListingSubmitted";
+import { Admin } from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/legal/terms" element={<LegalTerms />} />
           <Route path="/legal/privacy" element={<LegalPrivacy />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
