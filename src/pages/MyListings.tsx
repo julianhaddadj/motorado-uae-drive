@@ -16,6 +16,7 @@ interface Listing {
   approval_status: string;
   is_published: boolean;
   created_at: string;
+  slug: string;
 }
 
 export default function MyListings() {
@@ -120,7 +121,7 @@ export default function MyListings() {
                   
                   <div className="flex gap-2 mt-4">
                     <Button variant="outline" size="sm" asChild>
-                      <Link to={`/listing/${listing.id}`}>
+                      <Link to={`/cars/${listing.slug}`}>
                         View
                       </Link>
                     </Button>
