@@ -16,6 +16,9 @@ export type Database = {
     Tables: {
       listings: {
         Row: {
+          approval_status: string | null
+          approved_at: string | null
+          approved_by: string | null
           body_type: Database["public"]["Enums"]["body_type"]
           created_at: string
           description: string | null
@@ -29,6 +32,7 @@ export type Database = {
           model: string
           price_aed: number
           regional_spec: Database["public"]["Enums"]["regional_spec"]
+          rejection_reason: string | null
           slug: string
           trim: string | null
           updated_at: string
@@ -36,6 +40,9 @@ export type Database = {
           year: number
         }
         Insert: {
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           body_type: Database["public"]["Enums"]["body_type"]
           created_at?: string
           description?: string | null
@@ -49,6 +56,7 @@ export type Database = {
           model: string
           price_aed: number
           regional_spec: Database["public"]["Enums"]["regional_spec"]
+          rejection_reason?: string | null
           slug: string
           trim?: string | null
           updated_at?: string
@@ -56,6 +64,9 @@ export type Database = {
           year: number
         }
         Update: {
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           body_type?: Database["public"]["Enums"]["body_type"]
           created_at?: string
           description?: string | null
@@ -69,6 +80,7 @@ export type Database = {
           model?: string
           price_aed?: number
           regional_spec?: Database["public"]["Enums"]["regional_spec"]
+          rejection_reason?: string | null
           slug?: string
           trim?: string | null
           updated_at?: string
@@ -123,6 +135,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {

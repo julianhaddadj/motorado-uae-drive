@@ -1,3 +1,13 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
+import { useMakesAndModels } from "@/hooks/use-makes-models";
+import { useToast } from "@/hooks/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
@@ -8,14 +18,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useAuth } from "@/hooks/use-auth";
-import { useMakesAndModels } from "@/hooks/use-makes-models";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { toast } from "sonner";
 
 const formSchema = z.object({
   make: z.string().min(1, "This field is required"),
@@ -41,6 +43,7 @@ const formSchema = z.object({
 const CreateListing = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { makes, loading: makesLoading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -84,10 +87,56 @@ const CreateListing = () => {
     }
   }, [user, loading, navigate]);
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    toast.success("Listing created successfully!");
-    // TODO: Submit to backend
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!user) return;
+    
+    try {
+      // Create slug from make and model
+      const slug = `${values.make}-${values.model}-${values.year}-${Date.now()}`.toLowerCase().replace(/\s+/g, '-');
+      
+      const { error } = await supabase
+        .from('listings')
+        .insert({
+          user_id: user.id,
+          make: values.make,
+          model: values.model,
+          year: parseInt(values.year),
+          price_aed: parseInt(values.price),
+          mileage_km: parseInt(values.mileage),
+          regional_spec: values.regionalSpecs,
+          body_type: values.bodyType,
+          emirate: values.emirate,
+          description: values.description || null,
+          slug: slug,
+          is_published: false,
+        } as any);
+
+      if (error) {
+        console.error('Error creating listing:', error);
+        toast({
+          title: "Error",
+          description: "Failed to create listing. Please try again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      toast({
+        title: "Success!",
+        description: "Your listing has been submitted for review.",
+      });
+      
+      // Redirect to thank you page
+      navigate("/listing-submitted");
+      
+    } catch (error) {
+      console.error('Error submitting listing:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   if (loading) {

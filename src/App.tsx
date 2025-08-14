@@ -15,6 +15,7 @@ import Contact from "./pages/Contact";
 import ListingDetails from "./pages/ListingDetails";
 import Auth from "./pages/Auth";
 import CreateListing from "./pages/CreateListing";
+import ListingSubmitted from "./pages/ListingSubmitted";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/cars/:slug" element={<ListingDetails />} />
           <Route path="/sell" element={<Sell />} />
           <Route path="/create-listing" element={<CreateListing />} />
+          <Route path="/listing-submitted" element={<ListingSubmitted />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/auth" element={<Auth />} />
