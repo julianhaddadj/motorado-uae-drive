@@ -7,7 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, Eye } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Check, X, Eye, Phone, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 
@@ -25,6 +26,11 @@ interface Listing {
   contact_phone_country_code?: string;
   contact_phone_number?: string;
   contact_phone_has_whatsapp?: boolean;
+  description?: string;
+  images?: string[];
+  trim?: string;
+  body_type?: string;
+  regional_spec?: string;
 }
 
 interface ListingPerSeller {
@@ -331,11 +337,111 @@ export function Admin() {
                         </Badge>
                         
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline" asChild>
-                            <a href={`/cars/${listing.id}`} target="_blank">
-                              <Eye className="h-4 w-4" />
-                            </a>
-                          </Button>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                              <DialogHeader>
+                                <DialogTitle>
+                                  {listing.year} {listing.make} {listing.model}
+                                  {listing.trim && ` ${listing.trim}`}
+                                </DialogTitle>
+                              </DialogHeader>
+                              
+                              <div className="space-y-6">
+                                {/* Images */}
+                                {listing.images && listing.images.length > 0 && (
+                                  <div className="space-y-2">
+                                    <h4 className="font-semibold">Images</h4>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                      {listing.images.map((image, index) => (
+                                        <img
+                                          key={index}
+                                          src={image}
+                                          alt={`Car image ${index + 1}`}
+                                          className="w-full h-32 object-cover rounded-lg border"
+                                        />
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Basic Details */}
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <h4 className="font-semibold">Vehicle Details</h4>
+                                    <div className="space-y-1 text-sm">
+                                      <p><span className="font-medium">Year:</span> {listing.year}</p>
+                                      <p><span className="font-medium">Make:</span> {listing.make}</p>
+                                      <p><span className="font-medium">Model:</span> {listing.model}</p>
+                                      {listing.trim && <p><span className="font-medium">Trim:</span> {listing.trim}</p>}
+                                      {listing.body_type && <p><span className="font-medium">Body Type:</span> {listing.body_type}</p>}
+                                      {listing.regional_spec && <p><span className="font-medium">Regional Spec:</span> {listing.regional_spec}</p>}
+                                      <p><span className="font-medium">Mileage:</span> {listing.mileage_km.toLocaleString()} km</p>
+                                      <p><span className="font-medium">Emirate:</span> {listing.emirate}</p>
+                                    </div>
+                                  </div>
+
+                                  <div className="space-y-2">
+                                    <h4 className="font-semibold">Price & Contact</h4>
+                                    <div className="space-y-1 text-sm">
+                                      <p><span className="font-medium">Price:</span> AED {listing.price_aed.toLocaleString()}</p>
+                                      
+                                      {listing.contact_phone_number && (
+                                        <div className="space-y-1">
+                                          <p className="font-medium">Contact:</p>
+                                          <div className="flex items-center gap-2">
+                                            <Phone className="h-4 w-4" />
+                                            <span>{listing.contact_phone_country_code} {listing.contact_phone_number}</span>
+                                            {listing.contact_phone_has_whatsapp && (
+                                              <Badge variant="secondary" className="text-xs">
+                                                <MessageCircle className="h-3 w-3 mr-1" />
+                                                WhatsApp
+                                              </Badge>
+                                            )}
+                                          </div>
+                                        </div>
+                                      )}
+                                      
+                                      <p><span className="font-medium">Submitted:</span> {new Date(listing.created_at).toLocaleDateString()}</p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Description */}
+                                {listing.description && (
+                                  <div className="space-y-2">
+                                    <h4 className="font-semibold">Description</h4>
+                                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                                      {listing.description}
+                                    </p>
+                                  </div>
+                                )}
+
+                                {/* Action Buttons */}
+                                {listing.approval_status === 'pending' && (
+                                  <div className="flex justify-end gap-2 pt-4 border-t">
+                                    <Button 
+                                      variant="destructive"
+                                      onClick={() => handleApproval(listing.id, false)}
+                                    >
+                                      <X className="h-4 w-4 mr-2" />
+                                      Reject
+                                    </Button>
+                                    <Button 
+                                      onClick={() => handleApproval(listing.id, true)}
+                                    >
+                                      <Check className="h-4 w-4 mr-2" />
+                                      Approve
+                                    </Button>
+                                  </div>
+                                )}
+                              </div>
+                            </DialogContent>
+                          </Dialog>
                           
                           {listing.approval_status === 'pending' && (
                             <>
