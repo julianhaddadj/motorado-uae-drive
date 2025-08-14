@@ -76,6 +76,7 @@ const CreateListing = () => {
   // Image state management
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [uploadingImages, setUploadingImages] = useState(false);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -129,6 +130,46 @@ const CreateListing = () => {
       }
       setSelectedImages(fileArray);
     }
+  };
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null);
+      return;
+    }
+
+    const newImages = [...selectedImages];
+    const draggedImage = newImages[draggedIndex];
+    
+    // Remove dragged item
+    newImages.splice(draggedIndex, 1);
+    
+    // Insert at new position
+    const adjustedDropIndex = draggedIndex < dropIndex ? dropIndex - 1 : dropIndex;
+    newImages.splice(adjustedDropIndex, 0, draggedImage);
+    
+    setSelectedImages(newImages);
+    setDraggedIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
   };
 
   const uploadImages = async (listingId: string): Promise<string[]> => {
@@ -777,22 +818,55 @@ const CreateListing = () => {
                   />
                   <p className="text-sm text-muted-foreground">Upload up to 10 images of your car</p>
                   
-                  {/* Image Previews */}
+                  {/* Image Previews with Drag & Drop */}
                   {selectedImages.length > 0 && (
                     <div className="space-y-2">
                       <p className="text-sm font-medium">{selectedImages.length} image{selectedImages.length !== 1 ? 's' : ''} selected</p>
+                      <p className="text-xs text-muted-foreground">Drag images to reorder them. The first image will be the main photo.</p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                         {selectedImages.map((file, index) => (
-                          <div key={index} className="relative">
+                          <div 
+                            key={index} 
+                            className={`relative cursor-move group ${
+                              draggedIndex === index ? 'opacity-50 scale-95' : ''
+                            }`}
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, index)}
+                            onDragOver={handleDragOver}
+                            onDragEnter={handleDragEnter}
+                            onDrop={(e) => handleDrop(e, index)}
+                            onDragEnd={handleDragEnd}
+                          >
+                            {/* Order indicator */}
+                            <div className="absolute -top-2 -left-2 bg-primary text-primary-foreground w-6 h-6 rounded-full text-xs flex items-center justify-center font-medium z-10">
+                              {index + 1}
+                            </div>
+                            
+                            {/* Main image indicator */}
+                            {index === 0 && (
+                              <div className="absolute top-1 left-1 bg-green-500 text-white px-2 py-1 rounded text-xs font-medium z-10">
+                                Main
+                              </div>
+                            )}
+                            
                             <img
                               src={URL.createObjectURL(file)}
                               alt={`Preview ${index + 1}`}
-                              className="w-full h-20 object-cover rounded-md border"
+                              className="w-full h-20 object-cover rounded-md border transition-all duration-200 group-hover:border-primary"
                             />
+                            
+                            {/* Drag handle indicator */}
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-md">
+                              <div className="text-white text-xs font-medium bg-black/50 px-2 py-1 rounded">
+                                Drag to reorder
+                              </div>
+                            </div>
+                            
+                            {/* Remove button */}
                             <button
                               type="button"
                               onClick={() => setSelectedImages(prev => prev.filter((_, i) => i !== index))}
-                              className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground w-5 h-5 rounded-full text-xs flex items-center justify-center"
+                              className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground w-5 h-5 rounded-full text-xs flex items-center justify-center hover:bg-destructive/80 transition-colors z-10"
                             >
                               ×
                             </button>
