@@ -3,8 +3,11 @@ import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/use-auth";
 
 const Sell = () => {
+  const { user } = useAuth();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -19,7 +22,7 @@ const Sell = () => {
       <p className="max-w-2xl text-muted-foreground">Create a listing with photos and details, apply a promo code, and publish. Moderation ensures quality across the marketplace.</p>
       <div className="mt-8">
         <Button variant="hero" size="xl" asChild>
-          <Link to="/create-listing">Start listing</Link>
+          <Link to={user ? "/create-listing" : "/auth"}>Start listing</Link>
         </Button>
       </div>
       </main>
