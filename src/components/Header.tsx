@@ -24,9 +24,15 @@ export function Header() {
           <Link to="/cars" className="text-sm font-medium hover:text-primary transition-colors">
             Browse Cars
           </Link>
-          <Link to="/sell" className="text-sm font-medium hover:text-primary transition-colors">
-            Sell Your Car
-          </Link>
+          {user ? (
+            <Link to="/create-listing" className="text-sm font-medium hover:text-primary transition-colors">
+              Sell Your Car
+            </Link>
+          ) : (
+            <Link to="/auth" className="text-sm font-medium hover:text-primary transition-colors">
+              Sell Your Car
+            </Link>
+          )}
           <Link to="/favorites" className="text-sm font-medium hover:text-primary transition-colors">
             Favorites
           </Link>

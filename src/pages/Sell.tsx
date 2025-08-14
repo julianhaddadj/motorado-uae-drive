@@ -2,6 +2,7 @@ import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Sell = () => {
   return (
@@ -17,7 +18,9 @@ const Sell = () => {
       <h1 className="mb-6 text-3xl font-bold">Sell Your Car</h1>
       <p className="max-w-2xl text-muted-foreground">Create a listing with photos and details, apply a promo code, and publish. Moderation ensures quality across the marketplace.</p>
       <div className="mt-8">
-        <Button variant="hero" size="xl">Start listing</Button>
+        <Button variant="hero" size="xl" asChild>
+          <Link to="/create-listing">Start listing</Link>
+        </Button>
       </div>
       </main>
     </div>
