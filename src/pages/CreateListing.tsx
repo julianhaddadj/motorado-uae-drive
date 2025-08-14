@@ -115,6 +115,56 @@ const CreateListing = () => {
     }
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const fileArray = Array.from(files);
+      if (fileArray.length > 10) {
+        toast({
+          variant: "destructive",
+          title: "Too many images",
+          description: "You can upload up to 10 images only."
+        });
+        return;
+      }
+      setSelectedImages(fileArray);
+    }
+  };
+
+  const uploadImages = async (listingId: string): Promise<string[]> => {
+    if (selectedImages.length === 0) return [];
+    
+    setUploadingImages(true);
+    const imageUrls: string[] = [];
+    
+    try {
+      for (let i = 0; i < selectedImages.length; i++) {
+        const file = selectedImages[i];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user?.id}/${listingId}/${Date.now()}-${i}.${fileExt}`;
+        
+        const { data, error } = await supabase.storage
+          .from('car-images')
+          .upload(fileName, file);
+          
+        if (error) throw error;
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('car-images')
+          .getPublicUrl(fileName);
+          
+        imageUrls.push(publicUrl);
+      }
+      
+      return imageUrls;
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      throw error;
+    } finally {
+      setUploadingImages(false);
+    }
+  };
+
   useEffect(() => {
     if (!loading && !user) {
       navigate("/auth");
@@ -157,6 +207,32 @@ const CreateListing = () => {
           variant: "destructive"
         });
         return;
+      }
+
+      // Upload images if any were selected
+      let imageUrls: string[] = [];
+      if (selectedImages.length > 0) {
+        try {
+          imageUrls = await uploadImages(data[0].id);
+          
+          // Update listing with image URLs
+          const { error: updateError } = await supabase
+            .from('listings')
+            .update({ images: imageUrls })
+            .eq('id', data[0].id);
+            
+          if (updateError) {
+            console.error('Error updating listing with images:', updateError);
+            // Still show success since listing was created
+          }
+        } catch (imageError) {
+          console.error('Error uploading images:', imageError);
+          toast({
+            title: "Warning",
+            description: "Listing created but some images failed to upload. You can edit the listing to add them later.",
+            variant: "destructive"
+          });
+        }
       }
 
       // Send email notification
@@ -691,8 +767,40 @@ const CreateListing = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="images">Car Images</Label>
-                  <Input id="images" type="file" multiple accept="image/*" />
+                  <Input 
+                    id="images" 
+                    type="file" 
+                    multiple 
+                    accept="image/*" 
+                    onChange={handleImageChange}
+                    disabled={uploadingImages}
+                  />
                   <p className="text-sm text-muted-foreground">Upload up to 10 images of your car</p>
+                  
+                  {/* Image Previews */}
+                  {selectedImages.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">{selectedImages.length} image{selectedImages.length !== 1 ? 's' : ''} selected</p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        {selectedImages.map((file, index) => (
+                          <div key={index} className="relative">
+                            <img
+                              src={URL.createObjectURL(file)}
+                              alt={`Preview ${index + 1}`}
+                              className="w-full h-20 object-cover rounded-md border"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setSelectedImages(prev => prev.filter((_, i) => i !== index))}
+                              className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground w-5 h-5 rounded-full text-xs flex items-center justify-center"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Contact Phone Section */}
@@ -775,8 +883,8 @@ const CreateListing = () => {
                 </div>
 
                 <div className="flex gap-4 pt-4">
-                  <Button type="submit" size="lg" className="flex-1">
-                    Create Listing
+                  <Button type="submit" size="lg" className="flex-1" disabled={uploadingImages}>
+                    {uploadingImages ? "Uploading Images..." : "Create Listing"}
                   </Button>
                   <Button type="button" variant="outline" size="lg" onClick={() => navigate("/sell")}>
                     Cancel
