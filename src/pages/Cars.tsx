@@ -216,17 +216,11 @@ const Cars = () => {
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-[60]">
                 <SelectItem value="all">All Trims</SelectItem>
-                {availableTrims.length > 0 ? (
-                  availableTrims.map((trim) => (
-                    <SelectItem key={trim.id} value={trim.id}>
-                      {trim.name}
-                    </SelectItem>
-                  ))
-                ) : (
-                  !isLoadingTrimsForModel(selectedModelId) && selectedModelId && (
-                    <SelectItem value="" disabled>No trims available</SelectItem>
-                  )
-                )}
+                {availableTrims.map((trim) => (
+                  <SelectItem key={trim.id} value={trim.id}>
+                    {trim.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 

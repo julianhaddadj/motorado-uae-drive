@@ -453,17 +453,11 @@ const CreateListing = () => {
                              </SelectTrigger>
                            </FormControl>
                            <SelectContent side="bottom" className="bg-background border border-border shadow-lg z-[60]">
-                             {availableTrims.length > 0 ? (
-                               availableTrims.map((trim) => (
-                                 <SelectItem key={trim.id} value={trim.id}>
-                                   {trim.name}
-                                 </SelectItem>
-                               ))
-                             ) : (
-                               !isLoadingTrimsForModel(selectedModel) && selectedModel && (
-                                 <SelectItem value="" disabled>No trims available</SelectItem>
-                               )
-                             )}
+                             {availableTrims.map((trim) => (
+                               <SelectItem key={trim.id} value={trim.id}>
+                                 {trim.name}
+                               </SelectItem>
+                             ))}
                            </SelectContent>
                          </Select>
                          <FormMessage />
