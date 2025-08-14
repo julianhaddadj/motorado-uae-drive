@@ -30,23 +30,26 @@ function useFilters() {
 const Cars = () => {
   const { params, set, setParams } = useFilters();
   const { has, toggle } = useFavorites();
-  const { makes, loading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
+  const { makes, loading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake, fetchTrimsForModel, getTrimsByModel, isLoadingTrimsForModel } = useMakesAndModels();
   const { layout } = useLayout();
   const [listings, setListings] = useState<any[]>([]);
   const [listingsLoading, setListingsLoading] = useState(true);
 
   const selectedMakeId = params.get("make") || "";
   const selectedModelId = params.get("model") || "";
+  const selectedTrimId = params.get("trim") || "";
   const minYear = params.get("minYear") || "";
   const maxYear = params.get("maxYear") || "";
   const minPrice = params.get("minPrice") || "";
   const maxPrice = params.get("maxPrice") || "";
   const sort = params.get("sort") || "newest";
 
-  // Get make and model names for filtering
+  // Get make, model, and trim names for filtering
   const selectedMake = makes.find(m => m.id === selectedMakeId);
   const availableModels = selectedMakeId ? getModelsByMake(selectedMakeId) : [];
   const selectedModel = availableModels.find(m => m.id === selectedModelId);
+  const availableTrims = selectedModelId ? getTrimsByModel(selectedModelId) : [];
+  const selectedTrim = availableTrims.find(t => t.id === selectedTrimId);
 
   // Fetch listings from Supabase
   useEffect(() => {
@@ -91,8 +94,17 @@ const Cars = () => {
   const handleMakeChange = async (value: string) => {
     set("make", value === "all" ? "" : value);
     set("model", ""); // Reset model when make changes
+    set("trim", ""); // Reset trim when make changes
     if (value && value !== "all") {
       await fetchModelsForMake(value);
+    }
+  };
+
+  const handleModelChange = async (value: string) => {
+    set("model", value === "all" ? "" : value);
+    set("trim", ""); // Reset trim when model changes
+    if (value && value !== "all") {
+      await fetchTrimsForModel(value);
     }
   };
 
@@ -105,6 +117,9 @@ const Cars = () => {
     }
     if (selectedModel) {
       filtered = filtered.filter(listing => listing.model === selectedModel.id);
+    }
+    if (selectedTrim) {
+      filtered = filtered.filter(listing => listing.trim === selectedTrim.id);
     }
     if (minYear) {
       filtered = filtered.filter(listing => listing.year >= parseInt(minYear));
@@ -136,7 +151,7 @@ const Cars = () => {
     });
 
     return filtered;
-  }, [listings, selectedMake, selectedModel, minYear, maxYear, minPrice, maxPrice, sort]);
+  }, [listings, selectedMake, selectedModel, selectedTrim, minYear, maxYear, minPrice, maxPrice, sort]);
 
   if (loading || listingsLoading) {
     return (
@@ -163,7 +178,7 @@ const Cars = () => {
         <h1 className="mb-6 text-3xl font-bold">Browse Cars</h1>
 
         <div className="mb-6 space-y-4">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-6">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-7">
             <Select value={selectedMakeId || "all"} onValueChange={handleMakeChange}>
               <SelectTrigger className="h-11 md:col-span-1">
                 <SelectValue placeholder="Make" />
@@ -178,7 +193,7 @@ const Cars = () => {
               </SelectContent>
             </Select>
 
-            <Select value={selectedModelId || "all"} onValueChange={(value) => set("model", value === "all" ? "" : value)} disabled={!selectedMakeId}>
+            <Select value={selectedModelId || "all"} onValueChange={handleModelChange} disabled={!selectedMakeId}>
               <SelectTrigger className="h-11 md:col-span-1">
                 <SelectValue placeholder={isLoadingModelsForMake(selectedMakeId) ? "Loading..." : "Model"} />
               </SelectTrigger>
@@ -187,6 +202,20 @@ const Cars = () => {
                 {availableModels.map((model) => (
                   <SelectItem key={model.id} value={model.id}>
                     {model.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={selectedTrimId || "all"} onValueChange={(value) => set("trim", value === "all" ? "" : value)} disabled={!selectedModelId}>
+              <SelectTrigger className="h-11 md:col-span-1">
+                <SelectValue placeholder={isLoadingTrimsForModel(selectedModelId) ? "Loading..." : "Trim"} />
+              </SelectTrigger>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
+                <SelectItem value="all">All Trims</SelectItem>
+                {availableTrims.map((trim) => (
+                  <SelectItem key={trim.id} value={trim.id}>
+                    {trim.name}
                   </SelectItem>
                 ))}
               </SelectContent>
