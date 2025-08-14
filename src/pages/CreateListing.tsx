@@ -116,6 +116,23 @@ const CreateListing = () => {
     }
   };
 
+  const formatNumberWithCommas = (value: string) => {
+    // Remove all non-digit characters
+    const numericValue = value.replace(/\D/g, '');
+    // Add commas for thousands
+    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  const removeCommas = (value: string) => {
+    return value.replace(/,/g, '');
+  };
+
+  const handlePriceChange = (value: string) => {
+    const formattedValue = formatNumberWithCommas(value);
+    form.setValue("price", removeCommas(formattedValue));
+    return formattedValue;
+  };
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
@@ -428,19 +445,26 @@ const CreateListing = () => {
                     )}
                   />
                   
-                  <FormField
-                    control={form.control}
-                    name="price"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Price (AED) *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="150000" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                   <FormField
+                     control={form.control}
+                     name="price"
+                     render={({ field }) => (
+                       <FormItem>
+                         <FormLabel>Price (AED) *</FormLabel>
+                         <FormControl>
+                           <Input 
+                             placeholder="150,000" 
+                             value={formatNumberWithCommas(field.value || '')}
+                             onChange={(e) => {
+                               const formattedValue = handlePriceChange(e.target.value);
+                               e.target.value = formattedValue;
+                             }}
+                           />
+                         </FormControl>
+                         <FormMessage />
+                       </FormItem>
+                     )}
+                   />
                 </div>
 
                 {/* Location & Specs */}
