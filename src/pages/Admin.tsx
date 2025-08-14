@@ -332,7 +332,7 @@ export function Admin() {
                         
                         <div className="flex gap-2">
                           <Button size="sm" variant="outline" asChild>
-                            <a href={`/listings/${listing.id}`} target="_blank">
+                            <a href={`/cars/${listing.id}`} target="_blank">
                               <Eye className="h-4 w-4" />
                             </a>
                           </Button>
