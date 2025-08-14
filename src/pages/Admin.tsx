@@ -353,9 +353,9 @@ export function Admin() {
                               
                               <div className="space-y-6">
                                 {/* Images */}
-                                {listing.images && listing.images.length > 0 && (
-                                  <div className="space-y-2">
-                                    <h4 className="font-semibold">Images</h4>
+                                <div className="space-y-2">
+                                  <h4 className="font-semibold">Images</h4>
+                                  {listing.images && listing.images.length > 0 ? (
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                       {listing.images.map((image, index) => (
                                         <img
@@ -366,8 +366,12 @@ export function Admin() {
                                         />
                                       ))}
                                     </div>
-                                  </div>
-                                )}
+                                  ) : (
+                                    <div className="text-sm text-muted-foreground p-4 border rounded-lg bg-muted/50">
+                                      No images uploaded for this listing
+                                    </div>
+                                  )}
+                                </div>
 
                                 {/* Basic Details */}
                                 <div className="grid grid-cols-2 gap-4">
