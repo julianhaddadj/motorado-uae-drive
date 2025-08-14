@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useAuth } from "@/hooks/use-auth";
+import { useMakesAndModels } from "@/hooks/use-makes-models";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +41,7 @@ const formSchema = z.object({
 const CreateListing = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const { makes, loading: makesLoading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,6 +66,17 @@ const CreateListing = () => {
       steeringSide: undefined,
     },
   });
+
+  const selectedMake = form.watch("make");
+  const availableModels = selectedMake ? getModelsByMake(selectedMake) : [];
+
+  const handleMakeChange = async (value: string) => {
+    form.setValue("make", value);
+    form.setValue("model", ""); // Reset model when make changes
+    if (value) {
+      await fetchModelsForMake(value);
+    }
+  };
 
   useEffect(() => {
     if (!loading && !user) {
@@ -116,16 +129,18 @@ const CreateListing = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Make *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={handleMakeChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select make" />
+                              <SelectValue placeholder={makesLoading ? "Loading makes..." : "Select make"} />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
-                            <SelectItem value="toyota">Toyota</SelectItem>
-                            <SelectItem value="bmw">BMW</SelectItem>
-                            <SelectItem value="mercedes">Mercedes-Benz</SelectItem>
+                          <SelectContent className="bg-background border border-border shadow-lg z-50">
+                            {makes.map((make) => (
+                              <SelectItem key={make.id} value={make.id}>
+                                {make.name}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -139,16 +154,24 @@ const CreateListing = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Model *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} value={field.value} disabled={!selectedMake}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select model" />
+                              <SelectValue placeholder={
+                                !selectedMake 
+                                  ? "Select make first" 
+                                  : isLoadingModelsForMake(selectedMake) 
+                                    ? "Loading models..." 
+                                    : "Select model"
+                              } />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
-                            <SelectItem value="camry">Camry</SelectItem>
-                            <SelectItem value="x5">X5</SelectItem>
-                            <SelectItem value="c-class">C-Class</SelectItem>
+                          <SelectContent className="bg-background border border-border shadow-lg z-50">
+                            {availableModels.map((model) => (
+                              <SelectItem key={model.id} value={model.id}>
+                                {model.name}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
