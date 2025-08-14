@@ -135,7 +135,7 @@ const CreateListing = () => {
                               <SelectValue placeholder={makesLoading ? "Loading makes..." : "Select make"} />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="bg-background border border-border shadow-lg z-50">
+                          <SelectContent side="bottom" className="bg-background border border-border shadow-lg z-50">
                             {makes.map((make) => (
                               <SelectItem key={make.id} value={make.id}>
                                 {make.name}
@@ -166,7 +166,7 @@ const CreateListing = () => {
                               } />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="bg-background border border-border shadow-lg z-50">
+                          <SelectContent side="bottom" className="bg-background border border-border shadow-lg z-50">
                             {availableModels.map((model) => (
                               <SelectItem key={model.id} value={model.id}>
                                 {model.name}
@@ -238,7 +238,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select emirate" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="Dubai">Dubai</SelectItem>
                             <SelectItem value="Abu Dhabi">Abu Dhabi</SelectItem>
                             <SelectItem value="Sharjah">Sharjah</SelectItem>
@@ -265,7 +265,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select regional specs" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="GCC Specs">GCC Specs</SelectItem>
                             <SelectItem value="American Specs">American Specs</SelectItem>
                             <SelectItem value="Canadian Specs">Canadian Specs</SelectItem>
@@ -296,7 +296,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select body type" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="SUV">SUV</SelectItem>
                             <SelectItem value="Coupe">Coupe</SelectItem>
                             <SelectItem value="Sedan">Sedan</SelectItem>
@@ -329,7 +329,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select insurance status" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="Yes">Yes</SelectItem>
                             <SelectItem value="No">No</SelectItem>
                           </SelectContent>
@@ -354,7 +354,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select fuel type" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="Petrol">Petrol</SelectItem>
                             <SelectItem value="Diesel">Diesel</SelectItem>
                             <SelectItem value="Hybrid">Hybrid</SelectItem>
@@ -378,7 +378,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select exterior color" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="Beige">Beige</SelectItem>
                             <SelectItem value="Black">Black</SelectItem>
                             <SelectItem value="Blue">Blue</SelectItem>
@@ -416,7 +416,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select interior color" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="Beige">Beige</SelectItem>
                             <SelectItem value="Black">Black</SelectItem>
                             <SelectItem value="Blue">Blue</SelectItem>
@@ -457,7 +457,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select warranty status" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="Yes">Yes</SelectItem>
                             <SelectItem value="No">No</SelectItem>
                             <SelectItem value="Does not apply">Does not apply</SelectItem>
@@ -480,7 +480,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select number of doors" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="2 door">2 door</SelectItem>
                             <SelectItem value="3 door">3 door</SelectItem>
                             <SelectItem value="4 door">4 door</SelectItem>
@@ -507,7 +507,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select transmission" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="Automatic">Automatic</SelectItem>
                             <SelectItem value="Manual">Manual</SelectItem>
                           </SelectContent>
@@ -529,7 +529,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select horsepower range" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="0 - 99 HP">0 - 99 HP</SelectItem>
                             <SelectItem value="100 - 199 HP">100 - 199 HP</SelectItem>
                             <SelectItem value="200 - 299 HP">200 - 299 HP</SelectItem>
@@ -560,7 +560,7 @@ const CreateListing = () => {
                               <SelectValue placeholder="Select steering side" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent side="bottom">
                             <SelectItem value="Left">Left</SelectItem>
                             <SelectItem value="Right">Right</SelectItem>
                           </SelectContent>
