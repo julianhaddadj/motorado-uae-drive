@@ -55,7 +55,24 @@ const Cars = () => {
           .eq('is_published', true);
         
         if (error) throw error;
-        setListings(data || []);
+        
+        // Fetch make and model names for each listing
+        const listingsWithNames = await Promise.all(
+          (data || []).map(async (listing) => {
+            const [makeData, modelData] = await Promise.all([
+              supabase.from('makes').select('name').eq('id', listing.make).single(),
+              supabase.from('models').select('name').eq('id', listing.model).single()
+            ]);
+            
+            return {
+              ...listing,
+              make_name: makeData.data?.name || listing.make,
+              model_name: modelData.data?.name || listing.model
+            };
+          })
+        );
+        
+        setListings(listingsWithNames);
       } catch (error) {
         console.error('Error fetching listings:', error);
         setListings([]);
@@ -80,10 +97,10 @@ const Cars = () => {
 
     // Apply filters
     if (selectedMake) {
-      filtered = filtered.filter(listing => listing.make === selectedMake.name);
+      filtered = filtered.filter(listing => listing.make === selectedMake.id);
     }
     if (selectedModel) {
-      filtered = filtered.filter(listing => listing.model === selectedModel.name);
+      filtered = filtered.filter(listing => listing.model === selectedModel.id);
     }
     if (minYear) {
       filtered = filtered.filter(listing => listing.year >= parseInt(minYear));
@@ -219,7 +236,7 @@ const Cars = () => {
               <ListingCard
                 id={listing.id}
                 image={listing.images?.[0] || "/placeholder.svg"}
-                title={`${listing.make} ${listing.model} ${listing.year}${listing.trim ? ` ${listing.trim}` : ''}`}
+                title={`${listing.make_name || listing.make} ${listing.model_name || listing.model}`}
                 priceAED={listing.price_aed}
                 year={listing.year}
                 location={listing.emirate}
