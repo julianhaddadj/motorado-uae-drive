@@ -25,10 +25,11 @@ const Index = () => {
   const availableModels = selectedMake ? getModelsByMake(selectedMake) : [];
 
   const handleMakeChange = async (value: string) => {
-    setSelectedMake(value);
+    const actualValue = value === "all" ? "" : value;
+    setSelectedMake(actualValue);
     setSelectedModel(""); // Reset model when make changes
-    if (value) {
-      await fetchModelsForMake(value);
+    if (actualValue) {
+      await fetchModelsForMake(actualValue);
     }
   };
 
@@ -57,12 +58,12 @@ const Index = () => {
       <section className="mx-auto max-w-6xl px-4 pb-12">
         <div className="rounded-xl border bg-card p-4 shadow-sm md:p-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-            <Select value={selectedMake} onValueChange={handleMakeChange}>
+            <Select value={selectedMake || "all"} onValueChange={handleMakeChange}>
               <SelectTrigger className="h-11">
                 <SelectValue placeholder="Make" />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-50">
-                <SelectItem value="">All Makes</SelectItem>
+                <SelectItem value="all">All Makes</SelectItem>
                 {makes.map((make) => (
                   <SelectItem key={make.id} value={make.id}>
                     {make.name}
@@ -71,12 +72,12 @@ const Index = () => {
               </SelectContent>
             </Select>
             
-            <Select value={selectedModel} onValueChange={setSelectedModel} disabled={!selectedMake}>
+            <Select value={selectedModel || "all"} onValueChange={(value) => setSelectedModel(value === "all" ? "" : value)} disabled={!selectedMake}>
               <SelectTrigger className="h-11">
                 <SelectValue placeholder={isLoadingModelsForMake(selectedMake) ? "Loading..." : "Model"} />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-50">
-                <SelectItem value="">All Models</SelectItem>
+                <SelectItem value="all">All Models</SelectItem>
                 {availableModels.map((model) => (
                   <SelectItem key={model.id} value={model.id}>
                     {model.name}
