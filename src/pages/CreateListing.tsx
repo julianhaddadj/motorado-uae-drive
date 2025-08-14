@@ -18,6 +18,30 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
+
+const countryCodes = [
+  { code: "+971", name: "UAE", flag: "🇦🇪" },
+  { code: "+1", name: "Canada", flag: "🇨🇦" },
+  { code: "+86", name: "China", flag: "🇨🇳" },
+  { code: "+20", name: "Egypt", flag: "🇪🇬" },
+  { code: "+33", name: "France", flag: "🇫🇷" },
+  { code: "+49", name: "Germany", flag: "🇩🇪" },
+  { code: "+91", name: "India", flag: "🇮🇳" },
+  { code: "+81", name: "Japan", flag: "🇯🇵" },
+  { code: "+965", name: "Kuwait", flag: "🇰🇼" },
+  { code: "+60", name: "Malaysia", flag: "🇲🇾" },
+  { code: "+968", name: "Oman", flag: "🇴🇲" },
+  { code: "+92", name: "Pakistan", flag: "🇵🇰" },
+  { code: "+974", name: "Qatar", flag: "🇶🇦" },
+  { code: "+966", name: "Saudi Arabia", flag: "🇸🇦" },
+  { code: "+65", name: "Singapore", flag: "🇸🇬" },
+  { code: "+27", name: "South Africa", flag: "🇿🇦" },
+  { code: "+82", name: "South Korea", flag: "🇰🇷" },
+  { code: "+94", name: "Sri Lanka", flag: "🇱🇰" },
+  { code: "+44", name: "United Kingdom", flag: "🇬🇧" },
+  { code: "+1", name: "United States", flag: "🇺🇸" },
+];
 
 const formSchema = z.object({
   make: z.string().min(1, "This field is required"),
@@ -38,6 +62,9 @@ const formSchema = z.object({
   transmission: z.enum(["Automatic", "Manual"], { required_error: "This field is required" }),
   horsepower: z.string().min(1, "This field is required"),
   steeringSide: z.enum(["Left", "Right"], { required_error: "This field is required" }),
+  contactPhoneCountryCode: z.string().min(1, "Country code is required"),
+  contactPhoneNumber: z.string().min(1, "Phone number is required"),
+  contactPhoneHasWhatsapp: z.boolean().default(false),
 });
 
 const CreateListing = () => {
@@ -67,6 +94,9 @@ const CreateListing = () => {
       transmission: undefined,
       horsepower: "",
       steeringSide: undefined,
+      contactPhoneCountryCode: "+971",
+      contactPhoneNumber: "",
+      contactPhoneHasWhatsapp: false,
     },
   });
 
@@ -107,6 +137,9 @@ const CreateListing = () => {
           body_type: values.bodyType,
           emirate: values.emirate,
           description: values.description || null,
+          contact_phone_country_code: values.contactPhoneCountryCode,
+          contact_phone_number: values.contactPhoneNumber,
+          contact_phone_has_whatsapp: values.contactPhoneHasWhatsapp,
           slug: slug,
           is_published: false,
         } as any)
@@ -656,6 +689,85 @@ const CreateListing = () => {
                   <Label htmlFor="images">Car Images</Label>
                   <Input id="images" type="file" multiple accept="image/*" />
                   <p className="text-sm text-muted-foreground">Upload up to 10 images of your car</p>
+                </div>
+
+                {/* Contact Phone Section */}
+                <div className="space-y-4 border-t pt-6">
+                  <h3 className="text-lg font-semibold">Contact Information</h3>
+                  <p className="text-sm text-muted-foreground">Provide a phone number for buyers to contact you</p>
+                  
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <FormField
+                      control={form.control}
+                      name="contactPhoneCountryCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Country Code *</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select country" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent side="bottom" className="max-h-[200px] overflow-y-auto bg-background border border-border shadow-lg z-50">
+                              {countryCodes.map((country) => (
+                                <SelectItem key={country.code + country.name} value={country.code}>
+                                  <span className="flex items-center gap-2">
+                                    <span>{country.flag}</span>
+                                    <span>{country.code}</span>
+                                    <span className="text-muted-foreground">{country.name}</span>
+                                  </span>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="md:col-span-2">
+                      <FormField
+                        control={form.control}
+                        name="contactPhoneNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone Number *</FormLabel>
+                            <FormControl>
+                              <Input 
+                                placeholder="50 123 4567"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="contactPhoneHasWhatsapp"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>
+                            This number has WhatsApp
+                          </FormLabel>
+                          <p className="text-sm text-muted-foreground">
+                            Buyers will see a WhatsApp badge if enabled
+                          </p>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 <div className="flex gap-4 pt-4">

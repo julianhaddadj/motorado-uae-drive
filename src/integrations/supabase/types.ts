@@ -20,6 +20,9 @@ export type Database = {
           approved_at: string | null
           approved_by: string | null
           body_type: Database["public"]["Enums"]["body_type"]
+          contact_phone_country_code: string | null
+          contact_phone_has_whatsapp: boolean | null
+          contact_phone_number: string | null
           created_at: string
           description: string | null
           emirate: string
@@ -44,6 +47,9 @@ export type Database = {
           approved_at?: string | null
           approved_by?: string | null
           body_type: Database["public"]["Enums"]["body_type"]
+          contact_phone_country_code?: string | null
+          contact_phone_has_whatsapp?: boolean | null
+          contact_phone_number?: string | null
           created_at?: string
           description?: string | null
           emirate: string
@@ -68,6 +74,9 @@ export type Database = {
           approved_at?: string | null
           approved_by?: string | null
           body_type?: Database["public"]["Enums"]["body_type"]
+          contact_phone_country_code?: string | null
+          contact_phone_has_whatsapp?: boolean | null
+          contact_phone_number?: string | null
           created_at?: string
           description?: string | null
           emirate?: string

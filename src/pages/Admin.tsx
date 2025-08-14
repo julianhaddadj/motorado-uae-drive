@@ -22,6 +22,9 @@ interface Listing {
   user_id: string;
   emirate: string;
   mileage_km: number;
+  contact_phone_country_code?: string;
+  contact_phone_number?: string;
+  contact_phone_has_whatsapp?: boolean;
 }
 
 interface ListingPerSeller {
@@ -308,6 +311,12 @@ export function Admin() {
                         <p className="text-sm text-muted-foreground">
                           AED {listing.price_aed.toLocaleString()} • {listing.mileage_km.toLocaleString()} km • {listing.emirate}
                         </p>
+                        {listing.contact_phone_number && (
+                          <p className="text-xs text-muted-foreground">
+                            Contact: {listing.contact_phone_country_code} {listing.contact_phone_number}
+                            {listing.contact_phone_has_whatsapp && " (WhatsApp)"}
+                          </p>
+                        )}
                         <p className="text-xs text-muted-foreground">
                           Submitted: {new Date(listing.created_at).toLocaleDateString()}
                         </p>

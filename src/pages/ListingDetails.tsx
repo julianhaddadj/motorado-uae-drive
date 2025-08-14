@@ -1,15 +1,78 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getListingBySlug } from "@/data/listings";
+import { supabase } from "@/integrations/supabase/client";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Phone, MessageCircle } from "lucide-react";
+
+interface Listing {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  price_aed: number;
+  mileage_km: number;
+  body_type: string;
+  regional_spec: string;
+  emirate: string;
+  description?: string;
+  is_premium?: boolean;
+  contact_phone_country_code?: string;
+  contact_phone_number?: string;
+  contact_phone_has_whatsapp?: boolean;
+  images?: string[];
+  slug: string;
+  is_published: boolean;
+}
 
 const formatAED = (n: number) => new Intl.NumberFormat("en-AE", { style: "currency", currency: "AED", maximumFractionDigits: 0 }).format(n);
 
 const ListingDetails = () => {
   const { slug } = useParams();
-  const listing = slug ? getListingBySlug(slug) : undefined;
+  const [listing, setListing] = useState<Listing | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (slug) {
+      fetchListing();
+    }
+  }, [slug]);
+
+  const fetchListing = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('slug', slug)
+        .eq('is_published', true)
+        .single();
+
+      if (error) {
+        console.error('Error fetching listing:', error);
+        return;
+      }
+
+      setListing(data);
+    } catch (error) {
+      console.error('Error fetching listing:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="mx-auto max-w-6xl px-4 py-16">
+          <div className="text-center">Loading...</div>
+        </main>
+      </div>
+    );
+  }
 
   if (!listing) {
     return (
@@ -26,20 +89,18 @@ const ListingDetails = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Vehicle",
-    name: listing.title,
+    name: `${listing.year} ${listing.make} ${listing.model}`,
     brand: listing.make,
     model: listing.model,
-    color: listing.color,
-    vehicleTransmission: listing.transmission,
-    fuelType: listing.fuel,
+    vehicleTransmission: "Unknown",
     mileageFromOdometer: {
       "@type": "QuantitativeValue",
-      value: listing.mileage,
+      value: listing.mileage_km,
       unitCode: "KMT"
     },
     offers: {
       "@type": "Offer",
-      price: listing.priceAED,
+      price: listing.price_aed,
       priceCurrency: "AED",
       availability: "https://schema.org/InStock",
       url: typeof window !== 'undefined' ? window.location.href : ''
@@ -51,51 +112,96 @@ const ListingDetails = () => {
       <Header />
       <BreadcrumbNavigation />
       <main className="mx-auto max-w-6xl px-4 py-10">
-      <SEO
-        title={`${listing.make} ${listing.model} ${listing.year} — Motorado`}
-        description={listing.description || `${listing.make} ${listing.model} ${listing.year} for sale in ${listing.emirate}.`}
-        canonical={`/cars/${listing.slug}`}
-        jsonLd={jsonLd}
-      />
-      <div className="mb-6 flex items-center gap-3">
-        {listing.isPremium && <Badge className="bg-primary text-primary-foreground">Premium</Badge>}
-        <h1 className="text-3xl font-bold">{listing.title}</h1>
-      </div>
-
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <div className="space-y-3">
-          <img src={listing.coverImageUrl} alt={`${listing.title} for sale`} className="w-full rounded-lg border" />
-          {/* TODO: Implement gallery thumbnails when backend ready */}
-          {/* {listing.images?.map((image, i) => (
-            <img key={i} src={image} alt={`${listing.title} for sale - ${i + 1}`} className="w-full rounded-lg border" />
-          ))} */}
+        <SEO
+          title={`${listing.make} ${listing.model} ${listing.year} — Motorado`}
+          description={listing.description || `${listing.make} ${listing.model} ${listing.year} for sale in ${listing.emirate}.`}
+          canonical={`/cars/${listing.slug}`}
+          jsonLd={jsonLd}
+        />
+        
+        <div className="mb-6 flex items-center gap-3">
+          {listing.is_premium && <Badge className="bg-primary text-primary-foreground">Premium</Badge>}
+          <h1 className="text-3xl font-bold">{listing.year} {listing.make} {listing.model}</h1>
         </div>
-        <div>
-          <div className="rounded-lg border p-4">
-            <div className="text-2xl font-bold">{formatAED(listing.priceAED)}</div>
-            <p className="mt-2 text-muted-foreground">{listing.year} • {listing.emirate}</p>
-            <ul className="mt-4 grid grid-cols-2 gap-3 text-sm">
-              <li><span className="text-muted-foreground">Body</span>: {listing.bodyType}</li>
-              <li><span className="text-muted-foreground">Fuel</span>: {listing.fuel}</li>
-              <li><span className="text-muted-foreground">Transmission</span>: {listing.transmission}</li>
-              <li><span className="text-muted-foreground">Mileage</span>: {listing.mileage.toLocaleString()} km</li>
-              <li><span className="text-muted-foreground">Color</span>: {listing.color}</li>
-              <li><span className="text-muted-foreground">GCC Spec</span>: {listing.gccSpec ? 'Yes' : 'No'}</li>
-            </ul>
+
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="space-y-3">
+            {/* Use placeholder image if no images are available */}
+            <img 
+              src={listing.images?.[0] || "/placeholder.svg"} 
+              alt={`${listing.year} ${listing.make} ${listing.model} for sale`} 
+              className="w-full rounded-lg border" 
+            />
+            {/* TODO: Implement gallery thumbnails when backend ready */}
           </div>
-
-          {listing.description && (
-            <div className="prose mt-6 max-w-none">
-              <h2 className="mb-2 text-xl font-semibold">Description</h2>
-              <p className="text-muted-foreground">{listing.description}</p>
+          
+          <div className="space-y-6">
+            <div className="rounded-lg border p-4">
+              <div className="text-2xl font-bold">{formatAED(listing.price_aed)}</div>
+              <p className="mt-2 text-muted-foreground">{listing.year} • {listing.emirate}</p>
+              <ul className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                <li><span className="text-muted-foreground">Body</span>: {listing.body_type}</li>
+                <li><span className="text-muted-foreground">Mileage</span>: {listing.mileage_km.toLocaleString()} km</li>
+                <li><span className="text-muted-foreground">Spec</span>: {listing.regional_spec}</li>
+                <li><span className="text-muted-foreground">Location</span>: {listing.emirate}</li>
+              </ul>
             </div>
-          )}
-        </div>
-      </div>
 
-      <div className="mt-8">
-        <Link to="/cars" className="text-primary underline">← Back to search</Link>
-      </div>
+            {/* Contact Information */}
+            {listing.contact_phone_number && (
+              <div className="rounded-lg border p-4">
+                <h3 className="mb-3 text-lg font-semibold">Contact Seller</h3>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 flex-1">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">
+                      {listing.contact_phone_country_code} {listing.contact_phone_number}
+                    </span>
+                  </div>
+                  {listing.contact_phone_has_whatsapp && (
+                    <Badge variant="secondary" className="gap-1">
+                      <MessageCircle className="h-3 w-3 text-green-600" />
+                      WhatsApp
+                    </Badge>
+                  )}
+                </div>
+                
+                <div className="flex gap-2 mt-3">
+                  <Button asChild variant="default" size="sm">
+                    <a href={`tel:${listing.contact_phone_country_code}${listing.contact_phone_number}`}>
+                      <Phone className="h-4 w-4 mr-2" />
+                      Call
+                    </a>
+                  </Button>
+                  
+                  {listing.contact_phone_has_whatsapp && (
+                    <Button asChild variant="outline" size="sm">
+                      <a 
+                        href={`https://wa.me/${listing.contact_phone_country_code.replace('+', '')}${listing.contact_phone_number.replace(/\s/g, '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <MessageCircle className="h-4 w-4 mr-2 text-green-600" />
+                        WhatsApp
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {listing.description && (
+              <div className="prose mt-6 max-w-none">
+                <h2 className="mb-2 text-xl font-semibold">Description</h2>
+                <p className="text-muted-foreground whitespace-pre-wrap">{listing.description}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <Link to="/cars" className="text-primary underline">← Back to search</Link>
+        </div>
       </main>
     </div>
   );
