@@ -18,9 +18,14 @@ function useFilters() {
   const [params, setParams] = useSearchParams();
 
   const set = (key: string, value?: string) => {
+    console.log(`Setting URL param: ${key} = ${value}`);
     const next = new URLSearchParams(params);
-    if (!value) next.delete(key);
-    else next.set(key, value);
+    if (!value || value === '') {
+      next.delete(key);
+    } else {
+      next.set(key, value);
+    }
+    console.log('New URL params will be:', next.toString());
     setParams(next, { replace: true });
   };
 
