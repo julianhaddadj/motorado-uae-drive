@@ -273,7 +273,7 @@ const Cars = () => {
               <SelectContent className="bg-background border border-border shadow-lg z-[60]">
                 <SelectItem value="all">All Trims</SelectItem>
                 {availableTrims.length === 0 && selectedModelId && !isLoadingTrimsForModel(selectedModelId) ? (
-                  <SelectItem value="" disabled>No trims available for this model</SelectItem>
+                  <SelectItem value="no-trims" disabled>No trims available for this model</SelectItem>
                 ) : (
                   availableTrims.map((trim) => (
                     <SelectItem key={trim.id} value={trim.id}>
