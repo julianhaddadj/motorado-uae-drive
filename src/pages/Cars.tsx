@@ -51,6 +51,11 @@ const Cars = () => {
   const availableTrims = selectedModelId ? getTrimsByModel(selectedModelId) : [];
   const selectedTrim = availableTrims.find(t => t.id === selectedTrimId);
 
+  // Debug logging
+  console.log('URL params - make:', selectedMakeId, 'model:', selectedModelId, 'trim:', selectedTrimId);
+  console.log('Selected make object:', selectedMake);
+  console.log('Available models count:', availableModels.length);
+
   // Fetch listings from Supabase
   useEffect(() => {
     const fetchListings = async () => {
@@ -92,10 +97,22 @@ const Cars = () => {
   }, []);
 
   const handleMakeChange = async (value: string) => {
-    set("make", value === "all" ? "" : value);
-    set("model", ""); // Reset model when make changes
-    set("trim", ""); // Reset trim when make changes
+    console.log('handleMakeChange called with:', value);
+    
+    // Set the make parameter in URL
+    if (value === "all") {
+      set("make", "");
+    } else {
+      set("make", value);
+    }
+    
+    // Reset dependent selections
+    set("model", "");
+    set("trim", "");
+    
+    // Fetch models for the selected make
     if (value && value !== "all") {
+      console.log('Fetching models for make ID:', value);
       await fetchModelsForMake(value);
     }
   };
