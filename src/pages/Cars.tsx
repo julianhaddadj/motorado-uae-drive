@@ -35,7 +35,7 @@ function useFilters() {
 const Cars = () => {
   const { params, set, setParams } = useFilters();
   const { has, toggle } = useFavorites();
-  const { makes, loading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake, fetchTrimsForModel, getTrimsByModel, isLoadingTrimsForModel } = useMakesAndModels();
+  const { makes, loading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
   const { layout } = useLayout();
   const [listings, setListings] = useState<any[]>([]);
   const [listingsLoading, setListingsLoading] = useState(true);
@@ -43,37 +43,30 @@ const Cars = () => {
   // Use local state for immediate UI updates, sync with URL
   const [localMakeId, setLocalMakeId] = useState("");
   const [localModelId, setLocalModelId] = useState("");
-  const [localTrimId, setLocalTrimId] = useState("");
 
   const selectedMakeId = localMakeId || params.get("make") || "";
   const selectedModelId = localModelId || params.get("model") || "";
-  const selectedTrimId = localTrimId || params.get("trim") || "";
   const minYear = params.get("minYear") || "";
   const maxYear = params.get("maxYear") || "";
   const minPrice = params.get("minPrice") || "";
   const maxPrice = params.get("maxPrice") || "";
   const sort = params.get("sort") || "newest";
 
-  // Get make, model, and trim names for filtering
+  // Get make and model names for filtering
   const selectedMake = makes.find(m => m.id === selectedMakeId);
   const availableModels = selectedMakeId ? getModelsByMake(selectedMakeId) : [];
   const selectedModel = availableModels.find(m => m.id === selectedModelId);
-  const availableTrims = selectedModelId ? getTrimsByModel(selectedModelId) : [];
-  const selectedTrim = availableTrims.find(t => t.id === selectedTrimId);
 
   // Initialize local state from URL on component mount
   useEffect(() => {
     const urlMake = params.get("make") || "";
     const urlModel = params.get("model") || "";
-    const urlTrim = params.get("trim") || "";
     
     setLocalMakeId(urlMake);
     setLocalModelId(urlModel);
-    setLocalTrimId(urlTrim);
     
     // Load data if needed
     if (urlMake) fetchModelsForMake(urlMake);
-    if (urlModel) fetchTrimsForModel(urlModel);
   }, []); // Only run on mount
 
   // Fetch listings from Supabase
@@ -123,12 +116,10 @@ const Cars = () => {
     const newMakeId = value === "all" ? "" : value;
     setLocalMakeId(newMakeId);
     setLocalModelId(""); // Reset model
-    setLocalTrimId(""); // Reset trim
     
     // Update URL parameters
     set("make", newMakeId || undefined);
     set("model", "");
-    set("trim", "");
     
     // Fetch models for the selected make
     if (newMakeId) {
@@ -143,23 +134,11 @@ const Cars = () => {
     // Update local state immediately
     const newModelId = value === "all" ? "" : value;
     setLocalModelId(newModelId);
-    setLocalTrimId(""); // Reset trim
     
     // Update URL parameters
     set("model", newModelId || undefined);
-    set("trim", "");
-    
-    if (newModelId) {
-      console.log('Fetching trims for model:', newModelId);
-      await fetchTrimsForModel(newModelId);
-    }
   };
 
-  const handleTrimChange = (value: string) => {
-    const newTrimId = value === "all" ? "" : value;
-    setLocalTrimId(newTrimId);
-    set("trim", newTrimId || undefined);
-  };
 
   const filteredListings = useMemo(() => {
     let filtered = listings;
@@ -170,9 +149,6 @@ const Cars = () => {
     }
     if (selectedModel) {
       filtered = filtered.filter(listing => listing.model === selectedModel.id);
-    }
-    if (selectedTrim) {
-      filtered = filtered.filter(listing => listing.trim === selectedTrim.id);
     }
     if (minYear) {
       filtered = filtered.filter(listing => listing.year >= parseInt(minYear));
@@ -204,7 +180,7 @@ const Cars = () => {
     });
 
     return filtered;
-  }, [listings, selectedMake, selectedModel, selectedTrim, minYear, maxYear, minPrice, maxPrice, sort]);
+  }, [listings, selectedMake, selectedModel, minYear, maxYear, minPrice, maxPrice, sort]);
 
   if (loading || listingsLoading) {
     return (
@@ -231,7 +207,7 @@ const Cars = () => {
         <h1 className="mb-6 text-3xl font-bold">Browse Cars</h1>
 
         <div className="mb-6 space-y-4">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-7">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-6">
             <Select value={selectedMakeId || "all"} onValueChange={handleMakeChange}>
               <SelectTrigger className="h-11 md:col-span-1">
                 <SelectValue placeholder="Make" />
@@ -257,30 +233,6 @@ const Cars = () => {
                     {model.name}
                   </SelectItem>
                 ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedTrimId || "all"} onValueChange={handleTrimChange} disabled={!selectedModelId}>
-              <SelectTrigger className="h-11 md:col-span-1">
-                <SelectValue placeholder={
-                  isLoadingTrimsForModel(selectedModelId) 
-                    ? "Loading..." 
-                    : selectedModelId && availableTrims.length === 0 && !isLoadingTrimsForModel(selectedModelId)
-                      ? "No trims available"
-                      : "Trim"
-                } />
-              </SelectTrigger>
-              <SelectContent className="bg-background border border-border shadow-lg z-[60]">
-                <SelectItem value="all">All Trims</SelectItem>
-                {availableTrims.length === 0 && selectedModelId && !isLoadingTrimsForModel(selectedModelId) ? (
-                  <SelectItem value="no-trims" disabled>No trims available for this model</SelectItem>
-                ) : (
-                  availableTrims.map((trim) => (
-                    <SelectItem key={trim.id} value={trim.id}>
-                      {trim.name}
-                    </SelectItem>
-                  ))
-                )}
               </SelectContent>
             </Select>
 
@@ -330,7 +282,6 @@ const Cars = () => {
                 setParams(new URLSearchParams());
                 setLocalMakeId("");
                 setLocalModelId("");
-                setLocalTrimId("");
               }}>
                 Reset
               </Button>

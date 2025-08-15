@@ -46,7 +46,6 @@ const countryCodes = [
 const formSchema = z.object({
   make: z.string().min(1, "This field is required"),
   model: z.string().min(1, "This field is required"),
-  trim: z.string().optional(),
   year: z.string().min(1, "This field is required"),
   mileage: z.string().min(1, "This field is required"),
   price: z.string().min(1, "This field is required"),
@@ -72,7 +71,7 @@ const CreateListing = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { makes, loading: makesLoading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake, fetchTrimsForModel, getTrimsByModel, isLoadingTrimsForModel } = useMakesAndModels();
+  const { makes, loading: makesLoading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
   
   // Image state management
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -84,7 +83,6 @@ const CreateListing = () => {
     defaultValues: {
       make: "",
       model: "",
-      trim: "",
       year: "",
       mileage: "",
       price: "",
@@ -108,14 +106,11 @@ const CreateListing = () => {
   });
 
   const selectedMake = form.watch("make");
-  const selectedModel = form.watch("model");
   const availableModels = selectedMake ? getModelsByMake(selectedMake) : [];
-  const availableTrims = selectedModel ? getTrimsByModel(selectedModel) : [];
 
   const handleMakeChange = async (value: string) => {
     form.setValue("make", value);
     form.setValue("model", ""); // Reset model when make changes
-    form.setValue("trim", ""); // Reset trim when make changes
     if (value) {
       await fetchModelsForMake(value);
     }
@@ -124,12 +119,6 @@ const CreateListing = () => {
   const handleModelChange = async (value: string) => {
     console.log('Model changed to:', value);
     form.setValue("model", value);
-    form.setValue("trim", ""); // Reset trim when model changes
-    if (value) {
-      console.log('Fetching trims for model:', value);
-      const trims = await fetchTrimsForModel(value);
-      console.log('Available trims:', trims);
-    }
   };
 
   const formatNumberWithCommas = (value: string) => {
@@ -258,7 +247,6 @@ const CreateListing = () => {
           user_id: user.id,
           make: values.make,
           model: values.model,
-          trim: values.trim || null,
           year: parseInt(values.year),
           price_aed: parseInt(values.price),
           mileage_km: parseInt(values.mileage),
@@ -432,39 +420,6 @@ const CreateListing = () => {
                     )}
                   />
                 </div>
-
-                 <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
-                   <FormField
-                     control={form.control}
-                     name="trim"
-                     render={({ field }) => (
-                       <FormItem>
-                         <FormLabel>Trim</FormLabel>
-                         <Select onValueChange={field.onChange} value={field.value} disabled={!selectedModel}>
-                           <FormControl>
-                             <SelectTrigger>
-                               <SelectValue placeholder={
-                                 !selectedModel 
-                                   ? "Select model first" 
-                                   : isLoadingTrimsForModel(selectedModel) 
-                                     ? "Loading trims..." 
-                                     : "Select trim (optional)"
-                               } />
-                             </SelectTrigger>
-                           </FormControl>
-                           <SelectContent side="bottom" className="bg-background border border-border shadow-lg z-[60]">
-                             {availableTrims.map((trim) => (
-                               <SelectItem key={trim.id} value={trim.id}>
-                                 {trim.name}
-                               </SelectItem>
-                             ))}
-                           </SelectContent>
-                         </Select>
-                         <FormMessage />
-                       </FormItem>
-                     )}
-                   />
-                 </div>
 
                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
