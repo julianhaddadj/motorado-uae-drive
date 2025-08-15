@@ -8,7 +8,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Check, X, Eye, Phone, MessageCircle } from "lucide-react";
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle, 
+  AlertDialogTrigger 
+} from "@/components/ui/alert-dialog";
+import { Check, X, Eye, Phone, MessageCircle, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 
@@ -157,6 +168,31 @@ export function Admin() {
         variant: "destructive",
         title: "Error",
         description: "Failed to update listing"
+      });
+    }
+  };
+
+  const handleDeleteListing = async (listingId: string) => {
+    try {
+      const { error } = await supabase
+        .from('listings')
+        .delete()
+        .eq('id', listingId);
+
+      if (error) throw error;
+
+      setListings(prev => prev.filter(listing => listing.id !== listingId));
+
+      toast({
+        title: "Success",
+        description: "Listing deleted successfully"
+      });
+    } catch (error) {
+      console.error('Error deleting listing:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete listing"
       });
     }
   };
@@ -426,26 +462,81 @@ export function Admin() {
                                 )}
 
                                 {/* Action Buttons */}
-                                {listing.approval_status === 'pending' && (
-                                  <div className="flex justify-end gap-2 pt-4 border-t">
-                                    <Button 
-                                      variant="destructive"
-                                      onClick={() => handleApproval(listing.id, false)}
-                                    >
-                                      <X className="h-4 w-4 mr-2" />
-                                      Reject
-                                    </Button>
-                                    <Button 
-                                      onClick={() => handleApproval(listing.id, true)}
-                                    >
-                                      <Check className="h-4 w-4 mr-2" />
-                                      Approve
-                                    </Button>
-                                  </div>
-                                )}
+                                <div className="flex justify-between pt-4 border-t">
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <Button variant="destructive" size="sm">
+                                        <Trash2 className="h-4 w-4 mr-2" />
+                                        Delete Listing
+                                      </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Delete Listing</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Are you sure you want to delete this listing? This action cannot be undone.
+                                          The listing "{listing.year} {listing.make} {listing.model}" will be permanently removed.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction
+                                          onClick={() => handleDeleteListing(listing.id)}
+                                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                        >
+                                          Delete
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+
+                                  {listing.approval_status === 'pending' && (
+                                    <div className="flex gap-2">
+                                      <Button 
+                                        variant="destructive"
+                                        onClick={() => handleApproval(listing.id, false)}
+                                      >
+                                        <X className="h-4 w-4 mr-2" />
+                                        Reject
+                                      </Button>
+                                      <Button 
+                                        onClick={() => handleApproval(listing.id, true)}
+                                      >
+                                        <Check className="h-4 w-4 mr-2" />
+                                        Approve
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </DialogContent>
                           </Dialog>
+                          
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button size="sm" variant="destructive">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Listing</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete "{listing.year} {listing.make} {listing.model}"? 
+                                  This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDeleteListing(listing.id)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                           
                           {listing.approval_status === 'pending' && (
                             <>
