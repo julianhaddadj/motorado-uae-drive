@@ -40,9 +40,14 @@ const Cars = () => {
   const [listings, setListings] = useState<any[]>([]);
   const [listingsLoading, setListingsLoading] = useState(true);
 
-  const selectedMakeId = params.get("make") || "";
-  const selectedModelId = params.get("model") || "";
-  const selectedTrimId = params.get("trim") || "";
+  // Use local state for immediate UI updates, sync with URL
+  const [localMakeId, setLocalMakeId] = useState("");
+  const [localModelId, setLocalModelId] = useState("");
+  const [localTrimId, setLocalTrimId] = useState("");
+
+  const selectedMakeId = localMakeId || params.get("make") || "";
+  const selectedModelId = localModelId || params.get("model") || "";
+  const selectedTrimId = localTrimId || params.get("trim") || "";
   const minYear = params.get("minYear") || "";
   const maxYear = params.get("maxYear") || "";
   const minPrice = params.get("minPrice") || "";
@@ -56,26 +61,20 @@ const Cars = () => {
   const availableTrims = selectedModelId ? getTrimsByModel(selectedModelId) : [];
   const selectedTrim = availableTrims.find(t => t.id === selectedTrimId);
 
-  // Debug logging
-  console.log('URL params - make:', selectedMakeId, 'model:', selectedModelId, 'trim:', selectedTrimId);
-  console.log('Selected make object:', selectedMake);
-  console.log('Available models count:', availableModels.length);
-
-  // Load models when make is selected
+  // Initialize local state from URL on component mount
   useEffect(() => {
-    if (selectedMakeId && !isLoadingModelsForMake(selectedMakeId) && availableModels.length === 0) {
-      console.log('Auto-loading models for make:', selectedMakeId);
-      fetchModelsForMake(selectedMakeId);
-    }
-  }, [selectedMakeId, fetchModelsForMake, isLoadingModelsForMake, availableModels.length]);
-
-  // Load trims when model is selected
-  useEffect(() => {
-    if (selectedModelId && !isLoadingTrimsForModel(selectedModelId) && availableTrims.length === 0) {
-      console.log('Auto-loading trims for model:', selectedModelId);
-      fetchTrimsForModel(selectedModelId);
-    }
-  }, [selectedModelId, fetchTrimsForModel, isLoadingTrimsForModel, availableTrims.length]);
+    const urlMake = params.get("make") || "";
+    const urlModel = params.get("model") || "";
+    const urlTrim = params.get("trim") || "";
+    
+    setLocalMakeId(urlMake);
+    setLocalModelId(urlModel);
+    setLocalTrimId(urlTrim);
+    
+    // Load data if needed
+    if (urlMake) fetchModelsForMake(urlMake);
+    if (urlModel) fetchTrimsForModel(urlModel);
+  }, []); // Only run on mount
 
   // Fetch listings from Supabase
   useEffect(() => {
@@ -120,33 +119,46 @@ const Cars = () => {
   const handleMakeChange = async (value: string) => {
     console.log('handleMakeChange called with:', value);
     
-    // Set the make parameter in URL
-    if (value === "all") {
-      set("make", "");
-    } else {
-      set("make", value);
-    }
+    // Update local state immediately for UI responsiveness
+    const newMakeId = value === "all" ? "" : value;
+    setLocalMakeId(newMakeId);
+    setLocalModelId(""); // Reset model
+    setLocalTrimId(""); // Reset trim
     
-    // Reset dependent selections
+    // Update URL parameters
+    set("make", newMakeId || undefined);
     set("model", "");
     set("trim", "");
     
     // Fetch models for the selected make
-    if (value && value !== "all") {
-      console.log('Fetching models for make ID:', value);
-      await fetchModelsForMake(value);
+    if (newMakeId) {
+      console.log('Fetching models for make ID:', newMakeId);
+      await fetchModelsForMake(newMakeId);
     }
   };
 
   const handleModelChange = async (value: string) => {
     console.log('Model changed to:', value);
-    set("model", value === "all" ? "" : value);
-    set("trim", ""); // Reset trim when model changes
-    if (value && value !== "all") {
-      console.log('Fetching trims for model:', value);
-      const trims = await fetchTrimsForModel(value);
-      console.log('Available trims:', trims);
+    
+    // Update local state immediately
+    const newModelId = value === "all" ? "" : value;
+    setLocalModelId(newModelId);
+    setLocalTrimId(""); // Reset trim
+    
+    // Update URL parameters
+    set("model", newModelId || undefined);
+    set("trim", "");
+    
+    if (newModelId) {
+      console.log('Fetching trims for model:', newModelId);
+      await fetchTrimsForModel(newModelId);
     }
+  };
+
+  const handleTrimChange = (value: string) => {
+    const newTrimId = value === "all" ? "" : value;
+    setLocalTrimId(newTrimId);
+    set("trim", newTrimId || undefined);
   };
 
   const filteredListings = useMemo(() => {
@@ -248,7 +260,7 @@ const Cars = () => {
               </SelectContent>
             </Select>
 
-            <Select value={selectedTrimId || "all"} onValueChange={(value) => set("trim", value === "all" ? "" : value)} disabled={!selectedModelId}>
+            <Select value={selectedTrimId || "all"} onValueChange={handleTrimChange} disabled={!selectedModelId}>
               <SelectTrigger className="h-11 md:col-span-1">
                 <SelectValue placeholder={isLoadingTrimsForModel(selectedModelId) ? "Loading..." : "Trim"} />
               </SelectTrigger>
@@ -304,7 +316,12 @@ const Cars = () => {
 
             <div className="flex items-center gap-3">
               <LayoutSwitcher />
-              <Button variant="premium" onClick={() => setParams(new URLSearchParams())}>
+              <Button variant="premium" onClick={() => {
+                setParams(new URLSearchParams());
+                setLocalMakeId("");
+                setLocalModelId("");
+                setLocalTrimId("");
+              }}>
                 Reset
               </Button>
             </div>
