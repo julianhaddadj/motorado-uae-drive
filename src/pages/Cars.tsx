@@ -61,6 +61,22 @@ const Cars = () => {
   console.log('Selected make object:', selectedMake);
   console.log('Available models count:', availableModels.length);
 
+  // Load models when make is selected
+  useEffect(() => {
+    if (selectedMakeId && !isLoadingModelsForMake(selectedMakeId) && availableModels.length === 0) {
+      console.log('Auto-loading models for make:', selectedMakeId);
+      fetchModelsForMake(selectedMakeId);
+    }
+  }, [selectedMakeId, fetchModelsForMake, isLoadingModelsForMake, availableModels.length]);
+
+  // Load trims when model is selected
+  useEffect(() => {
+    if (selectedModelId && !isLoadingTrimsForModel(selectedModelId) && availableTrims.length === 0) {
+      console.log('Auto-loading trims for model:', selectedModelId);
+      fetchTrimsForModel(selectedModelId);
+    }
+  }, [selectedModelId, fetchTrimsForModel, isLoadingTrimsForModel, availableTrims.length]);
+
   // Fetch listings from Supabase
   useEffect(() => {
     const fetchListings = async () => {
