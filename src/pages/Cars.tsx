@@ -262,15 +262,25 @@ const Cars = () => {
 
             <Select value={selectedTrimId || "all"} onValueChange={handleTrimChange} disabled={!selectedModelId}>
               <SelectTrigger className="h-11 md:col-span-1">
-                <SelectValue placeholder={isLoadingTrimsForModel(selectedModelId) ? "Loading..." : "Trim"} />
+                <SelectValue placeholder={
+                  isLoadingTrimsForModel(selectedModelId) 
+                    ? "Loading..." 
+                    : selectedModelId && availableTrims.length === 0 && !isLoadingTrimsForModel(selectedModelId)
+                      ? "No trims available"
+                      : "Trim"
+                } />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-[60]">
                 <SelectItem value="all">All Trims</SelectItem>
-                {availableTrims.map((trim) => (
-                  <SelectItem key={trim.id} value={trim.id}>
-                    {trim.name}
-                  </SelectItem>
-                ))}
+                {availableTrims.length === 0 && selectedModelId && !isLoadingTrimsForModel(selectedModelId) ? (
+                  <SelectItem value="" disabled>No trims available for this model</SelectItem>
+                ) : (
+                  availableTrims.map((trim) => (
+                    <SelectItem key={trim.id} value={trim.id}>
+                      {trim.name}
+                    </SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
 
