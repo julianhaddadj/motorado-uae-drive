@@ -270,7 +270,7 @@ const CreateListing = () => {
           exterior_color: values.exteriorColor,
           interior_color: values.interiorColor,
           transmission: values.transmission,
-          horsepower: parseInt(values.horsepower),
+          horsepower: values.horsepower,
           doors: values.doors,
           warranty: values.warranty,
           steering_side: values.steeringSide,

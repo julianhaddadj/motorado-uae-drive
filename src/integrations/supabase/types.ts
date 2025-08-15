@@ -29,7 +29,7 @@ export type Database = {
           emirate: string
           exterior_color: string | null
           fuel_type: string | null
-          horsepower: number | null
+          horsepower: string | null
           id: string
           images: string[] | null
           insured_in_uae: string | null
@@ -65,7 +65,7 @@ export type Database = {
           emirate: string
           exterior_color?: string | null
           fuel_type?: string | null
-          horsepower?: number | null
+          horsepower?: string | null
           id?: string
           images?: string[] | null
           insured_in_uae?: string | null
@@ -101,7 +101,7 @@ export type Database = {
           emirate?: string
           exterior_color?: string | null
           fuel_type?: string | null
-          horsepower?: number | null
+          horsepower?: string | null
           id?: string
           images?: string[] | null
           insured_in_uae?: string | null

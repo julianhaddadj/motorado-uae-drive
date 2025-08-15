@@ -42,6 +42,15 @@ interface Listing {
   trim?: string;
   body_type?: string;
   regional_spec?: string;
+  fuel_type?: string;
+  exterior_color?: string;
+  interior_color?: string;
+  transmission?: string;
+  horsepower?: string;
+  doors?: string;
+  warranty?: string;
+  steering_side?: string;
+  insured_in_uae?: string;
 }
 
 interface ListingPerSeller {
@@ -422,6 +431,15 @@ export function Admin() {
                                       {listing.regional_spec && <p><span className="font-medium">Regional Spec:</span> {listing.regional_spec}</p>}
                                       <p><span className="font-medium">Mileage:</span> {listing.mileage_km.toLocaleString()} km</p>
                                       <p><span className="font-medium">Emirate:</span> {listing.emirate}</p>
+                                      {listing.fuel_type && <p><span className="font-medium">Fuel Type:</span> {listing.fuel_type}</p>}
+                                      {listing.transmission && <p><span className="font-medium">Transmission:</span> {listing.transmission}</p>}
+                                      {listing.horsepower && <p><span className="font-medium">Horsepower:</span> {listing.horsepower}</p>}
+                                      {listing.doors && <p><span className="font-medium">Doors:</span> {listing.doors}</p>}
+                                      {listing.exterior_color && <p><span className="font-medium">Exterior Color:</span> {listing.exterior_color}</p>}
+                                      {listing.interior_color && <p><span className="font-medium">Interior Color:</span> {listing.interior_color}</p>}
+                                      {listing.steering_side && <p><span className="font-medium">Steering Side:</span> {listing.steering_side}</p>}
+                                      {listing.warranty && <p><span className="font-medium">Warranty:</span> {listing.warranty}</p>}
+                                      {listing.insured_in_uae && <p><span className="font-medium">Insured in UAE:</span> {listing.insured_in_uae}</p>}
                                     </div>
                                   </div>
 

@@ -33,7 +33,7 @@ interface Listing {
   exterior_color?: string;
   interior_color?: string;
   transmission?: string;
-  horsepower?: number;
+  horsepower?: string;
   doors?: string;
   warranty?: string;
   steering_side?: string;
@@ -183,7 +183,7 @@ const ListingDetails = () => {
                 {listing.trim && <div><span className="text-muted-foreground">Trim</span>: {listing.trim}</div>}
                 {listing.fuel_type && <div><span className="text-muted-foreground">Fuel Type</span>: {listing.fuel_type}</div>}
                 {listing.transmission && <div><span className="text-muted-foreground">Transmission</span>: {listing.transmission}</div>}
-                {listing.horsepower && <div><span className="text-muted-foreground">Horsepower</span>: {listing.horsepower} HP</div>}
+                {listing.horsepower && <div><span className="text-muted-foreground">Horsepower</span>: {listing.horsepower}</div>}
                 {listing.doors && <div><span className="text-muted-foreground">Doors</span>: {listing.doors}</div>}
                 {listing.exterior_color && <div><span className="text-muted-foreground">Exterior Color</span>: {listing.exterior_color}</div>}
                 {listing.interior_color && <div><span className="text-muted-foreground">Interior Color</span>: {listing.interior_color}</div>}
