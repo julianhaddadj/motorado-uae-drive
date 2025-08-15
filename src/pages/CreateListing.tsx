@@ -140,6 +140,12 @@ const CreateListing = () => {
     return formattedValue;
   };
 
+  const handleMileageChange = (value: string) => {
+    const formattedValue = formatNumberWithCommas(value);
+    form.setValue("mileage", removeCommas(formattedValue));
+    return formattedValue;
+  };
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
@@ -460,7 +466,14 @@ const CreateListing = () => {
                       <FormItem>
                         <FormLabel>Mileage (km) *</FormLabel>
                         <FormControl>
-                          <Input placeholder="50000" {...field} />
+                          <Input 
+                            placeholder="50,000" 
+                            value={formatNumberWithCommas(field.value || '')}
+                            onChange={(e) => {
+                              const formattedValue = handleMileageChange(e.target.value);
+                              e.target.value = formattedValue;
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
