@@ -25,9 +25,15 @@ export type Database = {
           contact_phone_number: string | null
           created_at: string
           description: string | null
+          doors: string | null
           emirate: string
+          exterior_color: string | null
+          fuel_type: string | null
+          horsepower: number | null
           id: string
           images: string[] | null
+          insured_in_uae: string | null
+          interior_color: string | null
           is_premium: boolean | null
           is_published: boolean | null
           make: string
@@ -37,9 +43,12 @@ export type Database = {
           regional_spec: Database["public"]["Enums"]["regional_spec"]
           rejection_reason: string | null
           slug: string
+          steering_side: string | null
+          transmission: string | null
           trim: string | null
           updated_at: string
           user_id: string
+          warranty: string | null
           year: number
         }
         Insert: {
@@ -52,9 +61,15 @@ export type Database = {
           contact_phone_number?: string | null
           created_at?: string
           description?: string | null
+          doors?: string | null
           emirate: string
+          exterior_color?: string | null
+          fuel_type?: string | null
+          horsepower?: number | null
           id?: string
           images?: string[] | null
+          insured_in_uae?: string | null
+          interior_color?: string | null
           is_premium?: boolean | null
           is_published?: boolean | null
           make: string
@@ -64,9 +79,12 @@ export type Database = {
           regional_spec: Database["public"]["Enums"]["regional_spec"]
           rejection_reason?: string | null
           slug: string
+          steering_side?: string | null
+          transmission?: string | null
           trim?: string | null
           updated_at?: string
           user_id: string
+          warranty?: string | null
           year: number
         }
         Update: {
@@ -79,9 +97,15 @@ export type Database = {
           contact_phone_number?: string | null
           created_at?: string
           description?: string | null
+          doors?: string | null
           emirate?: string
+          exterior_color?: string | null
+          fuel_type?: string | null
+          horsepower?: number | null
           id?: string
           images?: string[] | null
+          insured_in_uae?: string | null
+          interior_color?: string | null
           is_premium?: boolean | null
           is_published?: boolean | null
           make?: string
@@ -91,9 +115,12 @@ export type Database = {
           regional_spec?: Database["public"]["Enums"]["regional_spec"]
           rejection_reason?: string | null
           slug?: string
+          steering_side?: string | null
+          transmission?: string | null
           trim?: string | null
           updated_at?: string
           user_id?: string
+          warranty?: string | null
           year?: number
         }
         Relationships: []

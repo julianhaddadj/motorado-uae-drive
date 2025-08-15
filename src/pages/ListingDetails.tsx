@@ -29,6 +29,15 @@ interface Listing {
   images?: string[];
   slug: string;
   is_published: boolean;
+  fuel_type?: string;
+  exterior_color?: string;
+  interior_color?: string;
+  transmission?: string;
+  horsepower?: number;
+  doors?: string;
+  warranty?: string;
+  steering_side?: string;
+  insured_in_uae?: string;
 }
 
 const formatAED = (n: number) => new Intl.NumberFormat("en-AE", { style: "currency", currency: "AED", maximumFractionDigits: 0 }).format(n);
@@ -165,12 +174,23 @@ const ListingDetails = () => {
           <div className="space-y-6">
             <div className="rounded-lg border p-4">
               <h3 className="text-lg font-semibold mb-3">Car Details</h3>
-              <ul className="grid grid-cols-2 gap-3 text-sm">
-                <li><span className="text-muted-foreground">Body Type</span>: {listing.body_type}</li>
-                <li><span className="text-muted-foreground">Mileage</span>: {listing.mileage_km.toLocaleString()} km</li>
-                <li><span className="text-muted-foreground">Regional Spec</span>: {listing.regional_spec}</li>
-                <li><span className="text-muted-foreground">Location</span>: {listing.emirate}</li>
-              </ul>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div><span className="text-muted-foreground">Year</span>: {listing.year}</div>
+                <div><span className="text-muted-foreground">Mileage</span>: {listing.mileage_km.toLocaleString()} km</div>
+                <div><span className="text-muted-foreground">Body Type</span>: {listing.body_type}</div>
+                <div><span className="text-muted-foreground">Regional Spec</span>: {listing.regional_spec}</div>
+                <div><span className="text-muted-foreground">Location</span>: {listing.emirate}</div>
+                {listing.trim && <div><span className="text-muted-foreground">Trim</span>: {listing.trim}</div>}
+                {listing.fuel_type && <div><span className="text-muted-foreground">Fuel Type</span>: {listing.fuel_type}</div>}
+                {listing.transmission && <div><span className="text-muted-foreground">Transmission</span>: {listing.transmission}</div>}
+                {listing.horsepower && <div><span className="text-muted-foreground">Horsepower</span>: {listing.horsepower} HP</div>}
+                {listing.doors && <div><span className="text-muted-foreground">Doors</span>: {listing.doors}</div>}
+                {listing.exterior_color && <div><span className="text-muted-foreground">Exterior Color</span>: {listing.exterior_color}</div>}
+                {listing.interior_color && <div><span className="text-muted-foreground">Interior Color</span>: {listing.interior_color}</div>}
+                {listing.steering_side && <div><span className="text-muted-foreground">Steering Side</span>: {listing.steering_side}</div>}
+                {listing.warranty && <div><span className="text-muted-foreground">Warranty</span>: {listing.warranty}</div>}
+                {listing.insured_in_uae && <div><span className="text-muted-foreground">Insured in UAE</span>: {listing.insured_in_uae}</div>}
+              </div>
             </div>
 
             {/* Contact Information */}
