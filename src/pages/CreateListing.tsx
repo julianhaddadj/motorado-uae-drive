@@ -46,6 +46,7 @@ const countryCodes = [
 const formSchema = z.object({
   make: z.string().min(1, "This field is required"),
   model: z.string().min(1, "This field is required"),
+  trim: z.string().optional(),
   year: z.string().min(1, "This field is required"),
   mileage: z.string().min(1, "This field is required"),
   price: z.string().min(1, "This field is required"),
@@ -83,6 +84,7 @@ const CreateListing = () => {
     defaultValues: {
       make: "",
       model: "",
+      trim: "",
       year: "",
       mileage: "",
       price: "",
@@ -247,6 +249,7 @@ const CreateListing = () => {
           user_id: user.id,
           make: values.make,
           model: values.model,
+          trim: values.trim || null,
           year: parseInt(values.year),
           price_aed: parseInt(values.price),
           mileage_km: parseInt(values.mileage),
@@ -415,6 +418,20 @@ const CreateListing = () => {
                             ))}
                           </SelectContent>
                         </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="trim"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Trim (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. Sport, Limited, Base" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}

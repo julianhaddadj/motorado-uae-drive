@@ -300,6 +300,7 @@ const Cars = () => {
                   id={listing.id}
                   image={listing.images?.[0] || "/placeholder.svg"}
                   title={`${listing.make_name || listing.make} ${listing.model_name || listing.model}`}
+                  trim={listing.trim}
                   priceAED={listing.price_aed}
                   year={listing.year}
                   location={listing.emirate}
@@ -312,6 +313,7 @@ const Cars = () => {
                   id={listing.id}
                   image={listing.images?.[0] || "/placeholder.svg"}
                   title={`${listing.make_name || listing.make} ${listing.model_name || listing.model}`}
+                  trim={listing.trim}
                   priceAED={listing.price_aed}
                   year={listing.year}
                   location={listing.emirate}

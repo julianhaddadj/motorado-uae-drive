@@ -14,6 +14,7 @@ interface Listing {
   model: string;
   make_name?: string;
   model_name?: string;
+  trim?: string;
   year: number;
   price_aed: number;
   mileage_km: number;
@@ -138,7 +139,10 @@ const ListingDetails = () => {
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {listing.is_premium && <Badge className="bg-primary text-primary-foreground">Premium</Badge>}
-              <h1 className="text-3xl font-bold">{listing.make_name || listing.make} - {listing.model_name || listing.model}</h1>
+              <h1 className="text-3xl font-bold">
+                {listing.make_name || listing.make} - {listing.model_name || listing.model}
+                {listing.trim && ` ${listing.trim}`}
+              </h1>
             </div>
             <div className="text-2xl font-bold">{formatAED(listing.price_aed)}</div>
           </div>

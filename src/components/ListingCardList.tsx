@@ -7,6 +7,7 @@ interface ListingCardListProps {
   id: string;
   image: string;
   title: string;
+  trim?: string;
   priceAED: number;
   year: number;
   location: string;
@@ -21,6 +22,7 @@ export const ListingCardList = ({
   id, 
   image, 
   title, 
+  trim,
   priceAED, 
   year, 
   location, 
@@ -54,7 +56,9 @@ export const ListingCardList = ({
           <div className="flex-1 p-4 sm:p-6 flex flex-col justify-between min-h-[120px]">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
               <div className="flex-1">
-                <h3 className="text-lg sm:text-xl font-semibold line-clamp-2">{title}</h3>
+                <h3 className="text-lg sm:text-xl font-semibold line-clamp-2">
+                  {title}{trim && ` ${trim}`}
+                </h3>
                 <p className="mt-1 text-sm text-muted-foreground">{year} • {location}</p>
               </div>
               <div className="text-right">

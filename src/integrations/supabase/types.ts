@@ -37,6 +37,7 @@ export type Database = {
           regional_spec: Database["public"]["Enums"]["regional_spec"]
           rejection_reason: string | null
           slug: string
+          trim: string | null
           updated_at: string
           user_id: string
           year: number
@@ -63,6 +64,7 @@ export type Database = {
           regional_spec: Database["public"]["Enums"]["regional_spec"]
           rejection_reason?: string | null
           slug: string
+          trim?: string | null
           updated_at?: string
           user_id: string
           year: number
@@ -89,6 +91,7 @@ export type Database = {
           regional_spec?: Database["public"]["Enums"]["regional_spec"]
           rejection_reason?: string | null
           slug?: string
+          trim?: string | null
           updated_at?: string
           user_id?: string
           year?: number
