@@ -233,9 +233,9 @@ const Cars = () => {
         <h1 className="mb-6 text-3xl font-bold">Browse Cars</h1>
 
         <div className="mb-6 space-y-4">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-7">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-6 lg:grid-cols-12">
             <Select value={selectedMakeId || "all"} onValueChange={handleMakeChange}>
-              <SelectTrigger className="h-11 md:col-span-1">
+              <SelectTrigger className="h-11 lg:col-span-2">
                 <SelectValue placeholder="Make" />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-50">
@@ -249,7 +249,7 @@ const Cars = () => {
             </Select>
 
             <Select value={selectedModelId || "all"} onValueChange={handleModelChange} disabled={!selectedMakeId}>
-              <SelectTrigger className="h-11 md:col-span-1">
+              <SelectTrigger className="h-11 lg:col-span-2">
                 <SelectValue>
                   {isLoadingModelsForMake(selectedMakeId) ? (
                     <div className="flex items-center gap-2">
@@ -272,7 +272,7 @@ const Cars = () => {
             </Select>
 
             <Select value={bodyType || "all"} onValueChange={(value) => set("bodyType", value === "all" ? undefined : value)}>
-              <SelectTrigger className="h-11 md:col-span-1">
+              <SelectTrigger className="h-11 md:col-span-2 lg:col-span-2">
                 <SelectValue placeholder="Body Type" />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-50">
@@ -286,26 +286,26 @@ const Cars = () => {
             </Select>
 
             <Input 
-              className="h-11" 
+              className="h-11 md:col-span-1 lg:col-span-1" 
               placeholder="Min Year" 
               value={minYear} 
               onChange={(e) => set("minYear", e.target.value || undefined)} 
             />
             <Input 
-              className="h-11" 
+              className="h-11 md:col-span-1 lg:col-span-1" 
               placeholder="Max Year" 
               value={maxYear} 
               onChange={(e) => set("maxYear", e.target.value || undefined)} 
             />
             <Input 
-              className="h-11" 
-              placeholder="Min Price" 
+              className="h-11 md:col-span-1 lg:col-span-2" 
+              placeholder="Min Price (AED)" 
               value={minPrice} 
               onChange={(e) => set("minPrice", e.target.value || undefined)} 
             />
             <Input 
-              className="h-11" 
-              placeholder="Max Price" 
+              className="h-11 md:col-span-1 lg:col-span-2" 
+              placeholder="Max Price (AED)" 
               value={maxPrice} 
               onChange={(e) => set("maxPrice", e.target.value || undefined)} 
             />
