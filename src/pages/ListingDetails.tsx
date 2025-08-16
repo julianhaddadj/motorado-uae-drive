@@ -179,8 +179,9 @@ const ListingDetails = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="space-y-3">
+        <div className="space-y-8">
+          {/* Image Gallery Section - Full Width */}
+          <div className="w-full">
             {/* Image Gallery */}
             {listing.images && listing.images.length > 0 ? (
               <div className="relative">
@@ -188,11 +189,13 @@ const ListingDetails = () => {
                   <CarouselContent>
                     {listing.images.map((image, index) => (
                       <CarouselItem key={index}>
-                        <img 
-                          src={image} 
-                          alt={`${listing.year} ${listing.make_name || listing.make} ${listing.model_name || listing.model} - Image ${index + 1}`} 
-                          className="w-full h-[400px] object-cover rounded-lg border" 
-                        />
+                        <div className="flex justify-center bg-muted/20 rounded-lg">
+                          <img 
+                            src={image} 
+                            alt={`${listing.year} ${listing.make_name || listing.make} ${listing.model_name || listing.model} - Image ${index + 1}`} 
+                            className="max-w-full max-h-[600px] object-contain rounded-lg" 
+                          />
+                        </div>
                       </CarouselItem>
                     ))}
                   </CarouselContent>
@@ -213,11 +216,11 @@ const ListingDetails = () => {
                 
                 {/* Thumbnail strip for multiple images */}
                 {listing.images.length > 1 && (
-                  <div className="flex gap-2 mt-3 overflow-x-auto">
+                  <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
                     {listing.images.map((image, index) => (
                       <button
                         key={index}
-                        className={`flex-shrink-0 w-16 h-16 rounded border transition-colors ${
+                        className={`flex-shrink-0 w-20 h-20 rounded border transition-colors ${
                           index === currentImageIndex 
                             ? 'border-primary border-2' 
                             : 'border-border hover:border-primary'
@@ -237,96 +240,105 @@ const ListingDetails = () => {
                 )}
               </div>
             ) : (
-              <img 
-                src="/placeholder.svg" 
-                alt={`${listing.year} ${listing.make_name || listing.make} ${listing.model_name || listing.model} for sale`} 
-                className="w-full h-[400px] object-cover rounded-lg border" 
-              />
+              <div className="flex justify-center bg-muted/20 rounded-lg py-16">
+                <img 
+                  src="/placeholder.svg" 
+                  alt={`${listing.year} ${listing.make_name || listing.make} ${listing.model_name || listing.model} for sale`} 
+                  className="max-w-full max-h-[400px] object-contain rounded-lg" 
+                />
+              </div>
             )}
           </div>
           
-          <div className="space-y-6">
-            <div className="rounded-lg border p-4">
-              <h3 className="text-lg font-semibold mb-3">Car Details</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <div><span className="text-muted-foreground">Year</span>: {listing.year}</div>
-                <div><span className="text-muted-foreground">Mileage</span>: {listing.mileage_km.toLocaleString()} km</div>
-                <div><span className="text-muted-foreground">Body Type</span>: {listing.body_type}</div>
-                <div><span className="text-muted-foreground">Regional Spec</span>: {listing.regional_spec}</div>
-                <div><span className="text-muted-foreground">Location</span>: {listing.emirate}</div>
-                {listing.trim && <div><span className="text-muted-foreground">Trim</span>: {listing.trim}</div>}
-                {listing.fuel_type && <div><span className="text-muted-foreground">Fuel Type</span>: {listing.fuel_type}</div>}
-                {listing.transmission && <div><span className="text-muted-foreground">Transmission</span>: {listing.transmission}</div>}
-                {listing.horsepower && <div><span className="text-muted-foreground">Horsepower</span>: {listing.horsepower}</div>}
-                {listing.doors && <div><span className="text-muted-foreground">Doors</span>: {listing.doors}</div>}
-                {listing.exterior_color && <div><span className="text-muted-foreground">Exterior Color</span>: {listing.exterior_color}</div>}
-                {listing.interior_color && <div><span className="text-muted-foreground">Interior Color</span>: {listing.interior_color}</div>}
-                {listing.steering_side && <div><span className="text-muted-foreground">Steering Side</span>: {listing.steering_side}</div>}
-                {listing.warranty && <div><span className="text-muted-foreground">Warranty</span>: {listing.warranty}</div>}
-                {listing.insured_in_uae && <div><span className="text-muted-foreground">Insured in UAE</span>: {listing.insured_in_uae}</div>}
-              </div>
-            </div>
-
-            {/* Seller Information */}
-            <div className="rounded-lg border p-4">
-              <h3 className="text-lg font-semibold mb-3">Seller Information</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <div><span className="text-muted-foreground">Type</span>: {listing.seller_type}</div>
-                {listing.seller_type === 'Dealership' && listing.dealership_name && (
-                  <div><span className="text-muted-foreground">Dealership</span>: {listing.dealership_name}</div>
-                )}
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            {listing.contact_phone_number && (
+          {/* Car Details Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
               <div className="rounded-lg border p-4">
-                <h3 className="mb-3 text-lg font-semibold">Contact Seller</h3>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 flex-1">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">
-                      {listing.contact_phone_country_code} {listing.contact_phone_number}
-                    </span>
-                  </div>
-                  {listing.contact_phone_has_whatsapp && (
-                    <Badge variant="secondary" className="gap-1">
-                      <MessageCircle className="h-3 w-3 text-green-600" />
-                      WhatsApp
-                    </Badge>
+                <h3 className="text-lg font-semibold mb-3">Car Details</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  <div><span className="text-muted-foreground">Year</span>: {listing.year}</div>
+                  <div><span className="text-muted-foreground">Mileage</span>: {listing.mileage_km.toLocaleString()} km</div>
+                  <div><span className="text-muted-foreground">Body Type</span>: {listing.body_type}</div>
+                  <div><span className="text-muted-foreground">Regional Spec</span>: {listing.regional_spec}</div>
+                  <div><span className="text-muted-foreground">Location</span>: {listing.emirate}</div>
+                  {listing.trim && <div><span className="text-muted-foreground">Trim</span>: {listing.trim}</div>}
+                  {listing.fuel_type && <div><span className="text-muted-foreground">Fuel Type</span>: {listing.fuel_type}</div>}
+                  {listing.transmission && <div><span className="text-muted-foreground">Transmission</span>: {listing.transmission}</div>}
+                  {listing.horsepower && <div><span className="text-muted-foreground">Horsepower</span>: {listing.horsepower}</div>}
+                  {listing.doors && <div><span className="text-muted-foreground">Doors</span>: {listing.doors}</div>}
+                  {listing.exterior_color && <div><span className="text-muted-foreground">Exterior Color</span>: {listing.exterior_color}</div>}
+                  {listing.interior_color && <div><span className="text-muted-foreground">Interior Color</span>: {listing.interior_color}</div>}
+                  {listing.steering_side && <div><span className="text-muted-foreground">Steering Side</span>: {listing.steering_side}</div>}
+                  {listing.warranty && <div><span className="text-muted-foreground">Warranty</span>: {listing.warranty}</div>}
+                  {listing.insured_in_uae && <div><span className="text-muted-foreground">Insured in UAE</span>: {listing.insured_in_uae}</div>}
+                </div>
+              </div>
+
+              {/* Seller Information */}
+              <div className="rounded-lg border p-4">
+                <h3 className="text-lg font-semibold mb-3">Seller Information</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  <div><span className="text-muted-foreground">Type</span>: {listing.seller_type}</div>
+                  {listing.seller_type === 'Dealership' && listing.dealership_name && (
+                    <div><span className="text-muted-foreground">Dealership</span>: {listing.dealership_name}</div>
                   )}
                 </div>
-                
-                <div className="flex gap-2 mt-3">
-                  <Button asChild variant="default" size="sm">
-                    <a href={`tel:${listing.contact_phone_country_code}${listing.contact_phone_number}`}>
-                      <Phone className="h-4 w-4 mr-2" />
-                      Call
-                    </a>
-                  </Button>
-                  
-                  {listing.contact_phone_has_whatsapp && (
-                    <Button asChild variant="outline" size="sm">
-                      <a 
-                        href={`https://wa.me/${listing.contact_phone_country_code.replace('+', '')}${listing.contact_phone_number.replace(/\s/g, '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <MessageCircle className="h-4 w-4 mr-2 text-green-600" />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {/* Contact Information */}
+              {listing.contact_phone_number && (
+                <div className="rounded-lg border p-4">
+                  <h3 className="mb-3 text-lg font-semibold">Contact Seller</h3>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 flex-1">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-medium">
+                        {listing.contact_phone_country_code} {listing.contact_phone_number}
+                      </span>
+                    </div>
+                    {listing.contact_phone_has_whatsapp && (
+                      <Badge variant="secondary" className="gap-1">
+                        <MessageCircle className="h-3 w-3 text-green-600" />
                         WhatsApp
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  <div className="flex gap-2 mt-3">
+                    <Button asChild variant="default" size="sm">
+                      <a href={`tel:${listing.contact_phone_country_code}${listing.contact_phone_number}`}>
+                        <Phone className="h-4 w-4 mr-2" />
+                        Call
                       </a>
                     </Button>
-                  )}
+                    
+                    {listing.contact_phone_has_whatsapp && (
+                      <Button asChild variant="outline" size="sm">
+                        <a 
+                          href={`https://wa.me/${listing.contact_phone_country_code.replace('+', '')}${listing.contact_phone_number.replace(/\s/g, '')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <MessageCircle className="h-4 w-4 mr-2 text-green-600" />
+                          WhatsApp
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {listing.description && (
-              <div className="prose mt-6 max-w-none">
-                <h2 className="mb-2 text-xl font-semibold">Description</h2>
-                <p className="text-muted-foreground whitespace-pre-wrap">{listing.description}</p>
-              </div>
-            )}
+              {listing.description && (
+                <div className="rounded-lg border p-4">
+                  <h3 className="mb-3 text-lg font-semibold">Description</h3>
+                  <p className="text-muted-foreground whitespace-pre-wrap text-sm leading-relaxed">
+                    {listing.description}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
