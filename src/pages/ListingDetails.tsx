@@ -6,6 +6,7 @@ import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Phone, MessageCircle } from "lucide-react";
 
 interface Listing {
@@ -48,12 +49,28 @@ const ListingDetails = () => {
   const { slug } = useParams();
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [carouselApi, setCarouselApi] = useState<any>(null);
 
   useEffect(() => {
     if (slug) {
       fetchListing();
     }
   }, [slug]);
+
+  // Track current carousel slide
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const onSelect = () => {
+      setCurrentImageIndex(carouselApi.selectedScrollSnap());
+    };
+
+    carouselApi.on("select", onSelect);
+    onSelect(); // Initialize
+
+    return () => carouselApi.off("select", onSelect);
+  }, [carouselApi]);
 
   const fetchListing = async () => {
     try {
@@ -164,13 +181,68 @@ const ListingDetails = () => {
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div className="space-y-3">
-            {/* Use placeholder image if no images are available */}
-            <img 
-              src={listing.images?.[0] || "/placeholder.svg"} 
-              alt={`${listing.year} ${listing.make_name || listing.make} ${listing.model_name || listing.model} for sale`} 
-              className="w-full rounded-lg border" 
-            />
-            {/* TODO: Implement gallery thumbnails when backend ready */}
+            {/* Image Gallery */}
+            {listing.images && listing.images.length > 0 ? (
+              <div className="relative">
+                <Carousel className="w-full" setApi={setCarouselApi}>
+                  <CarouselContent>
+                    {listing.images.map((image, index) => (
+                      <CarouselItem key={index}>
+                        <img 
+                          src={image} 
+                          alt={`${listing.year} ${listing.make_name || listing.make} ${listing.model_name || listing.model} - Image ${index + 1}`} 
+                          className="w-full h-[400px] object-cover rounded-lg border" 
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  {listing.images.length > 1 && (
+                    <>
+                      <CarouselPrevious className="left-4" />
+                      <CarouselNext className="right-4" />
+                    </>
+                  )}
+                </Carousel>
+                
+                {/* Image counter */}
+                {listing.images.length > 1 && (
+                  <div className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 rounded-md text-sm">
+                    {currentImageIndex + 1} / {listing.images.length}
+                  </div>
+                )}
+                
+                {/* Thumbnail strip for multiple images */}
+                {listing.images.length > 1 && (
+                  <div className="flex gap-2 mt-3 overflow-x-auto">
+                    {listing.images.map((image, index) => (
+                      <button
+                        key={index}
+                        className={`flex-shrink-0 w-16 h-16 rounded border transition-colors ${
+                          index === currentImageIndex 
+                            ? 'border-primary border-2' 
+                            : 'border-border hover:border-primary'
+                        }`}
+                        onClick={() => {
+                          carouselApi?.scrollTo(index);
+                        }}
+                      >
+                        <img 
+                          src={image} 
+                          alt={`Thumbnail ${index + 1}`} 
+                          className="w-full h-full object-cover rounded" 
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <img 
+                src="/placeholder.svg" 
+                alt={`${listing.year} ${listing.make_name || listing.make} ${listing.model_name || listing.model} for sale`} 
+                className="w-full h-[400px] object-cover rounded-lg border" 
+              />
+            )}
           </div>
           
           <div className="space-y-6">
