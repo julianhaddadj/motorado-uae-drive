@@ -148,19 +148,30 @@ export const BreadcrumbNavigation = () => {
       const modelId = searchParams.get("model");
       
       if (makeId) {
-        const makeName = makeModelNames[`make_${makeId}`] || makeId;
-        // "Cars" link should clear make and model filters
-        crumbs.push({ label: "Cars", href: buildFilteredUrl("/cars", ["make", "model"]) });
-        
-        if (modelId) {
-          const modelName = makeModelNames[`model_${modelId}`] || modelId;
-          // "Make" link should keep make but clear model
-          crumbs.push({ label: makeName, href: buildFilteredUrl("/cars", ["model"]) });
-          // Current model is not a link
-          crumbs.push({ label: modelName });
+        const makeName = makeModelNames[`make_${makeId}`];
+        // Only show make breadcrumb if we have the actual name
+        if (makeName) {
+          // "Cars" link should clear make and model filters
+          crumbs.push({ label: "Cars", href: buildFilteredUrl("/cars", ["make", "model"]) });
+          
+          if (modelId) {
+            const modelName = makeModelNames[`model_${modelId}`];
+            if (modelName) {
+              // "Make" link should keep make but clear model
+              crumbs.push({ label: makeName, href: buildFilteredUrl("/cars", ["model"]) });
+              // Current model is not a link
+              crumbs.push({ label: modelName });
+            } else {
+              // Model name not loaded yet, show make only
+              crumbs.push({ label: makeName });
+            }
+          } else {
+            // Current make is not a link
+            crumbs.push({ label: makeName });
+          }
         } else {
-          // Current make is not a link
-          crumbs.push({ label: makeName });
+          // Make name not loaded yet, show minimal breadcrumb
+          crumbs.push({ label: "Cars" });
         }
       } else {
         // No filters applied, current page
