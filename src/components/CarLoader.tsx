@@ -42,27 +42,38 @@ export const CarLoader = ({ className, size = "md", showText = true }: CarLoader
         {/* Car moving left to right */}
         <div className="absolute inset-0 animate-[slide-left-right_3s_ease-in-out_infinite]">
           <svg 
-            viewBox="0 0 120 60" 
+            viewBox="0 0 140 60" 
             className="w-full h-full text-primary"
             fill="currentColor"
             aria-hidden="true"
           >
-            {/* Car Body */}
-            <path d="M20 35 L25 25 L35 20 L80 20 L90 25 L95 35 L95 45 L85 45 L85 40 C85 37 82 35 79 35 L75 35 C72 35 69 37 69 40 L69 45 L51 45 L51 40 C51 37 48 35 45 35 L41 35 C38 35 35 37 35 40 L35 45 L25 45 L20 35 Z" />
+            {/* Sports Car Body - Low and sleek */}
+            <path d="M15 42 L18 38 L25 32 L35 28 L45 26 L85 26 L95 28 L105 30 L115 32 L125 35 L130 38 L132 42 L132 48 L125 48 L125 45 C125 42 122 40 119 40 L115 40 C112 40 109 42 109 45 L109 48 L75 48 L75 45 C75 42 72 40 69 40 L65 40 C62 40 59 42 59 45 L59 48 L51 48 L51 45 C51 42 48 40 45 40 L41 40 C38 40 35 42 35 45 L35 48 L25 48 L25 45 C25 42 22 40 19 40 L15 40 C12 40 9 42 9 45 L9 48 L15 48 L15 42 Z" />
             
-            {/* Windows */}
-            <path d="M30 25 L35 25 L40 30 L75 30 L80 25 L85 25 L85 35 L30 35 Z" fill="hsl(var(--muted))" />
+            {/* Windshield - Angular sports car style */}
+            <path d="M28 32 L40 28 L95 28 L105 30 L120 35 L120 42 L28 42 Z" fill="hsl(var(--muted))" />
+            
+            {/* Side Window */}
+            <path d="M45 30 L85 30 L95 32 L95 40 L45 40 Z" fill="hsl(var(--muted-foreground) / 0.3)" />
+            
+            {/* Spoiler */}
+            <path d="M8 38 L15 36 L18 38 L15 40 L8 38 Z" fill="currentColor" />
             
             {/* Front Wheel */}
-            <circle cx="77" cy="40" r="8" fill="hsl(var(--muted-foreground))" className="animate-spin origin-[77px_40px]" style={{ animationDuration: '0.5s' }} />
-            <circle cx="77" cy="40" r="5" fill="currentColor" />
+            <circle cx="109" cy="45" r="9" fill="hsl(var(--muted-foreground))" className="animate-spin origin-[109px_45px]" style={{ animationDuration: '0.4s' }} />
+            <circle cx="109" cy="45" r="6" fill="currentColor" />
+            <circle cx="109" cy="45" r="3" fill="hsl(var(--accent))" />
             
             {/* Rear Wheel */}
-            <circle cx="43" cy="40" r="8" fill="hsl(var(--muted-foreground))" className="animate-spin origin-[43px_40px]" style={{ animationDuration: '0.5s' }} />
-            <circle cx="43" cy="40" r="5" fill="currentColor" />
+            <circle cx="59" cy="45" r="9" fill="hsl(var(--muted-foreground))" className="animate-spin origin-[59px_45px]" style={{ animationDuration: '0.4s' }} />
+            <circle cx="59" cy="45" r="6" fill="currentColor" />
+            <circle cx="59" cy="45" r="3" fill="hsl(var(--accent))" />
             
-            {/* Headlight */}
-            <circle cx="92" cy="30" r="3" fill="hsl(var(--accent))" className="animate-pulse" />
+            {/* Headlights - Sharp angular design */}
+            <path d="M125 35 L130 37 L128 40 L123 38 Z" fill="hsl(var(--accent))" className="animate-pulse" />
+            
+            {/* Air Intake */}
+            <path d="M115 40 L125 40 L125 42 L115 42 Z" fill="hsl(var(--muted-foreground))" />
           </svg>
         </div>
       </div>
