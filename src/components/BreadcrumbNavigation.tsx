@@ -2,6 +2,7 @@ import { useLocation, Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getListingBySlug } from "@/data/listings";
 import { supabase } from "@/integrations/supabase/client";
+import { CarLoader } from "@/components/CarLoader";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -204,10 +205,7 @@ export const BreadcrumbNavigation = () => {
     // For ALL other car detail pages (loading, navigating, or incomplete data), show minimal breadcrumbs
     if (path.startsWith("/cars/")) {
       crumbs.push({ label: "Cars", href: "/cars" });
-      // Only show loading if we're not navigating and the path is a valid car details path
-      if (!isNavigating && path !== "/cars") {
-        crumbs.push({ label: "Loading..." });
-      }
+      // Don't show loading in breadcrumbs - handled by overlay
       return crumbs;
     }
 
@@ -302,7 +300,7 @@ export const BreadcrumbNavigation = () => {
         {/* Loading overlay during navigation */}
         {isNavigating && (
           <div className="fixed inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="text-muted-foreground animate-pulse">Loading...</div>
+            <CarLoader size="lg" />
           </div>
         )}
       </div>

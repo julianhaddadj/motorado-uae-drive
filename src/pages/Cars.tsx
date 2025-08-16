@@ -5,6 +5,7 @@ import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { ListingCard } from "@/components/ListingCard";
 import { ListingCardList } from "@/components/ListingCardList";
 import { LayoutSwitcher } from "@/components/LayoutSwitcher";
+import { CarLoader } from "@/components/CarLoader";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -209,7 +210,9 @@ const Cars = () => {
         <Header />
         <BreadcrumbNavigation />
         <main className="mx-auto max-w-6xl px-4 py-10">
-          <p>Loading...</p>
+          <div className="flex justify-center items-center min-h-[300px]">
+            <CarLoader size="lg" />
+          </div>
         </main>
       </div>
     );
@@ -245,7 +248,16 @@ const Cars = () => {
 
             <Select value={selectedModelId || "all"} onValueChange={handleModelChange} disabled={!selectedMakeId}>
               <SelectTrigger className="h-11 md:col-span-1">
-                <SelectValue placeholder={isLoadingModelsForMake(selectedMakeId) ? "Loading..." : "Model"} />
+                <SelectValue>
+                  {isLoadingModelsForMake(selectedMakeId) ? (
+                    <div className="flex items-center gap-2">
+                      <CarLoader size="sm" showText={false} className="scale-75" />
+                      <span>Loading...</span>
+                    </div>
+                  ) : (
+                    selectedModelId ? availableModels.find(m => m.id === selectedModelId)?.name : "Model"
+                  )}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-50">
                 <SelectItem value="all">All Models</SelectItem>
