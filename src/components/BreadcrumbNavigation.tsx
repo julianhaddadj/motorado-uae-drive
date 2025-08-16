@@ -2,7 +2,7 @@ import { useLocation, Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getListingBySlug } from "@/data/listings";
 import { supabase } from "@/integrations/supabase/client";
-import { CarLoader } from "@/components/CarLoader";
+import { FadeLoader } from "@/components/FadeLoader";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -300,7 +300,7 @@ export const BreadcrumbNavigation = () => {
         {/* Loading overlay during navigation */}
         {isNavigating && (
           <div className="fixed inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-50">
-            <CarLoader size="lg" />
+            <FadeLoader size="lg" showText={false} />
           </div>
         )}
       </div>

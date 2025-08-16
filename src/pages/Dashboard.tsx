@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
 import { Plus, Car, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { FadeLoader } from "@/components/FadeLoader";
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
@@ -20,8 +21,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">Loading...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <FadeLoader size="lg" showText={false} />
       </div>
     );
   }

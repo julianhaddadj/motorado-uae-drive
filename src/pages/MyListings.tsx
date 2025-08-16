@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Plus, Edit } from "lucide-react";
+import { FadeLoader } from "@/components/FadeLoader";
 
 interface Listing {
   id: string;
@@ -63,7 +64,24 @@ export default function MyListings() {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-4">
+            <Link to="/" className="inline-flex items-center hover:opacity-80 transition-opacity">
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                Motorado
+              </span>
+            </Link>
+          </div>
+        </header>
+        <main className="container mx-auto px-4 py-10">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <FadeLoader size="lg" showText={false} />
+          </div>
+        </main>
+      </div>
+    );
   }
 
   return (

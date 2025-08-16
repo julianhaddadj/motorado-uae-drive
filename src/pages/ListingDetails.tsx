@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Phone, MessageCircle } from "lucide-react";
+import { FadeLoader } from "@/components/FadeLoader";
 
 interface Listing {
   id: string;
@@ -120,14 +121,19 @@ const ListingDetails = () => {
         <Header />
         <BreadcrumbNavigation />
         <main className="mx-auto max-w-6xl px-4 py-16">
-          <div className="text-center">
-            {loading ? "Loading..." : "Listing not found"}
+          <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+            {loading ? (
+              <FadeLoader size="lg" showText={false} />
+            ) : (
+              <>
+                <h1 className="text-2xl font-bold mb-4">Listing not found</h1>
+                <p className="text-muted-foreground mb-6">The listing you're looking for doesn't exist or has been removed.</p>
+                <Button asChild>
+                  <Link to="/cars">Browse Cars</Link>
+                </Button>
+              </>
+            )}
           </div>
-          {!loading && !listing && (
-            <Link to="/cars" className="block text-center mt-4 text-primary underline">
-              Back to search
-            </Link>
-          )}
         </main>
       </div>
     );

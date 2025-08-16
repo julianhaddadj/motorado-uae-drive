@@ -22,6 +22,7 @@ import {
 import { Check, X, Eye, Phone, MessageCircle, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { FadeLoader } from "@/components/FadeLoader";
 
 interface Listing {
   id: string;
@@ -209,7 +210,11 @@ export function Admin() {
   };
 
   if (adminLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <FadeLoader size="lg" showText={false} />
+      </div>
+    );
   }
 
   if (!isAdmin) {
@@ -292,7 +297,9 @@ export function Admin() {
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="text-center py-4">Loading...</div>
+                <div className="flex justify-center py-8">
+                  <FadeLoader size="md" showText={false} />
+                </div>
               ) : listingsPerSeller.length === 0 ? (
                 <div className="text-center py-4 text-muted-foreground">No sellers found</div>
               ) : (
@@ -349,7 +356,9 @@ export function Admin() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="text-center py-8">Loading listings...</div>
+              <div className="flex justify-center py-8">
+                <FadeLoader size="md" showText={false} />
+              </div>
             ) : listings.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">No listings found</div>
             ) : (

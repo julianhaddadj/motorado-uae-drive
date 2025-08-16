@@ -21,6 +21,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { BODY_TYPES } from "@/constants/bodyTypes";
+import { FadeLoader } from "@/components/FadeLoader";
 
 const countryCodes = [
   { code: "+971", name: "UAE", flag: "🇦🇪" },
@@ -374,7 +375,11 @@ const CreateListing = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <FadeLoader size="lg" showText={false} />
+      </div>
+    );
   }
 
   if (!user) {
@@ -415,7 +420,12 @@ const CreateListing = () => {
                         <Select onValueChange={handleMakeChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder={makesLoading ? "Loading makes..." : "Select make"} />
+                              <SelectValue placeholder={makesLoading ? (
+                                <div className="flex items-center gap-2">
+                                  <div className="w-4 h-4 rounded-full bg-primary animate-pulse" />
+                                  <span>Loading makes...</span>
+                                </div>
+                              ) : "Select make"} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent side="bottom" className="bg-background border border-border shadow-lg z-50">
@@ -443,9 +453,12 @@ const CreateListing = () => {
                               <SelectValue placeholder={
                                 !selectedMake 
                                   ? "Select make first" 
-                                  : isLoadingModelsForMake(selectedMake) 
-                                    ? "Loading models..." 
-                                    : "Select model"
+                                  : isLoadingModelsForMake(selectedMake) ? (
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-4 h-4 rounded-full bg-primary animate-pulse" />
+                                      <span>Loading models...</span>
+                                    </div>
+                                  ) : "Select model"
                               } />
                             </SelectTrigger>
                           </FormControl>

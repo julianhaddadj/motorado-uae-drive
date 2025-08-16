@@ -129,7 +129,12 @@ const Auth = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Signing in..." : "Sign In"}
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded-full bg-primary-foreground animate-pulse" />
+                      <span>Signing in...</span>
+                    </div>
+                  ) : "Sign In"}
                 </Button>
               </form>
             </TabsContent>
@@ -168,7 +173,12 @@ const Auth = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Creating account..." : "Sign Up"}
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded-full bg-primary-foreground animate-pulse" />
+                      <span>Creating account...</span>
+                    </div>
+                  ) : "Sign Up"}
                 </Button>
               </form>
             </TabsContent>

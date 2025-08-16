@@ -74,7 +74,12 @@ const Index = () => {
             
             <Select value={selectedModel || "all"} onValueChange={(value) => setSelectedModel(value === "all" ? "" : value)} disabled={!selectedMake}>
               <SelectTrigger className="h-11">
-                <SelectValue placeholder={isLoadingModelsForMake(selectedMake) ? "Loading..." : "Model"} />
+                <SelectValue placeholder={isLoadingModelsForMake(selectedMake) ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-primary animate-pulse" />
+                    <span>Loading...</span>
+                  </div>
+                ) : "Model"} />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-50">
                 <SelectItem value="all">All Models</SelectItem>
