@@ -38,14 +38,14 @@ export const ListingCard = ({ id, image, title, trim, priceAED, year, location, 
         </div>
       </div>
       <CardContent className="p-4">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <h3 className="line-clamp-1 text-base font-semibold">
-              {title}{trim && ` - ${trim}`}
-            </h3>
-            <p className="mt-1 text-sm text-muted-foreground">{year} • {location}</p>
+        <div className="space-y-2">
+          <h3 className="line-clamp-1 text-base font-semibold">
+            {title}{trim && ` - ${trim}`}
+          </h3>
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">{year} • {location}</p>
+            <div className="text-base font-bold text-foreground">{formatAED(priceAED)}</div>
           </div>
-          <div className="text-right text-base font-bold text-foreground">{formatAED(priceAED)}</div>
         </div>
       </CardContent>
     </Card>
