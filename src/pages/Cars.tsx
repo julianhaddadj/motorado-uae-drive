@@ -71,6 +71,22 @@ const Cars = () => {
     if (urlMake) fetchModelsForMake(urlMake);
   }, []); // Only run on mount
 
+  // Sync local state with URL parameter changes (e.g., from breadcrumb navigation)
+  useEffect(() => {
+    const urlMake = params.get("make") || "";
+    const urlModel = params.get("model") || "";
+    
+    // Only update if URL params differ from local state
+    if (urlMake !== localMakeId) {
+      setLocalMakeId(urlMake);
+      if (urlMake) fetchModelsForMake(urlMake);
+    }
+    
+    if (urlModel !== localModelId) {
+      setLocalModelId(urlModel);
+    }
+  }, [params, localMakeId, localModelId, fetchModelsForMake]);
+
   // Fetch listings from Supabase
   useEffect(() => {
     const fetchListings = async () => {
