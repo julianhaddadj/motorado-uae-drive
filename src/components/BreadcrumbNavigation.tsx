@@ -77,6 +77,9 @@ export const BreadcrumbNavigation = () => {
   useEffect(() => {
     const fetchListingData = async () => {
       if (path.startsWith("/cars/") && path !== "/cars") {
+        // Clear previous data immediately when route changes
+        setListingData(null);
+        
         const slug = path.replace("/cars/", "");
         
         try {
@@ -181,6 +184,13 @@ export const BreadcrumbNavigation = () => {
       });
       crumbs.push({ label: carTitle });
       
+      return crumbs;
+    }
+
+    // Show minimal breadcrumbs for car details pages while loading
+    if (path.startsWith("/cars/") && !listingData) {
+      crumbs.push({ label: "Cars", href: "/cars" });
+      crumbs.push({ label: "Loading..." });
       return crumbs;
     }
 

@@ -52,6 +52,13 @@ const ListingDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [carouselApi, setCarouselApi] = useState<any>(null);
 
+  // Reset state when slug changes to prevent flash of old content
+  useEffect(() => {
+    setListing(null);
+    setLoading(true);
+    setCurrentImageIndex(0);
+  }, [slug]);
+
   useEffect(() => {
     if (slug) {
       fetchListing();
@@ -107,24 +114,20 @@ const ListingDetails = () => {
     }
   };
 
-  if (loading) {
+  if (loading || !listing) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
+        <BreadcrumbNavigation />
         <main className="mx-auto max-w-6xl px-4 py-16">
-          <div className="text-center">Loading...</div>
-        </main>
-      </div>
-    );
-  }
-
-  if (!listing) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="mx-auto max-w-6xl px-4 py-16">
-          <h1 className="mb-4 text-3xl font-bold">Listing not found</h1>
-          <Link to="/cars" className="text-primary underline">Back to search</Link>
+          <div className="text-center">
+            {loading ? "Loading..." : "Listing not found"}
+          </div>
+          {!loading && !listing && (
+            <Link to="/cars" className="block text-center mt-4 text-primary underline">
+              Back to search
+            </Link>
+          )}
         </main>
       </div>
     );
