@@ -142,12 +142,6 @@ export const BreadcrumbNavigation = () => {
       return [];
     }
 
-    // When navigating from car details, show minimal breadcrumbs immediately
-    if (isNavigating && path.startsWith("/cars/")) {
-      crumbs.push({ label: "Cars", href: "/cars" });
-      return crumbs;
-    }
-
     // Cars page with filtering
     if (path === "/cars") {
       const makeId = searchParams.get("make");
@@ -176,10 +170,10 @@ export const BreadcrumbNavigation = () => {
       return crumbs;
     }
 
-    // Car details page - only show if we have data and not navigating
-    if (path.startsWith("/cars/") && listingData && !isNavigating) {
-      const makeName = listingData.make_name || listingData.make;
-      const modelName = listingData.model_name || listingData.model;
+    // Car details page - only show full breadcrumb if we have complete listing data AND we're not navigating
+    if (path.startsWith("/cars/") && listingData && listingData.make_name && listingData.model_name && !isNavigating) {
+      const makeName = listingData.make_name;
+      const modelName = listingData.model_name;
       const carTitle = `${makeName} ${modelName}${listingData.trim ? ` - ${listingData.trim}` : ""} ${listingData.year}`;
       
       crumbs.push({ label: "Cars", href: "/cars" });
@@ -196,10 +190,13 @@ export const BreadcrumbNavigation = () => {
       return crumbs;
     }
 
-    // Show minimal breadcrumbs for car details pages while loading
-    if (path.startsWith("/cars/") && !listingData) {
+    // For ALL other car detail pages (loading, navigating, or incomplete data), show minimal breadcrumbs
+    if (path.startsWith("/cars/")) {
       crumbs.push({ label: "Cars", href: "/cars" });
-      crumbs.push({ label: "Loading..." });
+      // Only show loading if we're not navigating and the path is a valid car details path
+      if (!isNavigating && path !== "/cars") {
+        crumbs.push({ label: "Loading..." });
+      }
       return crumbs;
     }
 
