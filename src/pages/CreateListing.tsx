@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
+import { BODY_TYPES } from "@/constants/bodyTypes";
 
 const countryCodes = [
   { code: "+971", name: "UAE", flag: "🇦🇪" },
@@ -582,19 +583,11 @@ const CreateListing = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent side="bottom">
-                            <SelectItem value="SUV">SUV</SelectItem>
-                            <SelectItem value="Coupe">Coupe</SelectItem>
-                            <SelectItem value="Sedan">Sedan</SelectItem>
-                            <SelectItem value="Crossover">Crossover</SelectItem>
-                            <SelectItem value="Hard Top Convertible">Hard Top Convertible</SelectItem>
-                            <SelectItem value="Soft Top Convertible">Soft Top Convertible</SelectItem>
-                            <SelectItem value="Pick Up Truck">Pick Up Truck</SelectItem>
-                            <SelectItem value="Hatchback">Hatchback</SelectItem>
-                            <SelectItem value="Sports Car">Sports Car</SelectItem>
-                            <SelectItem value="Van">Van</SelectItem>
-                            <SelectItem value="Wagon">Wagon</SelectItem>
-                            <SelectItem value="Utility Truck">Utility Truck</SelectItem>
-                            <SelectItem value="Other">Other</SelectItem>
+                            {BODY_TYPES.map((type) => (
+                              <SelectItem key={type} value={type}>
+                                {type}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />

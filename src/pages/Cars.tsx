@@ -13,6 +13,7 @@ import { useMakesAndModels } from "@/hooks/use-makes-models";
 import { useLayout } from "@/hooks/use-layout";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { BODY_TYPES } from "@/constants/bodyTypes";
 
 function useFilters() {
   const [params, setParams] = useSearchParams();
@@ -46,6 +47,7 @@ const Cars = () => {
 
   const selectedMakeId = localMakeId || params.get("make") || "";
   const selectedModelId = localModelId || params.get("model") || "";
+  const bodyType = params.get("bodyType") || "";
   const minYear = params.get("minYear") || "";
   const maxYear = params.get("maxYear") || "";
   const minPrice = params.get("minPrice") || "";
@@ -150,6 +152,9 @@ const Cars = () => {
     if (selectedModel) {
       filtered = filtered.filter(listing => listing.model === selectedModel.id);
     }
+    if (bodyType) {
+      filtered = filtered.filter(listing => listing.body_type === bodyType);
+    }
     if (minYear) {
       filtered = filtered.filter(listing => listing.year >= parseInt(minYear));
     }
@@ -180,7 +185,7 @@ const Cars = () => {
     });
 
     return filtered;
-  }, [listings, selectedMake, selectedModel, minYear, maxYear, minPrice, maxPrice, sort]);
+  }, [listings, selectedMake, selectedModel, bodyType, minYear, maxYear, minPrice, maxPrice, sort]);
 
   if (loading || listingsLoading) {
     return (
@@ -207,7 +212,7 @@ const Cars = () => {
         <h1 className="mb-6 text-3xl font-bold">Browse Cars</h1>
 
         <div className="mb-6 space-y-4">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-6">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-7">
             <Select value={selectedMakeId || "all"} onValueChange={handleMakeChange}>
               <SelectTrigger className="h-11 md:col-span-1">
                 <SelectValue placeholder="Make" />
@@ -231,6 +236,20 @@ const Cars = () => {
                 {availableModels.map((model) => (
                   <SelectItem key={model.id} value={model.id}>
                     {model.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={bodyType || "all"} onValueChange={(value) => set("bodyType", value === "all" ? undefined : value)}>
+              <SelectTrigger className="h-11 md:col-span-1">
+                <SelectValue placeholder="Body Type" />
+              </SelectTrigger>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
+                <SelectItem value="all">All Body Types</SelectItem>
+                {BODY_TYPES.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
                   </SelectItem>
                 ))}
               </SelectContent>
