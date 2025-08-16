@@ -57,7 +57,7 @@ export const ListingCardList = ({
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
               <div className="flex-1">
                 <h3 className="text-lg sm:text-xl font-semibold line-clamp-2">
-                  {title}{trim && ` ${trim}`}
+                  {title}{trim && ` - ${trim}`}
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">{year} • {location}</p>
               </div>

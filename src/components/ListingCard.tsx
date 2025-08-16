@@ -41,7 +41,7 @@ export const ListingCard = ({ id, image, title, trim, priceAED, year, location, 
         <div className="flex items-start justify-between gap-2">
           <div>
             <h3 className="line-clamp-1 text-base font-semibold">
-              {title}{trim && ` ${trim}`}
+              {title}{trim && ` - ${trim}`}
             </h3>
             <p className="mt-1 text-sm text-muted-foreground">{year} • {location}</p>
           </div>
