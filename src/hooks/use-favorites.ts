@@ -2,13 +2,28 @@ import { useEffect, useMemo, useState } from "react";
 
 const KEY = "motorado:favorites";
 
+// Helper to check if an ID is a valid UUID
+const isValidUUID = (id: string) => {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(id);
+};
+
 export function useFavorites() {
   const [ids, setIds] = useState<string[]>([]);
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(KEY);
-      if (raw) setIds(JSON.parse(raw));
+      if (raw) {
+        const storedIds = JSON.parse(raw);
+        // Filter out any non-UUID IDs (from old static data)
+        const validIds = storedIds.filter(isValidUUID);
+        if (validIds.length !== storedIds.length) {
+          // Clean up localStorage if we found invalid IDs
+          localStorage.setItem(KEY, JSON.stringify(validIds));
+        }
+        setIds(validIds);
+      }
     } catch {}
   }, []);
 

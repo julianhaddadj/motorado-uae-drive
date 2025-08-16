@@ -5,21 +5,79 @@ import { SEO } from "@/components/SEO";
 import { ListingCard } from "@/components/ListingCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { listings as allListings } from "@/data/listings";
 import { useFavorites } from "@/hooks/use-favorites";
 import { useMakesAndModels } from "@/hooks/use-makes-models";
+import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface DatabaseListing {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  price_aed: number;
+  emirate: string;
+  trim?: string;
+  images: string[];
+  is_premium?: boolean;
+  slug: string;
+  make_name?: string;
+  model_name?: string;
+}
 
 const Index = () => {
   const { has, toggle } = useFavorites();
   const { makes, loading, fetchModelsForMake, getModelsByMake, isLoadingModelsForMake } = useMakesAndModels();
   const [selectedMake, setSelectedMake] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
+  const [listings, setListings] = useState<DatabaseListing[]>([]);
+  const [listingsLoading, setListingsLoading] = useState(true);
+
+  // Fetch listings from database
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('listings')
+          .select('*')
+          .eq('is_published', true)
+          .order('created_at', { ascending: false })
+          .limit(12);
+        
+        if (error) throw error;
+        
+        // Fetch make and model names for each listing
+        const listingsWithNames = await Promise.all(
+          (data || []).map(async (listing) => {
+            const [makeData, modelData] = await Promise.all([
+              supabase.from('makes').select('name').eq('id', listing.make).single(),
+              supabase.from('models').select('name').eq('id', listing.model).single()
+            ]);
+            
+            return {
+              ...listing,
+              make_name: makeData.data?.name || listing.make,
+              model_name: modelData.data?.name || listing.model
+            };
+          })
+        );
+        
+        setListings(listingsWithNames);
+      } catch (error) {
+        console.error('Error fetching listings:', error);
+        setListings([]);
+      } finally {
+        setListingsLoading(false);
+      }
+    };
+
+    fetchListings();
+  }, []);
   
-  const featured = allListings
-    .filter((l) => l.isPremium)
-    .concat(allListings.filter((l) => !l.isPremium))
+  const featured = listings
+    .filter((l) => l.is_premium)
+    .concat(listings.filter((l) => !l.is_premium))
     .slice(0, 6);
 
   const availableModels = selectedMake ? getModelsByMake(selectedMake) : [];
@@ -113,25 +171,38 @@ const Index = () => {
           <Button variant="premium">View all</Button>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-          {featured.map((l) => (
-            <Link key={l.id} to={`/cars/${l.slug}`} className="block">
-              <ListingCard
-                id={l.id}
-                image={l.coverImageUrl}
-                title={`${l.make} ${l.model} ${l.year}${l.trim ? ` ${l.trim}` : ''}`}
-                priceAED={l.priceAED}
-                year={l.year}
-                location={l.emirate}
-                isPremium={l.isPremium}
-                favorite={has.has(l.id)}
-                onToggleFavorite={(e?: any) => {
-                  // Prevent link navigation when toggling favorite
-                  if (e && e.preventDefault) e.preventDefault();
-                  toggle(l.id);
-                }}
-              />
-            </Link>
-          ))}
+          {listingsLoading ? (
+            // Show loading skeletons
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="bg-muted rounded-lg aspect-[16/10] mb-4"></div>
+                <div className="space-y-2">
+                  <div className="bg-muted rounded h-4 w-3/4"></div>
+                  <div className="bg-muted rounded h-4 w-1/2"></div>
+                </div>
+              </div>
+            ))
+          ) : (
+            featured.map((l) => (
+              <Link key={l.id} to={`/cars/${l.slug}`} className="block">
+                <ListingCard
+                  id={l.id}
+                  image={l.images?.[0] || "/placeholder.svg"}
+                  title={`${l.make_name || l.make} ${l.model_name || l.model} ${l.year}${l.trim ? ` ${l.trim}` : ''}`}
+                  priceAED={l.price_aed}
+                  year={l.year}
+                  location={l.emirate}
+                  isPremium={l.is_premium}
+                  favorite={has.has(l.id)}
+                  onToggleFavorite={(e?: any) => {
+                    // Prevent link navigation when toggling favorite
+                    if (e && e.preventDefault) e.preventDefault();
+                    toggle(l.id);
+                  }}
+                />
+              </Link>
+            ))
+          )}
         </div>
       </section>
 
