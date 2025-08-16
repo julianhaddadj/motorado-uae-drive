@@ -6,7 +6,7 @@ interface FadeLoaderProps {
   showText?: boolean;
 }
 
-export const FadeLoader = ({ className, size = "md", showText = true }: FadeLoaderProps) => {
+export const FadeLoader = ({ className, size = "md", showText = false }: FadeLoaderProps) => {
   const sizeClasses = {
     sm: "w-16 h-16",
     md: "w-24 h-24", 
@@ -20,7 +20,14 @@ export const FadeLoader = ({ className, size = "md", showText = true }: FadeLoad
   };
 
   return (
-    <div className={cn("flex flex-col items-center gap-4", className)} role="status" aria-label="Loading">
+    <div 
+      className={cn("flex flex-col items-center gap-4 animate-[fadeIn_0.8s_ease-out] opacity-0", className)} 
+      role="status" 
+      aria-label="Loading"
+      style={{ 
+        animation: 'fadeIn 0.8s ease-out forwards',
+      }}
+    >
       {/* Main loading circle with fade animation */}
       <div className={cn("relative", sizeClasses[size])}>
         {/* Outer ring with pulse */}

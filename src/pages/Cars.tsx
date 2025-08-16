@@ -212,8 +212,8 @@ const Cars = () => {
         <Header />
         <BreadcrumbNavigation />
         <main className="mx-auto max-w-6xl px-4 py-10">
-          <div className="flex justify-center items-center min-h-[300px]">
-            <FadeLoader size="lg" />
+          <div className="flex justify-center items-center min-h-[300px] loading-container">
+            <FadeLoader size="lg" showText={false} />
           </div>
         </main>
       </div>
