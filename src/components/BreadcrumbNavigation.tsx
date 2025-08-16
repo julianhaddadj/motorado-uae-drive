@@ -31,47 +31,52 @@ export const BreadcrumbNavigation = () => {
   const path = location.pathname;
   const [makeModelNames, setMakeModelNames] = useState<{[key: string]: string}>({});
   const [listingData, setListingData] = useState<ListingData | null>(null);
+  const [isNavigating, setIsNavigating] = useState(false);
 
-  // Fetch make and model names for IDs
+  // Clear navigation state after route changes
+  useEffect(() => {
+    if (isNavigating) {
+      const timer = setTimeout(() => setIsNavigating(false), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [path, isNavigating]);
+
+  // Fetch make and model names for IDs - with better caching
   useEffect(() => {
     const fetchNames = async () => {
       const makeId = searchParams.get("make");
       const modelId = searchParams.get("model");
       const newNames: {[key: string]: string} = {};
 
-      if (makeId && !makeModelNames[`make_${makeId}`]) {
-        try {
+      try {
+        if (makeId && !makeModelNames[`make_${makeId}`]) {
           const { data } = await supabase
             .from('makes')
             .select('name')
             .eq('id', makeId)
             .single();
           if (data) newNames[`make_${makeId}`] = data.name;
-        } catch (error) {
-          console.error('Error fetching make name:', error);
         }
-      }
 
-      if (modelId && !makeModelNames[`model_${modelId}`]) {
-        try {
+        if (modelId && !makeModelNames[`model_${modelId}`]) {
           const { data } = await supabase
             .from('models')
             .select('name')
             .eq('id', modelId)
             .single();
           if (data) newNames[`model_${modelId}`] = data.name;
-        } catch (error) {
-          console.error('Error fetching model name:', error);
         }
-      }
 
-      if (Object.keys(newNames).length > 0) {
-        setMakeModelNames(prev => ({ ...prev, ...newNames }));
+        if (Object.keys(newNames).length > 0) {
+          setMakeModelNames(prev => ({ ...prev, ...newNames }));
+        }
+      } catch (error) {
+        console.error('Error fetching make/model names:', error);
       }
     };
 
     fetchNames();
-  }, [searchParams, makeModelNames]);
+  }, [searchParams.get("make"), searchParams.get("model")]);
 
   // Fetch listing data for car details pages
   useEffect(() => {
@@ -260,6 +265,13 @@ export const BreadcrumbNavigation = () => {
                         to={crumb.href} 
                         className="text-muted-foreground hover:text-foreground transition-colors"
                         title={crumb.label}
+                        onClick={() => {
+                          // Clear listing data immediately for smoother transition
+                          if (path.startsWith("/cars/") && path !== "/cars") {
+                            setListingData(null);
+                            setIsNavigating(true);
+                          }
+                        }}
                       >
                         {crumb.label}
                       </Link>
@@ -274,6 +286,13 @@ export const BreadcrumbNavigation = () => {
             ))}
           </BreadcrumbList>
         </Breadcrumb>
+        
+        {/* Loading overlay during navigation */}
+        {isNavigating && (
+          <div className="fixed inset-0 bg-background/90 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="text-muted-foreground animate-pulse">Loading...</div>
+          </div>
+        )}
       </div>
     </div>
   );
