@@ -342,7 +342,7 @@ const Cars = () => {
           ? "grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3" 
           : "space-y-4"
         }>
-          {filteredListings.map((listing) => (
+          {filteredListings.map((listing, index) => (
             <Link key={listing.id} to={`/cars/${listing.slug}`} className="block">
               {layout === 'grid' ? (
                 <ListingCard
