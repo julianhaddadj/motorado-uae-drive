@@ -141,18 +141,24 @@ export const BreadcrumbNavigation = () => {
       const makeId = searchParams.get("make");
       const modelId = searchParams.get("model");
       
-      crumbs.push({ label: "Cars" });
-      
       if (makeId) {
         const makeName = makeModelNames[`make_${makeId}`] || makeId;
-        crumbs[crumbs.length - 1].href = buildFilteredUrl("/cars", ["make", "model"]);
-        crumbs.push({ label: makeName });
+        // "Cars" link should clear make and model filters
+        crumbs.push({ label: "Cars", href: buildFilteredUrl("/cars", ["make", "model"]) });
         
         if (modelId) {
           const modelName = makeModelNames[`model_${modelId}`] || modelId;
-          crumbs[crumbs.length - 1].href = buildFilteredUrl("/cars", ["model"]);
+          // "Make" link should keep make but clear model
+          crumbs.push({ label: makeName, href: buildFilteredUrl("/cars", ["model"]) });
+          // Current model is not a link
           crumbs.push({ label: modelName });
+        } else {
+          // Current make is not a link
+          crumbs.push({ label: makeName });
         }
+      } else {
+        // No filters applied, current page
+        crumbs.push({ label: "Cars" });
       }
       
       return crumbs;
