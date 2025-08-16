@@ -1,16 +1,13 @@
 export const BODY_TYPES = [
   "SUV",
   "Coupe",
-  "Sedan", 
+  "Sedan",
   "Crossover",
-  "Hard Top Convertible",
-  "Soft Top Convertible",
-  "Pick Up Truck",
+  "Convertible",
+  "Pickup",
   "Hatchback",
-  "Sports Car",
-  "Van",
+  "Van/Minivan",
   "Wagon",
-  "Utility Truck",
   "Other"
 ] as const;
 
