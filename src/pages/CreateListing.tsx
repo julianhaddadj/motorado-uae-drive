@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { BODY_TYPES } from "@/constants/bodyTypes";
 
 const countryCodes = [
@@ -67,6 +68,24 @@ const formSchema = z.object({
   contactPhoneCountryCode: z.string().min(1, "Country code is required"),
   contactPhoneNumber: z.string().min(1, "Phone number is required"),
   contactPhoneHasWhatsapp: z.boolean().default(false),
+  sellerType: z.enum(["Owner", "Dealership"], { required_error: "Please select a seller type" }),
+  dealershipName: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (data.sellerType === "Dealership") {
+    if (!data.dealershipName || data.dealershipName.trim().length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please enter a dealership name",
+        path: ["dealershipName"]
+      });
+    } else if (data.dealershipName.trim().length < 2 || data.dealershipName.trim().length > 80) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Dealership name must be between 2 and 80 characters",
+        path: ["dealershipName"]
+      });
+    }
+  }
 });
 
 const CreateListing = () => {
@@ -105,6 +124,8 @@ const CreateListing = () => {
       contactPhoneCountryCode: "+971",
       contactPhoneNumber: "",
       contactPhoneHasWhatsapp: false,
+      sellerType: undefined,
+      dealershipName: "",
     },
   });
 
@@ -276,6 +297,8 @@ const CreateListing = () => {
           warranty: values.warranty,
           steering_side: values.steeringSide,
           insured_in_uae: values.insuredInUAE,
+          seller_type: values.sellerType,
+          dealership_name: values.sellerType === "Dealership" ? values.dealershipName : null,
           slug: slug,
           is_published: false,
         } as any)
@@ -1015,6 +1038,58 @@ const CreateListing = () => {
                       </FormItem>
                     )}
                   />
+                </div>
+
+                {/* Seller Type Section */}
+                <div className="space-y-4 border-t pt-6">
+                  <h3 className="text-lg font-semibold">Seller Information</h3>
+                  <p className="text-sm text-muted-foreground">Are you the owner or a dealership?</p>
+                  
+                  <FormField
+                    control={form.control}
+                    name="sellerType"
+                    render={({ field }) => (
+                      <FormItem className="space-y-3">
+                        <FormLabel>Seller Type *</FormLabel>
+                        <FormControl>
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            className="flex flex-col space-y-2"
+                          >
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="Owner" id="owner" />
+                              <Label htmlFor="owner">Owner</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem value="Dealership" id="dealership" />
+                              <Label htmlFor="dealership">Dealership</Label>
+                            </div>
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {form.watch("sellerType") === "Dealership" && (
+                    <FormField
+                      control={form.control}
+                      name="dealershipName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Dealership Name *</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="e.g., Falcon Motors"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 </div>
 
                 <div className="flex gap-4 pt-4">

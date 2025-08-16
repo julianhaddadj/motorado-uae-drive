@@ -24,6 +24,7 @@ export type Database = {
           contact_phone_has_whatsapp: boolean | null
           contact_phone_number: string | null
           created_at: string
+          dealership_name: string | null
           description: string | null
           doors: string | null
           emirate: string
@@ -42,6 +43,7 @@ export type Database = {
           price_aed: number
           regional_spec: Database["public"]["Enums"]["regional_spec"]
           rejection_reason: string | null
+          seller_type: string
           slug: string
           steering_side: string | null
           transmission: string | null
@@ -60,6 +62,7 @@ export type Database = {
           contact_phone_has_whatsapp?: boolean | null
           contact_phone_number?: string | null
           created_at?: string
+          dealership_name?: string | null
           description?: string | null
           doors?: string | null
           emirate: string
@@ -78,6 +81,7 @@ export type Database = {
           price_aed: number
           regional_spec: Database["public"]["Enums"]["regional_spec"]
           rejection_reason?: string | null
+          seller_type?: string
           slug: string
           steering_side?: string | null
           transmission?: string | null
@@ -96,6 +100,7 @@ export type Database = {
           contact_phone_has_whatsapp?: boolean | null
           contact_phone_number?: string | null
           created_at?: string
+          dealership_name?: string | null
           description?: string | null
           doors?: string | null
           emirate?: string
@@ -114,6 +119,7 @@ export type Database = {
           price_aed?: number
           regional_spec?: Database["public"]["Enums"]["regional_spec"]
           rejection_reason?: string | null
+          seller_type?: string
           slug?: string
           steering_side?: string | null
           transmission?: string | null
