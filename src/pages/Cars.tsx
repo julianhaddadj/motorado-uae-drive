@@ -16,6 +16,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { BODY_TYPES } from "@/constants/bodyTypes";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { cn } from "@/lib/utils";
 
 function useFilters() {
   const [params, setParams] = useSearchParams();
@@ -42,6 +43,7 @@ const Cars = () => {
   const { layout } = useLayout();
   const [listings, setListings] = useState<any[]>([]);
   const [listingsLoading, setListingsLoading] = useState(true);
+  const [showContent, setShowContent] = useState(false);
   const scrollRef = useScrollAnimation();
 
   // Use local state for immediate UI updates, sync with URL
@@ -94,6 +96,7 @@ const Cars = () => {
   useEffect(() => {
     const fetchListings = async () => {
       setListingsLoading(true);
+      setShowContent(false);
       try {
         const { data, error } = await supabase
           .from('listings')
@@ -119,11 +122,19 @@ const Cars = () => {
         );
         
         setListings(listingsWithNames);
+        
+        // Add a small delay for smooth transition
+        setTimeout(() => {
+          setShowContent(true);
+        }, 300);
       } catch (error) {
         console.error('Error fetching listings:', error);
         setListings([]);
+        setShowContent(true);
       } finally {
-        setListingsLoading(false);
+        setTimeout(() => {
+          setListingsLoading(false);
+        }, 800);
       }
     };
 
@@ -208,20 +219,22 @@ const Cars = () => {
 
   if (loading || listingsLoading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <BreadcrumbNavigation />
-        <main className="mx-auto max-w-6xl px-4 py-10">
-          <div className="flex justify-center items-center min-h-[300px] loading-container">
-            <FadeLoader size="lg" showText={false} />
-          </div>
-        </main>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="loading-container">
+          <FadeLoader size="lg" showText={false} />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background" ref={scrollRef as any}>
+    <div 
+      className={cn(
+        "min-h-screen bg-background transition-all duration-1000 ease-out",
+        showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      )} 
+      ref={scrollRef as any}
+    >
       <Header />
       <BreadcrumbNavigation />
       <main className="mx-auto max-w-6xl px-4 py-10">
