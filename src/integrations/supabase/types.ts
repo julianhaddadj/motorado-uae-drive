@@ -282,6 +282,12 @@ export type Database = {
         | "Van/Minivan"
         | "Crossover"
         | "Other"
+        | "Sports Car"
+        | "Hard Top Convertible"
+        | "Soft Top Convertible"
+        | "Pick Up Truck"
+        | "Utility Truck"
+        | "Van"
       regional_spec:
         | "GCC"
         | "Japanese"
@@ -428,6 +434,12 @@ export const Constants = {
         "Van/Minivan",
         "Crossover",
         "Other",
+        "Sports Car",
+        "Hard Top Convertible",
+        "Soft Top Convertible",
+        "Pick Up Truck",
+        "Utility Truck",
+        "Van",
       ],
       regional_spec: [
         "GCC",
