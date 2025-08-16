@@ -51,6 +51,8 @@ interface Listing {
   warranty?: string;
   steering_side?: string;
   insured_in_uae?: string;
+  seller_type?: string;
+  dealership_name?: string;
 }
 
 interface ListingPerSeller {
@@ -443,21 +445,30 @@ export function Admin() {
                                     </div>
                                   </div>
 
-                                  <div className="space-y-2">
-                                    <h4 className="font-semibold">Price & Contact</h4>
-                                    <div className="space-y-1 text-sm">
-                                      <p><span className="font-medium">Price:</span> AED {listing.price_aed.toLocaleString()}</p>
-                                      
-                                      {listing.contact_phone_number && (
-                                        <div className="space-y-1">
-                                          <p className="font-medium">Contact:</p>
-                                          <div className="flex items-center gap-2">
-                                            <Phone className="h-4 w-4" />
-                                            <span>{listing.contact_phone_country_code} {listing.contact_phone_number}</span>
-                                            {listing.contact_phone_has_whatsapp && (
-                                              <Badge variant="secondary" className="text-xs">
-                                                <MessageCircle className="h-3 w-3 mr-1" />
-                                                WhatsApp
+                                   <div className="space-y-2">
+                                     <h4 className="font-semibold">Price & Contact</h4>
+                                     <div className="space-y-1 text-sm">
+                                       <p><span className="font-medium">Price:</span> AED {listing.price_aed.toLocaleString()}</p>
+                                       
+                                       {/* Seller Information */}
+                                       <div className="space-y-1 border-t pt-2 mt-2">
+                                         <p className="font-medium">Seller Information:</p>
+                                         <p><span className="font-medium">Type:</span> {listing.seller_type}</p>
+                                         {listing.seller_type === 'Dealership' && listing.dealership_name && (
+                                           <p><span className="font-medium">Dealership:</span> {listing.dealership_name}</p>
+                                         )}
+                                       </div>
+                                       
+                                       {listing.contact_phone_number && (
+                                         <div className="space-y-1 border-t pt-2 mt-2">
+                                           <p className="font-medium">Contact:</p>
+                                           <div className="flex items-center gap-2">
+                                             <Phone className="h-4 w-4" />
+                                             <span>{listing.contact_phone_country_code} {listing.contact_phone_number}</span>
+                                             {listing.contact_phone_has_whatsapp && (
+                                               <Badge variant="secondary" className="text-xs">
+                                                 <MessageCircle className="h-3 w-3 mr-1" />
+                                                 WhatsApp
                                               </Badge>
                                             )}
                                           </div>

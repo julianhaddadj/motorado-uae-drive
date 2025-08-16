@@ -38,6 +38,8 @@ interface Listing {
   warranty?: string;
   steering_side?: string;
   insured_in_uae?: string;
+  seller_type?: string;
+  dealership_name?: string;
 }
 
 const formatAED = (n: number) => new Intl.NumberFormat("en-AE", { style: "currency", currency: "AED", maximumFractionDigits: 0 }).format(n);
@@ -190,6 +192,17 @@ const ListingDetails = () => {
                 {listing.steering_side && <div><span className="text-muted-foreground">Steering Side</span>: {listing.steering_side}</div>}
                 {listing.warranty && <div><span className="text-muted-foreground">Warranty</span>: {listing.warranty}</div>}
                 {listing.insured_in_uae && <div><span className="text-muted-foreground">Insured in UAE</span>: {listing.insured_in_uae}</div>}
+              </div>
+            </div>
+
+            {/* Seller Information */}
+            <div className="rounded-lg border p-4">
+              <h3 className="text-lg font-semibold mb-3">Seller Information</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div><span className="text-muted-foreground">Type</span>: {listing.seller_type}</div>
+                {listing.seller_type === 'Dealership' && listing.dealership_name && (
+                  <div><span className="text-muted-foreground">Dealership</span>: {listing.dealership_name}</div>
+                )}
               </div>
             </div>
 
