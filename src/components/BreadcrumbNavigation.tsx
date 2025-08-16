@@ -142,6 +142,12 @@ export const BreadcrumbNavigation = () => {
       return [];
     }
 
+    // When navigating from car details, show minimal breadcrumbs immediately
+    if (isNavigating && path.startsWith("/cars/")) {
+      crumbs.push({ label: "Cars", href: "/cars" });
+      return crumbs;
+    }
+
     // Cars page with filtering
     if (path === "/cars") {
       const makeId = searchParams.get("make");
@@ -170,8 +176,8 @@ export const BreadcrumbNavigation = () => {
       return crumbs;
     }
 
-    // Car details page
-    if (path.startsWith("/cars/") && listingData) {
+    // Car details page - only show if we have data and not navigating
+    if (path.startsWith("/cars/") && listingData && !isNavigating) {
       const makeName = listingData.make_name || listingData.make;
       const modelName = listingData.model_name || listingData.model;
       const carTitle = `${makeName} ${modelName}${listingData.trim ? ` - ${listingData.trim}` : ""} ${listingData.year}`;
@@ -190,12 +196,10 @@ export const BreadcrumbNavigation = () => {
       return crumbs;
     }
 
-    // Show minimal breadcrumbs for car details pages while loading or navigating
-    if (path.startsWith("/cars/") && (!listingData || isNavigating)) {
+    // Show minimal breadcrumbs for car details pages while loading
+    if (path.startsWith("/cars/") && !listingData) {
       crumbs.push({ label: "Cars", href: "/cars" });
-      if (!isNavigating) {
-        crumbs.push({ label: "Loading..." });
-      }
+      crumbs.push({ label: "Loading..." });
       return crumbs;
     }
 
