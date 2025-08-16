@@ -18,6 +18,8 @@ interface Listing {
   is_published: boolean;
   created_at: string;
   slug: string;
+  makes?: { name: string };
+  models?: { name: string };
 }
 
 export default function MyListings() {
@@ -33,14 +35,42 @@ export default function MyListings() {
 
   const fetchMyListings = async () => {
     try {
-      const { data, error } = await supabase
+      // First get the listings
+      const { data: listings, error: listingsError } = await supabase
         .from('listings')
         .select('*')
         .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setListings(data || []);
+      if (listingsError) throw listingsError;
+
+      if (!listings || listings.length === 0) {
+        setListings([]);
+        return;
+      }
+
+      // Get unique make and model IDs
+      const makeIds = [...new Set(listings.map(l => l.make))];
+      const modelIds = [...new Set(listings.map(l => l.model))];
+
+      // Fetch makes and models
+      const [{ data: makes }, { data: models }] = await Promise.all([
+        supabase.from('makes').select('id, name').in('id', makeIds),
+        supabase.from('models').select('id, name').in('id', modelIds)
+      ]);
+
+      // Create lookup maps
+      const makeMap = new Map(makes?.map(m => [m.id, m.name]) || []);
+      const modelMap = new Map(models?.map(m => [m.id, m.name]) || []);
+
+      // Combine the data
+      const enrichedListings = listings.map(listing => ({
+        ...listing,
+        makes: { name: makeMap.get(listing.make) || listing.make },
+        models: { name: modelMap.get(listing.model) || listing.model }
+      }));
+
+      setListings(enrichedListings);
     } catch (error) {
       console.error('Error fetching listings:', error);
     } finally {
@@ -124,7 +154,7 @@ export default function MyListings() {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <CardTitle className="text-lg">
-                      {listing.make} {listing.model}
+                      {listing.makes?.name || listing.make} {listing.models?.name || listing.model}
                     </CardTitle>
                     {getStatusBadge(listing.approval_status)}
                   </div>
