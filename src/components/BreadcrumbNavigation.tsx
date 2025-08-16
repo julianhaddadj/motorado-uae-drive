@@ -33,13 +33,11 @@ export const BreadcrumbNavigation = () => {
   const [listingData, setListingData] = useState<ListingData | null>(null);
   const [isNavigating, setIsNavigating] = useState(false);
 
-  // Clear navigation state after route changes
+  // Clear navigation state after route changes  
   useEffect(() => {
-    if (isNavigating) {
-      const timer = setTimeout(() => setIsNavigating(false), 200);
-      return () => clearTimeout(timer);
-    }
-  }, [path, isNavigating]);
+    // Reset navigation state when route changes
+    setIsNavigating(false);
+  }, [location.pathname]);
 
   // Fetch make and model names for IDs - with better caching
   useEffect(() => {
@@ -192,10 +190,12 @@ export const BreadcrumbNavigation = () => {
       return crumbs;
     }
 
-    // Show minimal breadcrumbs for car details pages while loading
-    if (path.startsWith("/cars/") && !listingData) {
+    // Show minimal breadcrumbs for car details pages while loading or navigating
+    if (path.startsWith("/cars/") && (!listingData || isNavigating)) {
       crumbs.push({ label: "Cars", href: "/cars" });
-      crumbs.push({ label: "Loading..." });
+      if (!isNavigating) {
+        crumbs.push({ label: "Loading..." });
+      }
       return crumbs;
     }
 
