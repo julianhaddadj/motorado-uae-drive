@@ -15,6 +15,7 @@ import { useLayout } from "@/hooks/use-layout";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { BODY_TYPES } from "@/constants/bodyTypes";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 function useFilters() {
   const [params, setParams] = useSearchParams();
@@ -41,6 +42,7 @@ const Cars = () => {
   const { layout } = useLayout();
   const [listings, setListings] = useState<any[]>([]);
   const [listingsLoading, setListingsLoading] = useState(true);
+  const scrollRef = useScrollAnimation();
 
   // Use local state for immediate UI updates, sync with URL
   const [localMakeId, setLocalMakeId] = useState("");
@@ -219,7 +221,7 @@ const Cars = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" ref={scrollRef as any}>
       <Header />
       <BreadcrumbNavigation />
       <main className="mx-auto max-w-6xl px-4 py-10">

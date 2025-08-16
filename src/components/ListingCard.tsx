@@ -20,7 +20,7 @@ const formatAED = (n: number) => new Intl.NumberFormat("en-AE", { style: "curren
 
 export const ListingCard = ({ id, image, title, trim, priceAED, year, location, isPremium, favorite, onToggleFavorite }: ListingCardProps) => {
   return (
-    <Card className="group overflow-hidden transition-transform hover:-translate-y-0.5 hover:shadow-lg">
+    <Card className="group overflow-hidden hover-lift animate-on-scroll shimmer">
       <div className="relative aspect-[16/10] w-full overflow-hidden">
         <img
           src={image}
