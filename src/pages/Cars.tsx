@@ -5,7 +5,7 @@ import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
 import { ListingCard } from "@/components/ListingCard";
 import { ListingCardList } from "@/components/ListingCardList";
 import { LayoutSwitcher } from "@/components/LayoutSwitcher";
-import { CarLoader } from "@/components/CarLoader";
+import { FadeLoader } from "@/components/FadeLoader";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -213,7 +213,7 @@ const Cars = () => {
         <BreadcrumbNavigation />
         <main className="mx-auto max-w-6xl px-4 py-10">
           <div className="flex justify-center items-center min-h-[300px]">
-            <CarLoader size="lg" />
+            <FadeLoader size="lg" />
           </div>
         </main>
       </div>
@@ -253,7 +253,7 @@ const Cars = () => {
                 <SelectValue>
                   {isLoadingModelsForMake(selectedMakeId) ? (
                     <div className="flex items-center gap-2">
-                      <CarLoader size="sm" showText={false} className="scale-75" />
+                      <div className="w-4 h-4 rounded-full bg-primary animate-pulse" />
                       <span>Loading...</span>
                     </div>
                   ) : (
