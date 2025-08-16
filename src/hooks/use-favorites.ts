@@ -10,6 +10,7 @@ const isValidUUID = (id: string) => {
 
 export function useFavorites() {
   const [ids, setIds] = useState<string[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     try {
@@ -25,6 +26,7 @@ export function useFavorites() {
         setIds(validIds);
       }
     } catch {}
+    setIsLoaded(true);
   }, []);
 
   const toggle = (id: string) => {
@@ -54,5 +56,5 @@ export function useFavorites() {
 
   const has = useMemo(() => new Set(ids), [ids]);
 
-  return { ids, has, toggle, add, remove };
+  return { ids, has, toggle, add, remove, isLoaded };
 }

@@ -24,13 +24,15 @@ interface FavoriteListing {
 }
 
 const Favorites = () => {
-  const { ids, has, toggle } = useFavorites();
+  const { ids, has, toggle, isLoaded } = useFavorites();
   const [favoriteListings, setFavoriteListings] = useState<FavoriteListing[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchFavoriteListings();
-  }, [ids]);
+    if (isLoaded) {
+      fetchFavoriteListings();
+    }
+  }, [ids, isLoaded]);
 
   const fetchFavoriteListings = async () => {
     if (ids.length === 0) {
@@ -95,7 +97,7 @@ const Favorites = () => {
     }
   };
 
-  if (loading) {
+  if (loading || !isLoaded) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
