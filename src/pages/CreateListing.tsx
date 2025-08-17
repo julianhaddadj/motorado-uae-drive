@@ -19,8 +19,8 @@ const CreateListing = () => {
           />
           
           <div className="mb-8">
-            <h1 className="mb-2 text-3xl font-bold text-white">Create Your Car Listing</h1>
-            <p className="text-white/80">Follow the step-by-step guide to create your car listing</p>
+            <h1 className="mb-2 text-3xl font-bold text-primary">Create Your Car Listing</h1>
+            <p className="text-primary/80">Follow the step-by-step guide to create your car listing</p>
           </div>
 
           <CreateListingWizard />
