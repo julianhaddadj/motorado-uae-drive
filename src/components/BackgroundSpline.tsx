@@ -3,8 +3,8 @@ import React from 'react';
 export const BackgroundSpline = () => {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-      {/* Premium gradient: Rebecca Purple → deep midnight purple → almost black */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-600 via-purple-900 to-gray-900" />
+      {/* White to purple gradient background */}
+      <div className="absolute inset-0" style={{ background: 'var(--gradient-surface)' }} />
       
       {/* Simplified floating glass panels - fewer elements */}
       <div className="absolute inset-0">
