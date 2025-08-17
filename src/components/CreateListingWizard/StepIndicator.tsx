@@ -60,11 +60,14 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
                      <div 
                       className={cn(
                         "absolute top-4 left-8 h-1 transition-colors duration-500 rounded-full",
-                        "w-[calc(100%-2rem)]", // Adjust width to not overlap circles
+                        "w-[calc(100%-1rem)]", // Ensure consistent spacing
                         isCompleted || currentStep > step.id
                           ? "bg-gradient-to-r from-primary to-primary/80 shadow-sm"
                           : "bg-gradient-to-r from-white/30 to-white/10"
                       )}
+                      style={{ 
+                        right: '2rem' // Ensure line ends before next circle
+                      }}
                       aria-hidden="true"
                     />
                   )}
