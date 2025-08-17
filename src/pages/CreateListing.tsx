@@ -401,8 +401,8 @@ const CreateListing = () => {
         />
         
         <div className="mb-8">
-          <h1 className="mb-2 text-3xl font-bold">Create Your Car Listing</h1>
-          <p className="text-muted-foreground">Fill out the details below to create your car listing</p>
+          <h1 className="mb-2 text-3xl font-bold text-white">Create Your Car Listing</h1>
+          <p className="text-white/80">Fill out the details below to create your car listing</p>
         </div>
 
         <Form {...form}>
