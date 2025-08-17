@@ -240,4 +240,17 @@ All colors MUST be HSL.
     opacity: 0;
     transform: scale(0.95);
   }
+
+  /* Drift animation for background grid */
+  @keyframes drift {
+    0%, 100% { 
+      transform: translate(0px, 0px) rotate(0deg);
+    }
+    33% { 
+      transform: translate(10px, -10px) rotate(1deg);
+    }
+    66% { 
+      transform: translate(-5px, 5px) rotate(-0.5deg);
+    }
+  }
 }
