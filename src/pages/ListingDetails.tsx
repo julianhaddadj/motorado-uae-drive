@@ -269,33 +269,33 @@ const ListingDetails = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-4" style={{ boxShadow: 'var(--shadow-elevated)' }}>
-                <h3 className="text-lg font-semibold mb-3 text-white">Car Details</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-white">
-                  <div><span className="text-white/70">Year</span>: {listing.year}</div>
-                  <div><span className="text-white/70">Mileage</span>: {listing.mileage_km.toLocaleString()} km</div>
-                  <div><span className="text-white/70">Body Type</span>: {listing.body_type}</div>
-                  <div><span className="text-white/70">Regional Spec</span>: {listing.regional_spec}</div>
-                  <div><span className="text-white/70">Location</span>: {listing.emirate}</div>
-                  {listing.trim && <div><span className="text-white/70">Trim</span>: {listing.trim}</div>}
-                  {listing.fuel_type && <div><span className="text-white/70">Fuel Type</span>: {listing.fuel_type}</div>}
-                  {listing.transmission && <div><span className="text-white/70">Transmission</span>: {listing.transmission}</div>}
-                  {listing.horsepower && <div><span className="text-white/70">Horsepower</span>: {listing.horsepower}</div>}
-                  {listing.doors && <div><span className="text-white/70">Doors</span>: {listing.doors}</div>}
-                  {listing.exterior_color && <div><span className="text-white/70">Exterior Color</span>: {listing.exterior_color}</div>}
-                  {listing.interior_color && <div><span className="text-white/70">Interior Color</span>: {listing.interior_color}</div>}
-                  {listing.steering_side && <div><span className="text-white/70">Steering Side</span>: {listing.steering_side}</div>}
-                  {listing.warranty && <div><span className="text-white/70">Warranty</span>: {listing.warranty}</div>}
-                  {listing.insured_in_uae && <div><span className="text-white/70">Insured in UAE</span>: {listing.insured_in_uae}</div>}
+                <h3 className="text-lg font-semibold mb-3 text-foreground">Car Details</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-foreground">
+                  <div><span className="font-bold">Year</span>: {listing.year}</div>
+                  <div><span className="font-bold">Mileage</span>: {listing.mileage_km.toLocaleString()} km</div>
+                  <div><span className="font-bold">Body Type</span>: {listing.body_type}</div>
+                  <div><span className="font-bold">Regional Spec</span>: {listing.regional_spec}</div>
+                  <div><span className="font-bold">Location</span>: {listing.emirate}</div>
+                  {listing.trim && <div><span className="font-bold">Trim</span>: {listing.trim}</div>}
+                  {listing.fuel_type && <div><span className="font-bold">Fuel Type</span>: {listing.fuel_type}</div>}
+                  {listing.transmission && <div><span className="font-bold">Transmission</span>: {listing.transmission}</div>}
+                  {listing.horsepower && <div><span className="font-bold">Horsepower</span>: {listing.horsepower}</div>}
+                  {listing.doors && <div><span className="font-bold">Doors</span>: {listing.doors}</div>}
+                  {listing.exterior_color && <div><span className="font-bold">Exterior Color</span>: {listing.exterior_color}</div>}
+                  {listing.interior_color && <div><span className="font-bold">Interior Color</span>: {listing.interior_color}</div>}
+                  {listing.steering_side && <div><span className="font-bold">Steering Side</span>: {listing.steering_side}</div>}
+                  {listing.warranty && <div><span className="font-bold">Warranty</span>: {listing.warranty}</div>}
+                  {listing.insured_in_uae && <div><span className="font-bold">Insured in UAE</span>: {listing.insured_in_uae}</div>}
                 </div>
               </div>
 
               {/* Seller Information */}
               <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-4" style={{ boxShadow: 'var(--shadow-elevated)' }}>
-                <h3 className="text-lg font-semibold mb-3 text-white">Seller Information</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-white">
-                  <div><span className="text-white/70">Type</span>: {listing.seller_type}</div>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">Seller Information</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-foreground">
+                  <div><span className="font-bold">Type</span>: {listing.seller_type}</div>
                   {listing.seller_type === 'Dealership' && listing.dealership_name && (
-                    <div><span className="text-white/70">Dealership</span>: {listing.dealership_name}</div>
+                    <div><span className="font-bold">Dealership</span>: {listing.dealership_name}</div>
                   )}
                 </div>
               </div>
@@ -305,11 +305,11 @@ const ListingDetails = () => {
               {/* Contact Information */}
               {listing.contact_phone_number && (
                 <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-4" style={{ boxShadow: 'var(--shadow-elevated)' }}>
-                  <h3 className="mb-3 text-lg font-semibold text-white">Contact Seller</h3>
+                  <h3 className="mb-3 text-lg font-semibold text-foreground">Contact Seller</h3>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2 flex-1">
-                      <Phone className="h-4 w-4 text-white/70" />
-                      <span className="font-medium text-white">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-medium text-foreground">
                         {listing.contact_phone_country_code} {listing.contact_phone_number}
                       </span>
                     </div>
@@ -347,8 +347,8 @@ const ListingDetails = () => {
 
               {listing.description && (
                 <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-4" style={{ boxShadow: 'var(--shadow-elevated)' }}>
-                  <h3 className="mb-3 text-lg font-semibold text-white">Description</h3>
-                  <p className="text-white/80 whitespace-pre-wrap text-sm leading-relaxed">
+                  <h3 className="mb-3 text-lg font-semibold text-foreground">Description</h3>
+                  <p className="text-muted-foreground whitespace-pre-wrap text-sm leading-relaxed">
                     {listing.description}
                   </p>
                 </div>
