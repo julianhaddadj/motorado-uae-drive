@@ -9,7 +9,6 @@ import * as z from "zod";
 
 import { Form } from "@/components/ui/form";
 import { FadeLoader } from "@/components/FadeLoader";
-import { useFormAutosave } from "@/hooks/use-form-autosave";
 
 import { StepIndicator } from "./StepIndicator";
 import { UploadMediaStep } from "./UploadMediaStep";
@@ -121,13 +120,6 @@ export const CreateListingWizard = () => {
       sellerType: undefined,
       dealershipName: "",
     },
-  });
-
-  // Manual save draft functionality
-  const { saveDraft, clearSavedData } = useFormAutosave({
-    form,
-    storageKey: 'create-listing-draft',
-    enabled: true
   });
 
   const formatNumberWithCommas = (value: string) => {
@@ -297,9 +289,6 @@ export const CreateListingWizard = () => {
         console.error('Failed to send email notification:', emailError);
       }
 
-      // Clear saved draft
-      clearSavedData();
-
       toast({
         title: "Success!",
         description: "Your listing has been submitted for review.",
@@ -389,7 +378,6 @@ export const CreateListingWizard = () => {
               onBack={handleBack}
               onEditStep={handleStepClick}
               formatNumberWithCommas={formatNumberWithCommas}
-              onSaveDraft={saveDraft}
             />
           )}
         </form>

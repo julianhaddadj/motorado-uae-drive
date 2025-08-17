@@ -14,7 +14,6 @@ interface ReviewSubmitStepProps {
   onBack: () => void;
   onEditStep: (step: number) => void;
   formatNumberWithCommas: (value: string) => string;
-  onSaveDraft: () => void;
 }
 
 export const ReviewSubmitStep = ({
@@ -24,8 +23,7 @@ export const ReviewSubmitStep = ({
   onSubmit,
   onBack,
   onEditStep,
-  formatNumberWithCommas,
-  onSaveDraft
+  formatNumberWithCommas
 }: ReviewSubmitStepProps) => {
   const formData = form.getValues();
   const { makes, getModelsByMake, loading, fetchModelsForMake } = useMakesAndModels();
@@ -260,14 +258,9 @@ export const ReviewSubmitStep = ({
 
         {/* Navigation */}
         <div className="flex justify-between pt-6">
-          <div className="flex gap-2">
-            <Button type="button" variant="outline" onClick={onBack}>
-              Back
-            </Button>
-            <Button type="button" variant="secondary" onClick={onSaveDraft}>
-              Save Draft
-            </Button>
-          </div>
+          <Button type="button" variant="outline" onClick={onBack}>
+            Back
+          </Button>
           <Button
             type="button"
             onClick={onSubmit}
