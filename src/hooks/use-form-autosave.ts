@@ -30,34 +30,30 @@ export const useFormAutosave = ({ form, storageKey, enabled = true }: UseFormAut
     }
   }, [form, storageKey, enabled]);
 
-  // Auto-save form data when it changes
-  useEffect(() => {
-    if (!enabled) return;
-
-    const subscription = form.watch((value) => {
-      try {
-        // Filter out empty values to keep localStorage clean
-        const filteredValue = Object.fromEntries(
-          Object.entries(value).filter(([_, v]) => v !== undefined && v !== null && v !== '')
-        );
-        
-        localStorage.setItem(storageKey, JSON.stringify(filteredValue));
-        
-        // Show toast only if there's meaningful data to save
-        if (Object.keys(filteredValue).length > 0) {
-          toast({
-            title: "Draft Saved",
-            description: "Your progress has been automatically saved.",
-            duration: 2000,
-          });
-        }
-      } catch (error) {
-        console.error('Error saving form data:', error);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [form, storageKey, enabled, toast]);
+  const saveDraft = () => {
+    try {
+      const value = form.getValues();
+      // Filter out empty values to keep localStorage clean
+      const filteredValue = Object.fromEntries(
+        Object.entries(value).filter(([_, v]) => v !== undefined && v !== null && v !== '')
+      );
+      
+      localStorage.setItem(storageKey, JSON.stringify(filteredValue));
+      
+      toast({
+        title: "Draft Saved",
+        description: "Your progress has been saved.",
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error('Error saving form data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save draft.",
+        variant: "destructive"
+      });
+    }
+  };
 
   const clearSavedData = () => {
     try {
@@ -67,5 +63,5 @@ export const useFormAutosave = ({ form, storageKey, enabled = true }: UseFormAut
     }
   };
 
-  return { clearSavedData };
+  return { saveDraft, clearSavedData };
 };

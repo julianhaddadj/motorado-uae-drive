@@ -123,8 +123,8 @@ export const CreateListingWizard = () => {
     },
   });
 
-  // Auto-save form data
-  const { clearSavedData } = useFormAutosave({
+  // Manual save draft functionality
+  const { saveDraft, clearSavedData } = useFormAutosave({
     form,
     storageKey: 'create-listing-draft',
     enabled: true
@@ -389,6 +389,7 @@ export const CreateListingWizard = () => {
               onBack={handleBack}
               onEditStep={handleStepClick}
               formatNumberWithCommas={formatNumberWithCommas}
+              onSaveDraft={saveDraft}
             />
           )}
         </form>
