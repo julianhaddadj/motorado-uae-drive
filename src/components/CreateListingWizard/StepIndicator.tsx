@@ -59,7 +59,8 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
                   {step.id !== steps.length && (
                      <div 
                       className={cn(
-                        "absolute top-4 left-4 -ml-px h-1 w-full transition-colors duration-500 rounded-full",
+                        "absolute top-4 left-8 h-1 transition-colors duration-500 rounded-full",
+                        "w-[calc(100%-2rem)]", // Adjust width to not overlap circles
                         isCompleted || currentStep > step.id
                           ? "bg-gradient-to-r from-primary to-primary/80 shadow-sm"
                           : "bg-gradient-to-r from-white/30 to-white/10"
