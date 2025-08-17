@@ -10,6 +10,7 @@ interface ListingCardProps {
   trim?: string;
   priceAED: number;
   year: number;
+  mileageKm: number;
   location: string;
   isPremium?: boolean;
   favorite?: boolean;
@@ -17,8 +18,9 @@ interface ListingCardProps {
 }
 
 const formatAED = (n: number) => new Intl.NumberFormat("en-AE", { style: "currency", currency: "AED", maximumFractionDigits: 0 }).format(n);
+const formatMileage = (km: number) => new Intl.NumberFormat("en-AE").format(km) + " km";
 
-export const ListingCard = ({ id, image, title, trim, priceAED, year, location, isPremium, favorite, onToggleFavorite }: ListingCardProps) => {
+export const ListingCard = ({ id, image, title, trim, priceAED, year, mileageKm, location, isPremium, favorite, onToggleFavorite }: ListingCardProps) => {
   return (
     <Card className="group overflow-hidden hover-lift shimmer">
       <div className="relative aspect-[16/10] w-full overflow-hidden">
@@ -43,7 +45,7 @@ export const ListingCard = ({ id, image, title, trim, priceAED, year, location, 
             {title}{trim && ` - ${trim}`}
           </h3>
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">{year} • {location}</p>
+            <p className="text-sm text-muted-foreground">{year} • {formatMileage(mileageKm)} • {location}</p>
             <div className="text-base font-bold text-foreground">{formatAED(priceAED)}</div>
           </div>
         </div>

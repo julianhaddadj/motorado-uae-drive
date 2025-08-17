@@ -365,6 +365,7 @@ const Cars = () => {
                   trim={listing.trim}
                   priceAED={listing.price_aed}
                   year={listing.year}
+                  mileageKm={listing.mileage_km}
                   location={listing.emirate}
                   isPremium={listing.is_premium}
                   favorite={has.has(listing.id)}

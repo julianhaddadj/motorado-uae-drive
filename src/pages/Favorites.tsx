@@ -14,6 +14,7 @@ interface FavoriteListing {
   model: string;
   year: number;
   price_aed: number;
+  mileage_km: number;
   emirate: string;
   trim?: string;
   images: string[];
@@ -51,6 +52,7 @@ const Favorites = () => {
           model,
           year,
           price_aed,
+          mileage_km,
           emirate,
           trim,
           images,
@@ -141,6 +143,7 @@ const Favorites = () => {
                   trim={listing.trim}
                   priceAED={listing.price_aed}
                   year={listing.year}
+                  mileageKm={listing.mileage_km}
                   location={listing.emirate}
                   isPremium={listing.is_premium}
                   favorite={has.has(listing.id)}

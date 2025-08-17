@@ -17,6 +17,7 @@ interface DatabaseListing {
   model: string;
   year: number;
   price_aed: number;
+  mileage_km: number;
   emirate: string;
   trim?: string;
   images: string[];
@@ -191,6 +192,7 @@ const Index = () => {
                   title={`${l.make_name || l.make} ${l.model_name || l.model} ${l.year}${l.trim ? ` ${l.trim}` : ''}`}
                   priceAED={l.price_aed}
                   year={l.year}
+                  mileageKm={l.mileage_km}
                   location={l.emirate}
                   isPremium={l.is_premium}
                   favorite={has.has(l.id)}
