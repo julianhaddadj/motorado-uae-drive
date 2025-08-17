@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { UseFormReturn } from 'react-hook-form';
 import { useMakesAndModels } from '@/hooks/use-makes-models';
+import React from 'react';
 
 interface ReviewSubmitStepProps {
   form: UseFormReturn<any>;
@@ -25,7 +26,14 @@ export const ReviewSubmitStep = ({
   formatNumberWithCommas
 }: ReviewSubmitStepProps) => {
   const formData = form.getValues();
-  const { makes, getModelsByMake } = useMakesAndModels();
+  const { makes, getModelsByMake, loading, fetchModelsForMake } = useMakesAndModels();
+  
+  // Ensure models are loaded for the selected make
+  React.useEffect(() => {
+    if (formData.make && !loading) {
+      fetchModelsForMake(formData.make);
+    }
+  }, [formData.make, loading, fetchModelsForMake]);
   
   // Get actual make and model names from IDs
   const selectedMake = makes.find(make => make.id === formData.make);
@@ -106,7 +114,13 @@ export const ReviewSubmitStep = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Make & Model</p>
-              <p className="font-medium">{selectedMake?.name || formData.make} {selectedModel?.name || formData.model}</p>
+              <p className="font-medium">
+                {loading ? (
+                  <span className="text-muted-foreground">Loading...</span>
+                ) : (
+                  `${selectedMake?.name || 'Unknown Make'} ${selectedModel?.name || 'Unknown Model'}`
+                )}
+              </p>
             </div>
             
             <div className="space-y-2">
