@@ -253,4 +253,16 @@ All colors MUST be HSL.
       transform: translate(-5px, 5px) rotate(-0.5deg);
     }
   }
+
+  /* Grid pulse animation for 3D effect */
+  @keyframes gridPulse {
+    0%, 100% { 
+      opacity: 0.4;
+      transform: rotateX(60deg) translateZ(-50px) scale(1);
+    }
+    50% { 
+      opacity: 0.6;
+      transform: rotateX(60deg) translateZ(-30px) scale(1.05);
+    }
+  }
 }
