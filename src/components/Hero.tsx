@@ -5,8 +5,8 @@ import { GeometricAnimation } from "@/components/GeometricAnimation";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden geometric-bg">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_50%_-20%,hsl(var(--brand)/0.12),transparent_60%),linear-gradient(180deg,hsl(var(--background)),hsl(var(--background)))] animate-bg-pan" />
+    <section className="relative overflow-hidden bg-background/90">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_50%_-20%,hsl(var(--brand)/0.08),transparent_70%)] animate-bg-pan" />
       <GeometricAnimation className="absolute inset-0 -z-5" />
 
       <main className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 py-16 md:grid-cols-2">
