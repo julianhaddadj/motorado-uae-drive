@@ -115,7 +115,7 @@ const Index = () => {
       <Hero />
 
       <section className="mx-auto max-w-6xl px-4 pb-12">
-        <div className="rounded-xl border bg-card p-4 shadow-sm md:p-6">
+        <div className="rounded-xl border bg-card/95 backdrop-blur-sm p-4 md:p-6" style={{ boxShadow: 'var(--shadow-elevated)' }}>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <Select value={selectedMake || "all"} onValueChange={handleMakeChange}>
               <SelectTrigger className="h-11">
