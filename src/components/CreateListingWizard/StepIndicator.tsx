@@ -20,10 +20,10 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
       {/* Mobile Progress Bar */}
       <div className="md:hidden mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-white">
+          <span className="text-sm font-medium text-primary">
             Step {currentStep} of {steps.length}
           </span>
-          <span className="text-sm text-white/70">
+          <span className="text-sm text-primary/70">
             {Math.round((currentStep / steps.length) * 100)}% Complete
           </span>
         </div>
@@ -33,7 +33,7 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
             style={{ width: `${(currentStep / steps.length) * 100}%` }}
           />
         </div>
-        <p className="text-sm text-white/80 mt-2">
+        <p className="text-sm text-primary/80 mt-2">
           {steps[currentStep - 1]?.title}
         </p>
       </div>
@@ -41,54 +41,45 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
       {/* Desktop Stepper */}
       <div className="hidden md:block">
         <nav aria-label="Progress">
-          <ol className="flex items-center justify-between">
-            {steps.map((step) => {
-              const isCompleted = completedSteps.includes(step.id);
-              const isCurrent = currentStep === step.id;
-              const isClickable = isCompleted || step.id < currentStep;
-              
-              return (
-                <li 
-                  key={step.id} 
-                  className={cn(
-                    "relative flex-1",
-                    step.id !== steps.length && "pr-8 sm:pr-20"
-                  )}
-                >
-                   {/* Connection Line */}
-                   {step.id !== steps.length && (
-                     <div 
-                      className={cn(
-                        "absolute left-8 h-1 transition-colors duration-500 rounded-full",
-                        "w-[calc(100%-1rem)]", // Connect between circle edges
-                        isCompleted || currentStep > step.id
-                          ? "bg-gradient-to-r from-primary to-primary/80 shadow-sm"
-                          : "bg-gradient-to-r from-white/30 to-white/10"
-                      )}
-                      style={{ 
-                        top: '1rem', // Fixed position relative to circle center
-                        right: '2rem' // End before next circle
-                      }}
-                      aria-hidden="true"
-                    />
-                   )}
-                  
-                  {/* Step Button */}
-                  <button
-                    onClick={() => isClickable && onStepClick(step.id)}
-                    disabled={!isClickable}
-                    className={cn(
-                      "relative flex items-start group",
-                      isClickable && "cursor-pointer hover:opacity-80",
-                      !isClickable && "cursor-not-allowed opacity-60"
-                    )}
+          <div className="relative">
+            {/* Background connector line */}
+            <div className="absolute top-4 left-4 right-4 h-1 bg-white/20 rounded-full" />
+            
+            {/* Active connector line */}
+            <div 
+              className="absolute top-4 left-4 h-1 bg-gradient-to-r from-primary to-primary/80 rounded-full transition-all duration-500"
+              style={{ 
+                width: `${Math.max(0, (Math.min(currentStep - 1, steps.length - 1)) * (100 / (steps.length - 1)))}%` 
+              }}
+            />
+            
+            <ol className="relative flex items-center justify-between">
+              {steps.map((step) => {
+                const isCompleted = completedSteps.includes(step.id);
+                const isCurrent = currentStep === step.id;
+                const isClickable = isCompleted || step.id < currentStep;
+                
+                return (
+                  <li 
+                    key={step.id} 
+                    className="relative flex flex-col items-center"
                   >
-                    <span className="h-9 flex items-center">
+                    {/* Step Button */}
+                    <button
+                      onClick={() => isClickable && onStepClick(step.id)}
+                      disabled={!isClickable}
+                      className={cn(
+                        "relative flex flex-col items-center group",
+                        isClickable && "cursor-pointer hover:opacity-80",
+                        !isClickable && "cursor-not-allowed opacity-60"
+                      )}
+                    >
+                      {/* Circle */}
                       <span
                         className={cn(
-                          "relative z-10 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300",
-                          isCompleted && "bg-primary text-primary-foreground",
-                          isCurrent && !isCompleted && "bg-primary/30 border-2 border-primary text-primary",
+                          "relative z-10 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 mb-3",
+                          isCompleted && "bg-primary text-primary-foreground shadow-lg",
+                          isCurrent && !isCompleted && "bg-primary/30 border-2 border-primary text-primary shadow-md",
                           !isCompleted && !isCurrent && "bg-white/20 border-2 border-white/30 text-white/80"
                         )}
                       >
@@ -98,32 +89,34 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
                           <span className="text-sm font-medium">{step.id}</span>
                         )}
                       </span>
-                    </span>
-                    <span className="ml-4 min-w-0 flex flex-col text-left">
-                      <span
-                        className={cn(
-                          "text-sm font-medium transition-colors duration-300",
-                          "text-primary",
-                          !isClickable && "text-primary/60"
-                        )}
-                      >
-                        {step.title}
-                      </span>
-                      <span
-                        className={cn(
-                          "text-xs transition-colors duration-300",
-                          "text-primary/80",
-                          !isClickable && "text-primary/40"
-                        )}
-                      >
-                        {step.description}
-                      </span>
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
+                      
+                      {/* Step Content */}
+                      <div className="text-center max-w-24">
+                        <span
+                          className={cn(
+                            "text-sm font-medium transition-colors duration-300 block",
+                            "text-primary",
+                            !isClickable && "text-primary/60"
+                          )}
+                        >
+                          {step.title}
+                        </span>
+                        <span
+                          className={cn(
+                            "text-xs transition-colors duration-300 block mt-1",
+                            "text-primary/80",
+                            !isClickable && "text-primary/40"
+                          )}
+                        >
+                          {step.description}
+                        </span>
+                      </div>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
         </nav>
       </div>
     </div>
