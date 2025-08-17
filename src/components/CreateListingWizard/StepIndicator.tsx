@@ -57,12 +57,12 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
                 >
                   {/* Connection Line */}
                   {step.id !== steps.length && (
-                    <div 
+                     <div 
                       className={cn(
-                        "absolute top-4 left-4 -ml-px h-0.5 w-full transition-colors duration-300",
+                        "absolute top-4 left-4 -ml-px h-1 w-full transition-colors duration-500 rounded-full",
                         isCompleted || currentStep > step.id
-                          ? "bg-primary"
-                          : "bg-white/20"
+                          ? "bg-gradient-to-r from-primary to-primary/80 shadow-sm"
+                          : "bg-gradient-to-r from-white/30 to-white/10"
                       )}
                       aria-hidden="true"
                     />
