@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { BackgroundSpline } from "@/components/BackgroundSpline";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -117,17 +118,19 @@ const ListingDetails = () => {
 
   if (loading || !listing) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <BreadcrumbNavigation />
-        <main className="mx-auto max-w-6xl px-4 py-16">
+      <div className="min-h-screen bg-background relative">
+        <BackgroundSpline />
+        <div className="relative z-10">
+          <Header />
+          <BreadcrumbNavigation />
+          <main className="mx-auto max-w-6xl px-4 py-16">
           <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
             {loading ? (
               <FadeLoader size="lg" showText={false} />
             ) : (
               <>
-                <h1 className="text-2xl font-bold mb-4">Listing not found</h1>
-                <p className="text-muted-foreground mb-6">The listing you're looking for doesn't exist or has been removed.</p>
+                <h1 className="text-2xl font-bold mb-4 text-white">Listing not found</h1>
+                <p className="text-white/80 mb-6">The listing you're looking for doesn't exist or has been removed.</p>
                 <Button asChild>
                   <Link to="/cars">Browse Cars</Link>
                 </Button>
@@ -135,6 +138,7 @@ const ListingDetails = () => {
             )}
           </div>
         </main>
+        </div>
       </div>
     );
   }
@@ -161,10 +165,12 @@ const ListingDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <BreadcrumbNavigation />
-      <main className="mx-auto max-w-6xl px-4 py-10">
+    <div className="min-h-screen bg-background relative">
+      <BackgroundSpline />
+      <div className="relative z-10">
+        <Header />
+        <BreadcrumbNavigation />
+        <main className="mx-auto max-w-6xl px-4 py-10">
         <SEO
           title={`${listing.make_name || listing.make} ${listing.model_name || listing.model} ${listing.year} — Motorado`}
           description={listing.description || `${listing.make_name || listing.make} ${listing.model_name || listing.model} ${listing.year} for sale in ${listing.emirate}.`}
@@ -176,14 +182,14 @@ const ListingDetails = () => {
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {listing.is_premium && <Badge className="bg-primary text-primary-foreground">Premium</Badge>}
-              <h1 className="text-3xl font-bold">
+              <h1 className="text-3xl font-bold text-white">
                 {listing.make_name || listing.make} - {listing.model_name || listing.model}
                 {listing.trim && ` - ${listing.trim}`}
               </h1>
             </div>
-            <div className="text-2xl font-bold">{formatAED(listing.price_aed)}</div>
+            <div className="text-2xl font-bold text-white">{formatAED(listing.price_aed)}</div>
           </div>
-          <p className="mt-2 text-lg text-muted-foreground">
+          <p className="mt-2 text-lg text-white/80">
             {listing.year}, {listing.mileage_km.toLocaleString()} km, {listing.regional_spec}
           </p>
         </div>
@@ -262,34 +268,34 @@ const ListingDetails = () => {
           {/* Car Details Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
-              <div className="rounded-lg border p-4">
-                <h3 className="text-lg font-semibold mb-3">Car Details</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div><span className="text-muted-foreground">Year</span>: {listing.year}</div>
-                  <div><span className="text-muted-foreground">Mileage</span>: {listing.mileage_km.toLocaleString()} km</div>
-                  <div><span className="text-muted-foreground">Body Type</span>: {listing.body_type}</div>
-                  <div><span className="text-muted-foreground">Regional Spec</span>: {listing.regional_spec}</div>
-                  <div><span className="text-muted-foreground">Location</span>: {listing.emirate}</div>
-                  {listing.trim && <div><span className="text-muted-foreground">Trim</span>: {listing.trim}</div>}
-                  {listing.fuel_type && <div><span className="text-muted-foreground">Fuel Type</span>: {listing.fuel_type}</div>}
-                  {listing.transmission && <div><span className="text-muted-foreground">Transmission</span>: {listing.transmission}</div>}
-                  {listing.horsepower && <div><span className="text-muted-foreground">Horsepower</span>: {listing.horsepower}</div>}
-                  {listing.doors && <div><span className="text-muted-foreground">Doors</span>: {listing.doors}</div>}
-                  {listing.exterior_color && <div><span className="text-muted-foreground">Exterior Color</span>: {listing.exterior_color}</div>}
-                  {listing.interior_color && <div><span className="text-muted-foreground">Interior Color</span>: {listing.interior_color}</div>}
-                  {listing.steering_side && <div><span className="text-muted-foreground">Steering Side</span>: {listing.steering_side}</div>}
-                  {listing.warranty && <div><span className="text-muted-foreground">Warranty</span>: {listing.warranty}</div>}
-                  {listing.insured_in_uae && <div><span className="text-muted-foreground">Insured in UAE</span>: {listing.insured_in_uae}</div>}
+              <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-4" style={{ boxShadow: 'var(--shadow-elevated)' }}>
+                <h3 className="text-lg font-semibold mb-3 text-white">Car Details</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-white">
+                  <div><span className="text-white/70">Year</span>: {listing.year}</div>
+                  <div><span className="text-white/70">Mileage</span>: {listing.mileage_km.toLocaleString()} km</div>
+                  <div><span className="text-white/70">Body Type</span>: {listing.body_type}</div>
+                  <div><span className="text-white/70">Regional Spec</span>: {listing.regional_spec}</div>
+                  <div><span className="text-white/70">Location</span>: {listing.emirate}</div>
+                  {listing.trim && <div><span className="text-white/70">Trim</span>: {listing.trim}</div>}
+                  {listing.fuel_type && <div><span className="text-white/70">Fuel Type</span>: {listing.fuel_type}</div>}
+                  {listing.transmission && <div><span className="text-white/70">Transmission</span>: {listing.transmission}</div>}
+                  {listing.horsepower && <div><span className="text-white/70">Horsepower</span>: {listing.horsepower}</div>}
+                  {listing.doors && <div><span className="text-white/70">Doors</span>: {listing.doors}</div>}
+                  {listing.exterior_color && <div><span className="text-white/70">Exterior Color</span>: {listing.exterior_color}</div>}
+                  {listing.interior_color && <div><span className="text-white/70">Interior Color</span>: {listing.interior_color}</div>}
+                  {listing.steering_side && <div><span className="text-white/70">Steering Side</span>: {listing.steering_side}</div>}
+                  {listing.warranty && <div><span className="text-white/70">Warranty</span>: {listing.warranty}</div>}
+                  {listing.insured_in_uae && <div><span className="text-white/70">Insured in UAE</span>: {listing.insured_in_uae}</div>}
                 </div>
               </div>
 
               {/* Seller Information */}
-              <div className="rounded-lg border p-4">
-                <h3 className="text-lg font-semibold mb-3">Seller Information</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                  <div><span className="text-muted-foreground">Type</span>: {listing.seller_type}</div>
+              <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-4" style={{ boxShadow: 'var(--shadow-elevated)' }}>
+                <h3 className="text-lg font-semibold mb-3 text-white">Seller Information</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-white">
+                  <div><span className="text-white/70">Type</span>: {listing.seller_type}</div>
                   {listing.seller_type === 'Dealership' && listing.dealership_name && (
-                    <div><span className="text-muted-foreground">Dealership</span>: {listing.dealership_name}</div>
+                    <div><span className="text-white/70">Dealership</span>: {listing.dealership_name}</div>
                   )}
                 </div>
               </div>
@@ -298,12 +304,12 @@ const ListingDetails = () => {
             <div className="space-y-6">
               {/* Contact Information */}
               {listing.contact_phone_number && (
-                <div className="rounded-lg border p-4">
-                  <h3 className="mb-3 text-lg font-semibold">Contact Seller</h3>
+                <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-4" style={{ boxShadow: 'var(--shadow-elevated)' }}>
+                  <h3 className="mb-3 text-lg font-semibold text-white">Contact Seller</h3>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2 flex-1">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">
+                      <Phone className="h-4 w-4 text-white/70" />
+                      <span className="font-medium text-white">
                         {listing.contact_phone_country_code} {listing.contact_phone_number}
                       </span>
                     </div>
@@ -340,9 +346,9 @@ const ListingDetails = () => {
               )}
 
               {listing.description && (
-                <div className="rounded-lg border p-4">
-                  <h3 className="mb-3 text-lg font-semibold">Description</h3>
-                  <p className="text-muted-foreground whitespace-pre-wrap text-sm leading-relaxed">
+                <div className="rounded-lg border border-white/10 bg-card/95 backdrop-blur-sm p-4" style={{ boxShadow: 'var(--shadow-elevated)' }}>
+                  <h3 className="mb-3 text-lg font-semibold text-white">Description</h3>
+                  <p className="text-white/80 whitespace-pre-wrap text-sm leading-relaxed">
                     {listing.description}
                   </p>
                 </div>
@@ -352,9 +358,10 @@ const ListingDetails = () => {
         </div>
 
         <div className="mt-8">
-          <Link to="/cars" className="text-primary underline">← Back to search</Link>
+          <Link to="/cars" className="text-white underline">← Back to search</Link>
         </div>
       </main>
+      </div>
     </div>
   );
 };
