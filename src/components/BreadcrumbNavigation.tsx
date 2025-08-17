@@ -261,7 +261,7 @@ export const BreadcrumbNavigation = () => {
   }
 
   return (
-    <div className="border-b bg-muted/30">
+    <div className="border-b border-border/20">
       <div className="mx-auto max-w-6xl px-4 py-3">
         <Breadcrumb>
           <BreadcrumbList>
