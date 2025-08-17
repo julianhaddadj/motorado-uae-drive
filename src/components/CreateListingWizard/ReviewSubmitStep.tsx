@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { UseFormReturn } from 'react-hook-form';
+import { useMakesAndModels } from '@/hooks/use-makes-models';
 
 interface ReviewSubmitStepProps {
   form: UseFormReturn<any>;
@@ -24,6 +25,11 @@ export const ReviewSubmitStep = ({
   formatNumberWithCommas
 }: ReviewSubmitStepProps) => {
   const formData = form.getValues();
+  const { makes, getModelsByMake } = useMakesAndModels();
+  
+  // Get actual make and model names from IDs
+  const selectedMake = makes.find(make => make.id === formData.make);
+  const selectedModel = formData.make ? getModelsByMake(formData.make).find(model => model.id === formData.model) : null;
 
   return (
     <Card>
@@ -100,7 +106,7 @@ export const ReviewSubmitStep = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Make & Model</p>
-              <p className="font-medium">{formData.make} {formData.model}</p>
+              <p className="font-medium">{selectedMake?.name || formData.make} {selectedModel?.name || formData.model}</p>
             </div>
             
             <div className="space-y-2">
