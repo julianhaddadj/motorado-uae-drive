@@ -266,37 +266,15 @@ All colors MUST be HSL.
     }
   }
 
-  /* Premium showroom light streak animations */
-  @keyframes streak-move-0 {
+  /* Simplified light streak animation */
+  @keyframes simple-streak {
     0%, 100% { 
       opacity: 0.2;
-      transform: rotate(25deg) translateY(-20px);
+      transform: translateY(-10px);
     }
     50% { 
-      opacity: 0.6;
-      transform: rotate(25deg) translateY(20px);
-    }
-  }
-
-  @keyframes streak-move-1 {
-    0%, 100% { 
-      opacity: 0.3;
-      transform: rotate(30deg) translateY(20px);
-    }
-    50% { 
-      opacity: 0.7;
-      transform: rotate(30deg) translateY(-20px);
-    }
-  }
-
-  @keyframes streak-move-cross {
-    0%, 100% { 
-      opacity: 0.2;
-      transform: rotate(-20deg) translateY(30px);
-    }
-    50% { 
-      opacity: 0.5;
-      transform: rotate(-25deg) translateY(-15px);
+      opacity: 0.4;
+      transform: translateY(10px);
     }
   }
 }
