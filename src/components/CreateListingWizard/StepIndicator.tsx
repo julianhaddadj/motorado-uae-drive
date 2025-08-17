@@ -83,8 +83,8 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
                         className={cn(
                           "relative z-10 w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300",
                           isCompleted && "bg-primary text-primary-foreground",
-                          isCurrent && !isCompleted && "bg-primary/20 border-2 border-primary text-primary",
-                          !isCompleted && !isCurrent && "bg-white/10 border-2 border-white/20 text-white/60"
+                          isCurrent && !isCompleted && "bg-primary/30 border-2 border-primary text-primary",
+                          !isCompleted && !isCurrent && "bg-white/20 border-2 border-white/30 text-white/80"
                         )}
                       >
                         {isCompleted ? (
