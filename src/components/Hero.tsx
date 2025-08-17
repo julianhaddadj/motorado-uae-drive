@@ -5,11 +5,10 @@ import { GeometricAnimation } from "@/components/GeometricAnimation";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden bg-background/90">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_50%_-20%,hsl(var(--brand)/0.08),transparent_70%)] animate-bg-pan" />
+    <section className="relative overflow-hidden">
       <GeometricAnimation className="absolute inset-0 -z-5" />
 
-      <main className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 py-16 md:grid-cols-2">
+      <main className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 py-16 md:grid-cols-2 relative z-10">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">
             UAE's premium car marketplace
