@@ -98,8 +98,8 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
                       <span
                         className={cn(
                           "text-sm font-medium transition-colors duration-300",
-                          isCurrent ? "text-primary" : "text-white",
-                          !isClickable && "text-white/60"
+                          "text-primary",
+                          !isClickable && "text-primary/60"
                         )}
                       >
                         {step.title}
@@ -107,8 +107,8 @@ export const StepIndicator = ({ steps, currentStep, completedSteps, onStepClick 
                       <span
                         className={cn(
                           "text-xs transition-colors duration-300",
-                          isCurrent ? "text-primary/80" : "text-white/70",
-                          !isClickable && "text-white/40"
+                          "text-primary/80",
+                          !isClickable && "text-primary/40"
                         )}
                       >
                         {step.description}
