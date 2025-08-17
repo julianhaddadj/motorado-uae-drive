@@ -246,7 +246,7 @@ const Cars = () => {
           description="Search cars for sale across the UAE by make, model, price, year, mileage and more."
           canonical="/cars"
         />
-        <h1 className="mb-6 text-3xl font-bold text-white">Browse Cars</h1>
+        <h1 className="mb-6 text-3xl font-bold text-primary">Browse Cars</h1>
 
         <div className="mb-6 space-y-4">
           <div className="rounded-xl border border-white/10 bg-card/95 backdrop-blur-sm p-4 md:p-6" style={{ boxShadow: 'var(--shadow-elevated)' }}>
