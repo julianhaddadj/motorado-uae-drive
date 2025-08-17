@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { BackgroundSpline } from "@/components/BackgroundSpline";
 import { ListingCard } from "@/components/ListingCard";
 import { ListingCardList } from "@/components/ListingCardList";
 import { LayoutSwitcher } from "@/components/LayoutSwitcher";
@@ -230,13 +231,15 @@ const Cars = () => {
   return (
     <div 
       className={cn(
-        "min-h-screen bg-background transition-all duration-1000 ease-out",
+        "min-h-screen bg-background transition-all duration-1000 ease-out relative",
         showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       )} 
       ref={scrollRef as any}
     >
-      <Header />
-      <BreadcrumbNavigation />
+      <BackgroundSpline />
+      <div className="relative z-10">
+        <Header />
+        <BreadcrumbNavigation />
       <main className="mx-auto max-w-6xl px-4 py-10">
         <SEO
           title="Browse Cars — Motorado"
@@ -246,7 +249,8 @@ const Cars = () => {
         <h1 className="mb-6 text-3xl font-bold">Browse Cars</h1>
 
         <div className="mb-6 space-y-4">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-6 lg:grid-cols-12">
+          <div className="rounded-xl border border-white/10 bg-card/95 backdrop-blur-sm p-4 md:p-6" style={{ boxShadow: 'var(--shadow-elevated)' }}>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-6 lg:grid-cols-12">
             <Select value={selectedMakeId || "all"} onValueChange={handleMakeChange}>
               <SelectTrigger className="h-11 lg:col-span-2">
                 <SelectValue placeholder="Make" />
@@ -322,6 +326,7 @@ const Cars = () => {
               value={maxPrice} 
               onChange={(e) => set("maxPrice", e.target.value || undefined)} 
             />
+            </div>
           </div>
 
           <div className="flex items-center justify-between gap-4">
@@ -393,6 +398,7 @@ const Cars = () => {
           <p className="mt-10 text-muted-foreground">No cars found. Try adjusting your filters.</p>
         )}
       </main>
+      </div>
     </div>
   );
 };

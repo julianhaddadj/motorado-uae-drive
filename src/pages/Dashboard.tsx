@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
+import { BackgroundSpline } from "@/components/BackgroundSpline";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
@@ -32,8 +33,10 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <div className="min-h-screen bg-background relative">
+      <BackgroundSpline />
+      <div className="relative z-10">
+        <Header />
       <SEO
         title="Dashboard — Motorado"
         description="Manage your car listings and account on Motorado."
@@ -49,7 +52,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-md transition-shadow bg-card/95 backdrop-blur-sm border-white/10" style={{ boxShadow: 'var(--shadow-elevated)' }}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Listings</CardTitle>
               <Car className="h-4 w-4 text-muted-foreground" />
@@ -60,7 +63,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-md transition-shadow bg-card/95 backdrop-blur-sm border-white/10" style={{ boxShadow: 'var(--shadow-elevated)' }}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Favorites</CardTitle>
               <Heart className="h-4 w-4 text-muted-foreground" />
@@ -71,7 +74,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="hover:shadow-md transition-shadow">
+          <Card className="hover:shadow-md transition-shadow bg-card/95 backdrop-blur-sm border-white/10" style={{ boxShadow: 'var(--shadow-elevated)' }}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Profile Views</CardTitle>
               <Plus className="h-4 w-4 text-muted-foreground" />
@@ -84,7 +87,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
+          <Card className="bg-card/95 backdrop-blur-sm border-white/10" style={{ boxShadow: 'var(--shadow-elevated)' }}>
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
@@ -110,7 +113,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-card/95 backdrop-blur-sm border-white/10" style={{ boxShadow: 'var(--shadow-elevated)' }}>
             <CardHeader>
               <CardTitle>Account Information</CardTitle>
             </CardHeader>
@@ -128,6 +131,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
+      </div>
       </div>
     </div>
   );

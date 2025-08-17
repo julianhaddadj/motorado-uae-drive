@@ -1,13 +1,10 @@
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/motorado-hero.jpg";
 import { Link } from "react-router-dom";
-import { GeometricAnimation } from "@/components/GeometricAnimation";
 
 const Hero = () => {
   return (
     <section className="relative overflow-hidden">
-      <GeometricAnimation className="absolute inset-0 -z-5" />
-
       <main className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-4 py-16 md:grid-cols-2 relative z-10">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl">

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Plus, Edit } from "lucide-react";
 import { FadeLoader } from "@/components/FadeLoader";
+import { BackgroundSpline } from "@/components/BackgroundSpline";
 
 interface Listing {
   id: string;
@@ -115,19 +116,21 @@ export default function MyListings() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header with Motorado Logo */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/" className="inline-flex items-center hover:opacity-80 transition-opacity">
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              Motorado
-            </span>
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background relative">
+      <BackgroundSpline />
+      <div className="relative z-10">
+        {/* Header with Motorado Logo */}
+        <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-4">
+            <Link to="/" className="inline-flex items-center hover:opacity-80 transition-opacity">
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                Motorado
+              </span>
+            </Link>
+          </div>
+        </header>
 
-      <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">My Listings</h1>
           <Button asChild>
@@ -139,7 +142,7 @@ export default function MyListings() {
         </div>
 
         {listings.length === 0 ? (
-          <Card>
+          <Card className="bg-card/95 backdrop-blur-sm border-white/10" style={{ boxShadow: 'var(--shadow-elevated)' }}>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <p className="text-muted-foreground mb-4">You haven't created any listings yet.</p>
               <Button asChild>
@@ -150,7 +153,7 @@ export default function MyListings() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {listings.map((listing) => (
-              <Card key={listing.id}>
+              <Card key={listing.id} className="bg-card/95 backdrop-blur-sm border-white/10" style={{ boxShadow: 'var(--shadow-elevated)' }}>
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <CardTitle className="text-lg">
@@ -183,6 +186,7 @@ export default function MyListings() {
             ))}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

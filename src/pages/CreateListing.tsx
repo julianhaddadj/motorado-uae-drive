@@ -11,6 +11,7 @@ import * as z from "zod";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { BackgroundSpline } from "@/components/BackgroundSpline";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -387,9 +388,11 @@ const CreateListing = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <BreadcrumbNavigation />
+    <div className="min-h-screen bg-background relative">
+      <BackgroundSpline />
+      <div className="relative z-10">
+        <Header />
+        <BreadcrumbNavigation />
       <main className="mx-auto max-w-4xl px-4 py-10">
         <SEO
           title="Create Car Listing — Motorado"
@@ -1118,6 +1121,7 @@ const CreateListing = () => {
           </form>
         </Form>
       </main>
+      </div>
     </div>
   );
 };

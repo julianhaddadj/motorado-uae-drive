@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { BackgroundSpline } from "@/components/BackgroundSpline";
 import { useEffect } from "react";
 
 const Auth = () => {
@@ -80,17 +81,19 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <BreadcrumbNavigation />
-      <div className="flex items-center justify-center px-4" style={{ minHeight: 'calc(100vh - 4rem)' }}>
+    <div className="min-h-screen bg-background relative">
+      <BackgroundSpline />
+      <div className="relative z-10">
+        <Header />
+        <BreadcrumbNavigation />
+        <div className="flex items-center justify-center px-4" style={{ minHeight: 'calc(100vh - 4rem)' }}>
       <SEO
         title="Sign In | Sign Up — Motorado"
         description="Sign in to your Motorado account or create a new account to start buying and selling cars in the UAE."
         canonical="/auth"
       />
       
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-card/95 backdrop-blur-sm border-white/10" style={{ boxShadow: 'var(--shadow-elevated)' }}>
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Welcome to Motorado
@@ -185,6 +188,7 @@ const Auth = () => {
           </Tabs>
         </CardContent>
       </Card>
+      </div>
       </div>
     </div>
   );

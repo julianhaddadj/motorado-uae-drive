@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import { Header } from "@/components/Header";
 import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
+import { BackgroundSpline } from "@/components/BackgroundSpline";
 import { SEO } from "@/components/SEO";
 import { ListingCard } from "@/components/ListingCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -93,9 +94,11 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <BreadcrumbNavigation />
+    <div className="min-h-screen bg-background relative">
+      <BackgroundSpline />
+      <div className="relative z-10">
+        <Header />
+        <BreadcrumbNavigation />
       <SEO
         title="Motorado — UAE Car Marketplace"
         description="Sell your car in the UAE fast. Pay-to-list with promo codes. Browse premium cars by make, model, price and more."
@@ -220,6 +223,7 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      </div>
     </div>
   );
 };

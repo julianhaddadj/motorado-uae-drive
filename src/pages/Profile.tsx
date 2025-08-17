@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { BackgroundSpline } from "@/components/BackgroundSpline";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -37,8 +38,11 @@ export default function Profile() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Card className="max-w-md mx-auto">
+    <div className="min-h-screen bg-background relative">
+      <BackgroundSpline />
+      <div className="relative z-10">
+        <div className="container mx-auto px-4 py-8">
+          <Card className="max-w-md mx-auto bg-card/95 backdrop-blur-sm border-white/10" style={{ boxShadow: 'var(--shadow-elevated)' }}>
         <CardHeader>
           <CardTitle>Profile</CardTitle>
         </CardHeader>
@@ -65,6 +69,8 @@ export default function Profile() {
           </form>
         </CardContent>
       </Card>
+      </div>
+      </div>
     </div>
   );
 }
