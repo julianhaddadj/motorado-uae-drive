@@ -273,7 +273,7 @@ export const BreadcrumbNavigation = () => {
                     <BreadcrumbLink asChild>
                       <Link 
                         to={crumb.href} 
-                        className="text-muted-foreground hover:text-foreground transition-colors"
+                        className="text-white/80 hover:text-white transition-colors"
                         title={crumb.label}
                         onClick={() => {
                           // Clear listing data immediately for smoother transition
@@ -287,7 +287,7 @@ export const BreadcrumbNavigation = () => {
                       </Link>
                     </BreadcrumbLink>
                   ) : (
-                    <BreadcrumbPage className="text-foreground font-medium">
+                    <BreadcrumbPage className="text-white font-medium">
                       {crumb.label}
                     </BreadcrumbPage>
                   )}
